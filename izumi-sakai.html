@@ -271,12 +271,11 @@ footer h2 {
     <div class="music_list box_shadow">
         <ul>
             <li class="playing"><a href="#">01.zard - kitto masurenai.mp3</a></li>
-            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
-            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
-            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
-            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
-            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
-            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
+            <li><a href="#">02.zard - kitto masurenai2.mp3</a></li>
+            <li><a href="#">03.zard - kitto masurenai3.mp3</a></li>
+            <li><a href="#">04.zard - kitto masurenai4.mp3</a></li>
+            <li><a href="#">05.zard - kitto masurenai5.mp3</a></li>
+            <li><a href="#">06.zard - kitto masurenai6.mp3</a></li>
         </ul>
     </div>
 
@@ -286,17 +285,35 @@ footer h2 {
 
 <script type="text/javascript">
     $(document).ready(function(){
-        var playing_music_id = null;
         var player = $("#player");
         $(".music_list li a").click(function(){
             $(".music_list li.playing").removeClass("playing");
             $(this).parent().addClass("playing");
+            $(".music_name").text($(this).text());
         });
-        $(".control_button").mousedown(function(){
-        }).mouseup(function(){
-        }).click(function(){
 
+        $(".next_button").click(function(){
+            var next_music = $(".music_list li.playing").next();
+            if(next_music.length == 1){
+                next_music.find("a").click();
+            } else {
+                $(".music_list li a").first().click();
+            }
         });
+
+        $(".pre_button").click(function(){
+            var pre_music = $(".music_list li.playing").prev();
+            if(pre_music.length == 1){
+                pre_music.find("a").click();
+            } else {
+                $(".music_list li a").last().click();
+            }
+        });
+
+        $("#play_control").click(function(){
+            $(this).find("div").toggleClass("play_button_triangle").toggleClass("pause_button_rect_x_2");
+        })
+
     });
 </script>
 
