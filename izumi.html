@@ -65,7 +65,7 @@ footer h2 {
 .music_name {
     position: absolute; font: 18px "Microsoft YaHei",Arial,Sans-Serif;
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-    left: 32px; top: 8px; width: 400px;
+    left: 32px; top: 6px; width: 400px;
 }
 .elaspe_time {
     position: absolute; 
@@ -252,8 +252,8 @@ footer h2 {
 
 <body>
 <header><h2>Sakai Izumi</h2></header>
+<audio id="player"></audio>
 <div class="music_box">
-    <audio id="player"></audio>
     <div class="music_control box_shadow">
         <div class="music_name">music box</div>
         <div class="elaspe_time">00:00</div>
@@ -268,9 +268,6 @@ footer h2 {
         </div>
         <div id="play_control" class="play_button control_button">
             <div class="play_button_triangle"></div>
-            <!--
-            <div class="pause_button_rect_x_2"></div>
-            -->
         </div>
         <div class="next_button control_button">
             <div class="next_button_rect button_rect"></div>
@@ -289,13 +286,13 @@ footer h2 {
     </div>
     <div class="music_list box_shadow">
         <ul>
-            <li><a href="#01"><span>01. </span>坂井泉水 - きっと忘れない.mp3</a></li>
-            <li><a href="#"><span>02. </span>坂井泉水 - DAN DAN 心魅かれて.mp3</a></li>
-            <li><a href="#"><span>03. </span>坂井泉水 - Oh My Love.mp3</a></li>
-            <li><a href="#"><span>04. </span>坂井泉水 - 少女の頃に戻ったみたいに.mp3</a></li>
-            <li><a href="#"><span>05. </span>坂井泉水 - 息もできない.mp3</a></li>
-            <li><a href="#"><span>06. </span>坂井泉水 - 揺れる想い.mp3</a></li>
-            <li><a href="#"><span>07. </span>坂井泉水 - 负けないで.mp3</a></li>
+            <li><a href="#1"><span>01. </span><span>坂井泉水 - きっと忘れない.mp3</span></a></li>
+            <li><a href="#2"><span>02. </span><span>坂井泉水 - DAN DAN 心魅かれて.mp3</span></a></li>
+            <li><a href="#3"><span>03. </span><span>坂井泉水 - Oh My Love.mp3</span></a></li>
+            <li><a href="#4"><span>04. </span><span>坂井泉水 - 少女の頃に戻ったみたいに.mp3</span></a></li>
+            <li><a href="#5"><span>05. </span><span>坂井泉水 - 息もできない.mp3</span></a></li>
+            <li><a href="#6"><span>06. </span><span>坂井泉水 - 揺れる想い.mp3</span></a></li>
+            <li><a href="#7"><span>07. </span><span>坂井泉水 - 负けないで.mp3</span></a></li>
         </ul>
     </div>
 
@@ -305,11 +302,14 @@ footer h2 {
 
 <script type="text/javascript">
     $(document).ready(function(){
-        var player = $("#player");
+        var player = $("#player").get(0);
         $(".music_list li a").click(function(){
             $(".music_list li.playing").removeClass("playing");
             $(this).parent().addClass("playing");
             $(".music_name").text($(this).text());
+            $("#play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
+            player.src = "./music/" + $(this).find("span").eq(1).text();
+            player.play();
         });
 
         $(".next_button").click(function(){
@@ -331,7 +331,17 @@ footer h2 {
         });
 
         $("#play_control").click(function(){
-            $(this).find("div").toggleClass("play_button_triangle").toggleClass("pause_button_rect_x_2");
+            if($(".music_list li.playing").length == 0){
+                $(".music_list li a").first().click();
+            } else {
+                if(player.paused){
+                    $(this).find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
+                    player.play();
+                } else {
+                    $(this).find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
+                    player.pause(); 
+                }
+            }
         });
 
         (function(){
