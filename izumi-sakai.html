@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>music box</title>
+<style>
+* {margin: 0; padding: 0;}
+html {height: 100%;}
+body {
+    margin: auto; 
+    /*width: 1024px;*/
+    background-color: #E0FFFF;
+    height: 100%;
+}
+a {color: #000000; text-decoration: none;}
+header {
+    border-bottom: solid 3px #00FFFF;
+    padding: 36px 0 18px;
+    height: 30px;
+}
+header h2 {
+    text-align: center;
+    font-family: "Microsoft YaHei", Arial, Sans-Serif;
+    font-size: 36px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    opacity: 0.8;
+}
+footer {
+    border-top: solid 3px #00FFFF;
+    padding: 18px 0;
+    margin-top: 32px;
+    height: 30px;
+    bottom: 0;
+}
+footer h2 {
+    text-align: center;
+    font-size: 16px; 
+    font-family: "Microsoft YaHei", Arial, Sans-Serif;
+    opacity: 0.6;
+}
+.music_box {
+    min-height: 100%;
+    margin: auto; width: 512px;
+    margin-top: 32px;
+}
+.music_control {
+    position: relative; 
+    width: 512px; height: 102px; background-color: #CFCFCF;
+    -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
+    opacity: 0.8; border: solid 1px #B5B5B5;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#696969), to(#CFCFCF));
+    background-image: -webkit-linear-gradient(top, #696969, #CFCFCF);
+    background-image: -moz-linear-gradient(top, #696969, #CFCFCF);
+    background-image: -ms-linear-gradient(top, #696969, #CFCFCF);
+    background-image: -o-linear-gradient(top, #696969, #CFCFCF);
+    background-image: linear-gradient(top, #696969, #CFCFCF);
+}
+.box_shadow {
+    -webkit-box-shadow: 4px 4px 8px #4F4F4F;
+    -moz-box-shadow: 4px 4px 8px #4F4F4F;
+    box-shadow: 4px 4px 8px #4F4F4F;
+}
+.music_name {
+    position: absolute; font: 18px "Microsoft YaHei",Arial,Sans-Serif;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    left: 32px; top: 8px; width: 400px;
+}
+.elaspe_time {
+    position: absolute; 
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    width: 48px; left: 18px; top: 38px;
+}
+.elaspe_bar {
+    position: absolute; 
+    height: 18px;
+    -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
+    background-color: #363636;
+    left: 72px; top: 38px;
+    width: 180px; 
+}
+.duration_time {
+    position: absolute; 
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    width: 48px; right: 18px; top: 38px;
+}
+.duration_bar {
+    position: absolute; 
+    width: 360px; height: 18px;
+    -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
+    background-color: #E8E8E8;
+    opacity: 0.8;
+    left: 72px; top: 38px;
+}
+.control_button {
+    position: absolute; 
+    -moz-border-radius: 13px; -webkit-border-radius: 13px; border-radius: 13px;
+    border: solid 3px #363636;
+    width: 22px; height: 22px; bottom: 6px;
+    -webkit-box-shadow: 1px 1px 2px #4F4F4F;
+    -moz-box-shadow: 1px 1px 2px #4F4F4F;
+    box-shadow: 1px 1px 2px #4F4F4F;
+    cursor: pointer;
+}
+.control_button:hover {
+    border-color: #E8E8E8;
+}
+.button_rect {
+    position: absolute; 
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    background-color: #363636;
+    border: solid 1px #363636;
+    width: 2px; height: 12px; 
+}
+.pre_button {
+    left: 32px;
+}
+.pre_button_rect {
+    left: 3px; top: 4px;
+}
+.pre_and_next_button_triangle {
+    position: absolute; 
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    border-top: solid 8px transparent;
+    border-bottom: solid 8px transparent;
+    width: 0; height: 0; 
+}
+.pre_button_triangle {
+    border-right: solid 12px #363636;
+    left: 7px; top: 3px;
+}
+.play_button {
+    left: 68px;
+}
+.play_button_triangle {
+    position: absolute; 
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    border-left: solid 16px #363636;
+    border-top: solid 10px transparent;
+    border-bottom: solid 10px transparent;
+    width: 0; height: 0; left: 5px; top: 1px;
+}
+.pause_button_rect_x_2 {
+    position: absolute; 
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    border-top: solid 1px transparent;
+    border-bottom: solid 1px transparent;
+    border-left: solid 5px #363636;
+    border-right: solid 5px #363636;
+    width: 4px; height: 16px; left: 4px; top: 2px;
+}
+.next_button {
+    left: 102px;
+}
+.next_button_rect {
+    left: 15px; top: 4px;
+}
+.next_button_triangle {
+    border-left: solid 12px #363636;
+    left: 3px; top: 3px;
+}
+.volumn_icon {
+    position: absolute; 
+    /*border: solid 1px;*/
+    bottom: 8px; left: 160px; width: 22px; height: 22px;
+}
+.volumn_icon_rect {
+    position: absolute; 
+    -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px;
+    background-color: #363636;
+    border: solid 1px #363636;
+    width: 8px; height: 8px; left: 2px; top: 6px;
+}
+.volumn_icon_triangle {
+    position: absolute; 
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    border-top: solid 6px transparent;
+    border-bottom: solid 6px transparent;
+    border-right: solid 10px #363636;
+    width: 0; height: 8px; left: 9px; top: 1px;
+}
+.volumn_full_bar {
+    position: absolute; 
+    width: 120px; height: 12px;
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    background-color: #E8E8E8;
+    opacity: 0.8;
+    left: 200px; bottom: 13px;
+}
+.volumn_current_bar {
+    position: absolute; 
+    height: 12px;
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    background-color: #363636;
+    left: 200px; bottom: 13px;
+    width: 60px; 
+}
+.music_list {
+    position: relative; 
+    -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
+    border: solid 1px #B5B5B5; padding: 5px;
+    margin-top: 16px;
+    width: 512px; background-color: #FFFFFF;
+}
+.music_list ul {
+    list-style: none;
+    padding-bottom: 16px;
+}
+.music_list a {
+    color: #828282;
+}
+.music_list ul li {
+    position: relative;
+    border-bottom: solid 1px #B5B5B5;
+    padding: 16px 5px 8px;
+}
+.music_list ul li:hover {
+    opacity: 0.4;
+}
+.music_list ul li.playing a {
+    color: #000000;
+    font-weight: bold;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+/*
+.music_list ul li.playing:before {
+    content: ">>"; width: 14px; height: 14px; padding: 3px; line-height: 14px; 
+    margin: 0px; position: absolute; left: -30px; top: 18px; color: #000000; 
+    font-size: 16px; font-weight: bold; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+*/
+</style>
+<script src="./javascripts/jquery.min.js"></script>
+</head>
+
+<body>
+<header><h2>Izumi Sakai</h2></header>
+<div class="music_box">
+    <audio id="player"></audio>
+    <div class="music_control box_shadow">
+        <div class="music_name">music box</div>
+        <div class="elaspe_time">00:00</div>
+        <div class="duration_bar box_shadow"></div>
+        <div class="elaspe_bar"></div>
+        <div class="process_button"></div>
+        <div class="duration_time">10:24</div>
+
+        <div class="pre_button control_button">
+            <div class="pre_button_rect button_rect"></div>
+            <div class="pre_button_triangle pre_and_next_button_triangle"></div>
+        </div>
+        <div id="play_control" class="play_button control_button">
+            <div class="play_button_triangle"></div>
+            <!--
+            <div class="pause_button_rect_x_2"></div>
+            -->
+        </div>
+        <div class="next_button control_button">
+            <div class="next_button_rect button_rect"></div>
+            <div class="next_button_triangle pre_and_next_button_triangle"></div>
+        </div>
+
+        <div class="volumn_icon">
+            <div class="volumn_icon_rect"></div>
+            <div class="volumn_icon_triangle"></div>
+        </div>
+
+        <div class="volumn_full_bar box_shadow"></div>
+        <div class="volumn_current_bar"></div>
+        <div id="play_mode" class="play_mode_circle"></div>
+    </div>
+    <div class="music_list box_shadow">
+        <ul>
+            <li class="playing"><a href="#">01.zard - kitto masurenai.mp3</a></li>
+            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
+            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
+            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
+            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
+            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
+            <li><a href="#">01.zard - kitto masurenai.mp3</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<footer><h2>&copy;busuncle</h2></footer>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var playing_music_id = null;
+        var player = $("#player");
+        $(".music_list li a").click(function(){
+            $(".music_list li.playing").removeClass("playing");
+            $(this).parent().addClass("playing");
+        });
+        $(".control_button").mousedown(function(){
+        }).mouseup(function(){
+        }).click(function(){
+
+        });
+    });
+</script>
+
+</body>
+
+</html>
