@@ -76,7 +76,6 @@ footer h2 {
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
     background-color: #363636;
     left: 80px; top: 40px;
-    width: 170px; 
 }
 .elaspe_button {
     position: absolute; 
@@ -84,7 +83,7 @@ footer h2 {
     -moz-border-radius: 12px; -webkit-border-radius: 12px; border-radius: 12px;
     border: solid 2px #FFFFFF;
     background-color: #363636;
-    top: 36px; left: 242px;
+    top: 36px; /*left: 242px;*/
     cursor: pointer;
 }
 .duration_time {
@@ -201,7 +200,15 @@ footer h2 {
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     background-color: #363636;
     left: 200px; bottom: 13px;
-    width: 60px; 
+}
+.volumn_button {
+    position: absolute; 
+    height: 16px; width: 16px;
+    -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;
+    border: solid 2px #FFFFFF;
+    background-color: #363636;
+    bottom: 9px; left: 240px;
+    cursor: pointer;
 }
 .music_list {
     position: relative; 
@@ -242,7 +249,7 @@ footer h2 {
 </head>
 
 <body>
-<header><h2>Izumi Sakai</h2></header>
+<header><h2>Sakai Izumi</h2></header>
 <div class="music_box">
     <audio id="player"></audio>
     <div class="music_control box_shadow">
@@ -251,7 +258,6 @@ footer h2 {
         <div class="duration_bar"></div>
         <div class="elaspe_bar"></div>
         <div class="elaspe_button"></div>
-        <div class="process_button"></div>
         <div class="duration_time">10:24</div>
 
         <div class="pre_button control_button">
@@ -276,6 +282,7 @@ footer h2 {
 
         <div class="volumn_full_bar box_shadow"></div>
         <div class="volumn_current_bar"></div>
+        <div class="volumn_button"></div>
         <div id="play_mode" class="play_mode_circle"></div>
     </div>
     <div class="music_list box_shadow">
@@ -322,7 +329,71 @@ footer h2 {
 
         $("#play_control").click(function(){
             $(this).find("div").toggleClass("play_button_triangle").toggleClass("pause_button_rect_x_2");
-        })
+        });
+
+        (function(){
+            var mouse_is_down = false;
+            var x = null;
+            var lmin = $(".duration_bar").position().left - $(".elaspe_button").width() / 2;
+            var lmax = $(".duration_bar").position().left + $(".duration_bar").width() - $(".elaspe_button").width() / 2;
+            $(".elaspe_button").css({"left": lmin});
+            $(".elaspe_button").mousedown(function(e){
+                mouse_is_down = true;
+                x = e.pageX;
+            });
+
+            $(".music_control,.music_name,.elaspe_time,.duration_bar,.elaspe_bar,.elaspe_button,.duration_time").mousemove(function(e){
+                if(mouse_is_down){
+                    var dx = e.pageX - x;
+                    var lnew = $(".elaspe_button").position().left + dx;
+                    lnew = Math.max(lmin, lnew);
+                    lnew = Math.min(lnew, lmax);
+                    $(".elaspe_button").css({"left": lnew});
+                    $(".elaspe_bar").width(lnew - lmin);
+                    x = e.pageX;
+                }
+            }).mouseup(function(){
+                mouse_is_down = false;
+            });
+
+            $(".music_control").mouseleave(function(){
+                mouse_is_down = false;
+            });
+
+
+        })();
+
+        (function(){
+            var mouse_is_down = false;
+            var x = null;
+            var lmin = $(".volumn_full_bar").position().left - $(".volumn_button").width() / 2;
+            var lmax = $(".volumn_full_bar").position().left + $(".volumn_full_bar").width() - $(".volumn_button").width() / 2;
+            $(".volumn_button").css({"left": lmin});
+            $(".volumn_button").mousedown(function(e){
+                mouse_is_down = true;
+                x = e.pageX;
+            });
+
+            $(".music_control,.volumn_full_bar,.volumn_current_bar,.volumn_button").mousemove(function(e){
+                if(mouse_is_down){
+                    var dx = e.pageX - x;
+                    var lnew = $(".volumn_button").position().left + dx;
+                    lnew = Math.max(lmin, lnew);
+                    lnew = Math.min(lnew, lmax);
+                    $(".volumn_button").css({"left": lnew});
+                    $(".volumn_current_bar").width(lnew - lmin);
+                    x = e.pageX;
+
+                }
+            }).mouseup(function(){
+                mouse_is_down = false;
+            });
+
+            $(".music_control").mouseleave(function(){
+                mouse_is_down = false;
+            });
+
+        })();
 
     });
 </script>
