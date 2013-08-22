@@ -67,15 +67,19 @@ footer h2 {
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
     left: 24px; top: 7px; width: 90%;
 }
-.elaspe_time {
+.music_progress {
     position: absolute; 
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-    height: 16px; width: 48px; left: 18px; top: 40px;
+    height: 16px; width: 100%; top: 40px;
     vertical-align:middle; line-height: 16px;
+}
+.elaspe_time {
+    position: absolute; 
+    left: 18px;
 }
 .elaspe_bar {
     position: absolute; 
-    height: 16px;
+    height: 100%;
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
     background-color: #363636;
 }
@@ -93,19 +97,17 @@ footer h2 {
 }
 .duration_time {
     position: absolute; 
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-    height: 16px; width: 48px; right: 18px; top: 40px;
-    vertical-align:middle; line-height: 16px;
+    right: 18px;
 }
 .duration_wrapper {
     position: absolute; 
-    width: 340px; height: 16px;
-    left: 80px; top: 40px;
+    width: 68%; height: 100%;
+    margin-left: 16%; margin-right: 16%;
 }
 .duration_bar {
     position: absolute; 
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
-    width: 340px; height: 16px;
+    width: 100%; height: 100%;
     background-color: #000000;
     opacity: 0.2;
 }
@@ -276,13 +278,15 @@ footer h2 {
 <div class="music_box">
     <div class="music_control box_shadow">
         <div class="music_name">music box</div>
-        <div class="elaspe_time">00:00</div>
-        <div class="duration_wrapper">
-            <div class="duration_bar"></div>
-            <div class="elaspe_bar"></div>
-            <div class="elaspe_button"></div>
+        <div class="music_progress">
+            <div class="elaspe_time">00:00</div>
+            <div class="duration_wrapper">
+                <div class="duration_bar"></div>
+                <div class="elaspe_bar"></div>
+                <div class="elaspe_button"></div>
+            </div>
+            <div class="duration_time">00:00</div>
         </div>
-        <div class="duration_time">00:00</div>
 
         <div class="pre_button control_button">
             <div class="pre_button_rect button_rect"></div>
