@@ -171,19 +171,19 @@ footer h2 {
     border-left: solid 12px #363636;
     left: 3px; top: 3px;
 }
-.volumn_icon {
+.volume_icon {
     position: absolute; 
     /*border: solid 1px;*/
     bottom: 8px; left: 160px; width: 22px; height: 22px;
 }
-.volumn_icon_rect {
+.volume_icon_rect {
     position: absolute; 
     -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px;
     background-color: #363636;
     border: solid 1px #363636;
     width: 8px; height: 8px; left: 2px; top: 6px;
 }
-.volumn_icon_triangle {
+.volume_icon_triangle {
     position: absolute; 
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     border-top: solid 6px transparent;
@@ -191,25 +191,25 @@ footer h2 {
     border-right: solid 10px #363636;
     width: 0; height: 8px; left: 9px; top: 1px;
 }
-.volumn_bar_wrapper {
+.volume_bar_wrapper {
     position: absolute; 
     width: 120px; height: 12px;
     left: 200px; bottom: 13px;
 }
-.volumn_full_bar {
+.volume_full_bar {
     position: absolute; 
     width: 120px; height: 12px;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     background-color: #000000;
     opacity: 0.2;
 }
-.volumn_current_bar {
+.volume_current_bar {
     position: absolute; 
     height: 12px;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     background-color: #363636;
 }
-.volumn_button {
+.volume_button {
     position: absolute; 
     height: 16px; width: 16px;
     -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;
@@ -282,15 +282,15 @@ footer h2 {
             <div class="next_button_triangle pre_and_next_button_triangle"></div>
         </div>
 
-        <div class="volumn_icon">
-            <div class="volumn_icon_rect"></div>
-            <div class="volumn_icon_triangle"></div>
+        <div class="volume_icon">
+            <div class="volume_icon_rect"></div>
+            <div class="volume_icon_triangle"></div>
         </div>
 
-        <div class="volumn_bar_wrapper">
-            <div class="volumn_full_bar"></div>
-            <div class="volumn_current_bar"></div>
-            <div class="volumn_button"></div>
+        <div class="volume_bar_wrapper">
+            <div class="volume_full_bar"></div>
+            <div class="volume_current_bar"></div>
+            <div class="volume_button"></div>
         </div>
         <div id="play_mode" class="play_mode_circle"></div>
     </div>
@@ -399,33 +399,43 @@ footer h2 {
         })();
 
         (function(){
-            // control volumn bar related
+            // control volume bar related
             var mouse_is_down = false;
             var x = null;
-            var lmin =  - $(".volumn_button").width() / 2;
-            var lmax = $(".volumn_full_bar").width() - $(".volumn_button").width() / 2;
-            $(".volumn_button").css({"left": lmin});
-            $(".volumn_button").mousedown(function(e){
+            var lmin =  - $(".volume_button").width() / 2;
+            var lmax = $(".volume_full_bar").width() - $(".volume_button").width() / 2;
+            $(".volume_button").css({"left": lmin});
+            $(".volume_button").mousedown(function(e){
                 mouse_is_down = true;
                 x = e.pageX;
             });
 
-            $(".music_control,.volumn_full_bar,.volumn_current_bar,.volumn_button").mousemove(function(e){
+            function change_volume(ratio){
+                player.volume = parseFloat(ratio);
+            }
+
+            $(".music_control,.volume_full_bar,.volume_current_bar,.volume_button").mousemove(function(e){
                 if(mouse_is_down){
                     var dx = e.pageX - x;
-                    var lnew = $(".volumn_button").position().left + dx;
+                    var lnew = $(".volume_button").position().left + dx;
                     lnew = Math.max(lmin, lnew);
                     lnew = Math.min(lnew, lmax);
-                    $(".volumn_button").css({"left": lnew});
-                    $(".volumn_current_bar").width(lnew - lmin);
+                    $(".volume_button").css({"left": lnew});
+                    $(".volume_current_bar").width(lnew - lmin);
                     x = e.pageX;
 
                 }
             }).mouseup(function(){
+                if(mouse_is_down){
+                    change_volume($(".volume_current_bar").width() / $(".volume_full_bar").width());
+                }
                 mouse_is_down = false;
             });
 
             $(".music_control").mouseleave(function(){
+                if(mouse_is_down){
+                    change_volume($(".volume_current_bar").width() / $(".volume_full_bar").width());
+                }
                 mouse_is_down = false;
             });
 
