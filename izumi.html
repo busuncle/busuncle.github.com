@@ -453,11 +453,16 @@ footer h2 {
 
         (function(){
             // control volume bar related
+            var init_volume = 0.7;
+            $(".volume_current_bar").width($(".volume_full_bar").width() * init_volume);
+            $(".volume_button").css({"left": $(".volume_current_bar").width() - $(".volume_button").width() / 2});
+            change_volume(init_volume);
+
             var mouse_is_down = false;
             var x = null;
             var lmin =  - $(".volume_button").width() / 2;
             var lmax = $(".volume_full_bar").width() - $(".volume_button").width() / 2;
-            $(".volume_button").css({"left": lmin});
+
             $(".volume_button").mousedown(function(e){
                 mouse_is_down = true;
                 x = e.pageX;
