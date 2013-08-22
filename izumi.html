@@ -296,13 +296,6 @@ footer h2 {
     </div>
     <div class="music_list box_shadow">
         <ul>
-            <li><a href="#1"><span>01. </span><span>坂井泉水 - きっと忘れない.mp3</span></a></li>
-            <li><a href="#2"><span>02. </span><span>坂井泉水 - DAN DAN 心魅かれて.mp3</span></a></li>
-            <li><a href="#3"><span>03. </span><span>坂井泉水 - Oh My Love.mp3</span></a></li>
-            <li><a href="#4"><span>04. </span><span>坂井泉水 - 少女の頃に戻ったみたいに.mp3</span></a></li>
-            <li><a href="#5"><span>05. </span><span>坂井泉水 - 息もできない.mp3</span></a></li>
-            <li><a href="#6"><span>06. </span><span>坂井泉水 - 揺れる想い.mp3</span></a></li>
-            <li><a href="#7"><span>07. </span><span>坂井泉水 - 负けないで.mp3</span></a></li>
         </ul>
     </div>
 
@@ -312,6 +305,35 @@ footer h2 {
 
 <script type="text/javascript">
     $(document).ready(function(){
+        (function(){
+            // init music_list;
+            var music_list = [
+                "坂井泉水 - きっと忘れない.mp3",
+                "坂井泉水 - DAN DAN 心魅かれて.mp3",
+                "坂井泉水 - Oh My Love.mp3",
+                "坂井泉水 - 少女の頃に戻ったみたいに.mp3",
+                "坂井泉水 - 息もできない.mp3",
+                "坂井泉水 - 揺れる想い.mp3",
+                "坂井泉水 - 负けないで.mp3",
+            ];
+            for(var i = 0; i < music_list.length; i++){
+                // notice that i starts from 0
+                var li = $("<li>");
+                var a = $("<a>");
+                var span_order = $("<span>");
+                var span_name = $("<span>");
+
+                var j = i + 1;
+                span_order.text((j >= 10 ? j : "0" + j) + ". ");
+                span_name.text(music_list[i]);
+                a.append(span_order);
+                a.append(span_name);
+                a.attr("href", "#" + j);
+                li.append(a);
+                $(".music_list ul").append(li);
+            }
+        })();
+
         var player = $("#player").get(0);
         var elaspe_button_locked = false;
         var elaspe_timer = {
