@@ -78,6 +78,9 @@ footer h2 {
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
     background-color: #363636;
 }
+.elaspe_bar:hover {
+    cursor: pointer;
+}
 .elaspe_button {
     position: absolute; 
     height: 20px; width: 20px;
@@ -103,6 +106,9 @@ footer h2 {
     width: 340px; height: 16px;
     background-color: #000000;
     opacity: 0.2;
+}
+.duration_bar:hover {
+    cursor: pointer;
 }
 .control_button {
     position: absolute; 
@@ -203,11 +209,17 @@ footer h2 {
     background-color: #000000;
     opacity: 0.2;
 }
+.volume_full_bar:hover {
+    cursor: pointer;
+}
 .volume_current_bar {
     position: absolute; 
     height: 12px;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     background-color: #363636;
+}
+.volume_current_bar:hover {
+    cursor: pointer;
 }
 .volume_button {
     position: absolute; 
@@ -446,7 +458,8 @@ footer h2 {
                 x = e.pageX;
             });
 
-            function change_elaspe(ratio){
+            function change_elaspe(){
+                var ratio = $(".elaspe_bar").width() / $(".duration_bar").width();
                 player.currentTime = ratio * player.duration;
             }
 
@@ -462,7 +475,7 @@ footer h2 {
                 }
             }).mouseup(function(){
                 if(mouse_is_down){
-                    change_elaspe($(".elaspe_bar").width() / $(".duration_bar").width());
+                    change_elaspe();
                 }
                 mouse_is_down = false;
                 elaspe_button_locked = false;
@@ -470,11 +483,18 @@ footer h2 {
 
             $(".music_control").mouseleave(function(){
                 if(mouse_is_down){
-                    change_elaspe($(".elaspe_bar").width() / $(".duration_bar").width());
+                    change_elaspe();
                 }
                 mouse_is_down = false;
                 elaspe_button_locked = false;
             });
+
+            $(".duration_bar,.elaspe_bar").click(function(e){
+                $(".elaspe_bar").width(e.clientX - $(".duration_bar").offset().left);
+                $(".elaspe_button").css({"left": $(".elaspe_bar").width() - $(".elaspe_button").width() / 2});
+                change_elaspe();
+            });
+
         })();
 
         (function(){
@@ -494,7 +514,8 @@ footer h2 {
                 x = e.pageX;
             });
 
-            function change_volume(ratio){
+            function change_volume(){
+                var ratio = $(".volume_current_bar").width() / $(".volume_full_bar").width();
                 player.volume = parseFloat(ratio);
             }
 
@@ -511,16 +532,22 @@ footer h2 {
                 }
             }).mouseup(function(){
                 if(mouse_is_down){
-                    change_volume($(".volume_current_bar").width() / $(".volume_full_bar").width());
+                    change_volume();
                 }
                 mouse_is_down = false;
             });
 
             $(".music_control").mouseleave(function(){
                 if(mouse_is_down){
-                    change_volume($(".volume_current_bar").width() / $(".volume_full_bar").width());
+                    change_volume();
                 }
                 mouse_is_down = false;
+            });
+
+            $(".volume_current_bar,.volume_full_bar").click(function(e){
+                $(".volume_current_bar").width(e.clientX - $(".volume_full_bar").offset().left);
+                $(".volume_button").css({"left": $(".volume_current_bar").width() - $(".volume_button").width() / 2});
+                change_volume();
             });
 
         })();
