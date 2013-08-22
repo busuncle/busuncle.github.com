@@ -313,6 +313,7 @@ footer h2 {
 <script type="text/javascript">
     $(document).ready(function(){
         var player = $("#player").get(0);
+
         $(".music_list li a").click(function(){
             $(".music_list li.playing").removeClass("playing");
             $(this).parent().addClass("playing");
@@ -355,6 +356,7 @@ footer h2 {
         });
 
         (function(){
+            // control duration bar related logic
             var mouse_is_down = false;
             var x = null;
             var lmin = - $(".elaspe_button").width() / 2;
@@ -364,6 +366,10 @@ footer h2 {
                 mouse_is_down = true;
                 x = e.pageX;
             });
+
+            function change_elaspe(ratio){
+                player.currentTime = ratio * player.duration;
+            }
 
             $(".music_control,.music_name,.elaspe_time,.duration_bar,.elaspe_bar,.elaspe_button,.duration_time").mousemove(function(e){
                 if(mouse_is_down){
@@ -376,10 +382,16 @@ footer h2 {
                     x = e.pageX;
                 }
             }).mouseup(function(){
+                if(mouse_is_down){
+                    change_elaspe($(".elaspe_bar").width() / $(".duration_bar").width());
+                }
                 mouse_is_down = false;
             });
 
             $(".music_control").mouseleave(function(){
+                if(mouse_is_down){
+                    change_elaspe($(".elaspe_bar").width() / $(".duration_bar").width());
+                }
                 mouse_is_down = false;
             });
 
@@ -387,6 +399,7 @@ footer h2 {
         })();
 
         (function(){
+            // control volumn bar related
             var mouse_is_down = false;
             var x = null;
             var lmin =  - $(".volumn_button").width() / 2;
