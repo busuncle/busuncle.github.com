@@ -77,7 +77,6 @@ footer h2 {
     height: 16px;
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
     background-color: #363636;
-    left: 80px; top: 40px;
 }
 .elaspe_button {
     position: absolute; 
@@ -85,7 +84,7 @@ footer h2 {
     -moz-border-radius: 12px; -webkit-border-radius: 12px; border-radius: 12px;
     border: solid 2px #FFFFFF;
     background-color: #363636;
-    top: 36px; /*left: 242px;*/
+    top: -3px; left: -10px;
     cursor: pointer;
 }
 .duration_time {
@@ -93,13 +92,17 @@ footer h2 {
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
     width: 48px; right: 18px; top: 38px;
 }
-.duration_bar {
+.duration_wrapper {
     position: absolute; 
     width: 340px; height: 16px;
+    left: 80px; top: 40px;
+}
+.duration_bar {
+    position: absolute; 
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
+    width: 340px; height: 16px;
     background-color: #000000;
     opacity: 0.2;
-    left: 80px; top: 40px;
 }
 .control_button {
     position: absolute; 
@@ -188,20 +191,23 @@ footer h2 {
     border-right: solid 10px #363636;
     width: 0; height: 8px; left: 9px; top: 1px;
 }
+.volumn_bar_wrapper {
+    position: absolute; 
+    width: 120px; height: 12px;
+    left: 200px; bottom: 13px;
+}
 .volumn_full_bar {
     position: absolute; 
     width: 120px; height: 12px;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     background-color: #000000;
     opacity: 0.2;
-    left: 200px; bottom: 13px;
 }
 .volumn_current_bar {
     position: absolute; 
     height: 12px;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     background-color: #363636;
-    left: 200px; bottom: 13px;
 }
 .volumn_button {
     position: absolute; 
@@ -209,7 +215,7 @@ footer h2 {
     -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;
     border: solid 2px #FFFFFF;
     background-color: #363636;
-    bottom: 9px; left: 240px;
+    top: -4px; left: -8px;
     cursor: pointer;
 }
 .music_list {
@@ -257,9 +263,11 @@ footer h2 {
     <div class="music_control box_shadow">
         <div class="music_name">music box</div>
         <div class="elaspe_time">00:00</div>
-        <div class="duration_bar"></div>
-        <div class="elaspe_bar"></div>
-        <div class="elaspe_button"></div>
+        <div class="duration_wrapper">
+            <div class="duration_bar"></div>
+            <div class="elaspe_bar"></div>
+            <div class="elaspe_button"></div>
+        </div>
         <div class="duration_time">10:24</div>
 
         <div class="pre_button control_button">
@@ -279,9 +287,11 @@ footer h2 {
             <div class="volumn_icon_triangle"></div>
         </div>
 
-        <div class="volumn_full_bar box_shadow"></div>
-        <div class="volumn_current_bar"></div>
-        <div class="volumn_button"></div>
+        <div class="volumn_bar_wrapper">
+            <div class="volumn_full_bar"></div>
+            <div class="volumn_current_bar"></div>
+            <div class="volumn_button"></div>
+        </div>
         <div id="play_mode" class="play_mode_circle"></div>
     </div>
     <div class="music_list box_shadow">
@@ -347,8 +357,8 @@ footer h2 {
         (function(){
             var mouse_is_down = false;
             var x = null;
-            var lmin = $(".duration_bar").position().left - $(".elaspe_button").width() / 2;
-            var lmax = $(".duration_bar").position().left + $(".duration_bar").width() - $(".elaspe_button").width() / 2;
+            var lmin = - $(".elaspe_button").width() / 2;
+            var lmax = $(".duration_bar").width() - $(".elaspe_button").width() / 2;
             $(".elaspe_button").css({"left": lmin});
             $(".elaspe_button").mousedown(function(e){
                 mouse_is_down = true;
@@ -379,8 +389,8 @@ footer h2 {
         (function(){
             var mouse_is_down = false;
             var x = null;
-            var lmin = $(".volumn_full_bar").position().left - $(".volumn_button").width() / 2;
-            var lmax = $(".volumn_full_bar").position().left + $(".volumn_full_bar").width() - $(".volumn_button").width() / 2;
+            var lmin =  - $(".volumn_button").width() / 2;
+            var lmax = $(".volumn_full_bar").width() - $(".volumn_button").width() / 2;
             $(".volumn_button").css({"left": lmin});
             $(".volumn_button").mousedown(function(e){
                 mouse_is_down = true;
