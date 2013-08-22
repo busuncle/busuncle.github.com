@@ -313,6 +313,7 @@ footer h2 {
 <script type="text/javascript">
     $(document).ready(function(){
         var player = $("#player").get(0);
+        var elaspe_button_locked = false;
         var elaspe_timer = {
             run_id: null, 
             duration_time: null,
@@ -326,6 +327,11 @@ footer h2 {
                         this.duration_time = duration_time;
                     }
                 }
+                if(!elaspe_button_locked){
+                    var elaspe_ratio = player.currentTime / player.duration;
+                    $(".elaspe_bar").width($(".duration_bar").width() * elaspe_ratio);
+                    $(".elaspe_button").css({"left": $(".elaspe_bar").width() - $(".elaspe_button").width() / 2});
+                }
                 var _this = this;
                 this.run_id = setTimeout(function(){
                     _this.run();
@@ -338,6 +344,8 @@ footer h2 {
                 this.duration_time = null;
                 $(".elaspe_time").text("00:00");
                 $(".duration_time").text("00:00");
+                $(".elaspe_bar").width(0);
+                $(".elaspe_button").css({"left": $(".elaspe_button").width() / 2});
                 clearTimeout(this.run_id);    
             }
         }
@@ -408,6 +416,7 @@ footer h2 {
             $(".elaspe_button").css({"left": lmin});
             $(".elaspe_button").mousedown(function(e){
                 mouse_is_down = true;
+                elaspe_button_locked = true;
                 x = e.pageX;
             });
 
@@ -430,6 +439,7 @@ footer h2 {
                     change_elaspe($(".elaspe_bar").width() / $(".duration_bar").width());
                 }
                 mouse_is_down = false;
+                elaspe_button_locked = false;
             });
 
             $(".music_control").mouseleave(function(){
@@ -437,9 +447,8 @@ footer h2 {
                     change_elaspe($(".elaspe_bar").width() / $(".duration_bar").width());
                 }
                 mouse_is_down = false;
+                elaspe_button_locked = false;
             });
-
-
         })();
 
         (function(){
