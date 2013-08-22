@@ -331,8 +331,13 @@ footer h2 {
                     _this.run();
                 }, 1000);
             },
+            pause: function() {
+                clearTimeout(this.run_id);    
+            },
             stop: function(){
                 this.duration_time = null;
+                $(".elaspe_time").text("00:00");
+                $(".duration_time").text("00:00");
                 clearTimeout(this.run_id);    
             }
         }
@@ -356,6 +361,7 @@ footer h2 {
             $("#play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
             player.src = "./music/" + $(this).find("span").eq(1).text();
             player.play();
+            elaspe_timer.stop();
             elaspe_timer.run();
         });
 
@@ -388,7 +394,7 @@ footer h2 {
                 } else {
                     $(this).find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
                     player.pause(); 
-                    elaspe_timer.stop();
+                    elaspe_timer.pause();
                 }
             }
         });
