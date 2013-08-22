@@ -268,7 +268,7 @@ footer h2 {
             <div class="elaspe_bar"></div>
             <div class="elaspe_button"></div>
         </div>
-        <div class="duration_time">10:24</div>
+        <div class="duration_time">00:00</div>
 
         <div class="pre_button control_button">
             <div class="pre_button_rect button_rect"></div>
@@ -313,6 +313,41 @@ footer h2 {
 <script type="text/javascript">
     $(document).ready(function(){
         var player = $("#player").get(0);
+        var elaspe_timer = {
+            run_id: null, 
+            duration_time: null,
+            run: function(){
+                var elaspe_time = convert_seconds_to_time(player.currentTime);
+                $(".elaspe_time").text(elaspe_time);
+                if(!this.duration_time){
+                    var duration_time = convert_seconds_to_time(player.duration);
+                    if(duration_time){
+                        $(".duration_time").text(duration_time);
+                        this.duration_time = duration_time;
+                    }
+                }
+                var _this = this;
+                this.run_id = setTimeout(function(){
+                    _this.run();
+                }, 1000);
+            },
+            stop: function(){
+                this.duration_time = null;
+                clearTimeout(this.run_id);    
+            }
+        }
+
+        function convert_seconds_to_time(seconds){
+            // assume no more than 99 * 60 seconds
+            if(isNaN(seconds)){
+                return null;
+            }
+            var m = parseInt(seconds / 60);
+            var s = parseInt(seconds % 60);
+            m = m >= 10 ? m : "0" + m;
+            s = s >= 10 ? s : "0" + s;
+            return m + ":" + s;
+        }
 
         $(".music_list li a").click(function(){
             $(".music_list li.playing").removeClass("playing");
@@ -321,6 +356,7 @@ footer h2 {
             $("#play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
             player.src = "./music/" + $(this).find("span").eq(1).text();
             player.play();
+            elaspe_timer.run();
         });
 
         $(".next_button").click(function(){
@@ -348,9 +384,11 @@ footer h2 {
                 if(player.paused){
                     $(this).find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
                     player.play();
+                    elaspe_timer.run();
                 } else {
                     $(this).find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
                     player.pause(); 
+                    elaspe_timer.stop();
                 }
             }
         });
