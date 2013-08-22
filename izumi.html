@@ -63,9 +63,9 @@ footer h2 {
     box-shadow: 4px 4px 8px #4F4F4F;
 }
 .music_name {
-    position: absolute; font: 18px "Microsoft YaHei",Arial,Sans-Serif;
+    position: absolute; font: 16px "Microsoft YaHei",Arial,Sans-Serif;
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-    left: 32px; top: 6px; width: 400px;
+    left: 24px; top: 7px; width: 90%;
 }
 .elaspe_time {
     position: absolute; 
@@ -405,6 +405,10 @@ footer h2 {
                     elaspe_timer.pause();
                 }
             }
+        });
+
+        player.addEventListener("ended", function(){
+            $(".next_button").click();
         });
 
         (function(){
