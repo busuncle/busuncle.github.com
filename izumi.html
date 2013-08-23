@@ -504,7 +504,7 @@ footer h2 {
             var init_volume = 0.7;
             $(".volume_current_bar").width($(".volume_full_bar").width() * init_volume);
             $(".volume_button").css({"left": $(".volume_current_bar").width() - $(".volume_button").width() / 2});
-            change_volume(init_volume);
+            change_player_volume();
 
             var mouse_is_down = false;
             var x = null;
@@ -516,40 +516,39 @@ footer h2 {
                 x = e.pageX;
             });
 
-            function change_volume(){
+            function change_player_volume(){
+                // change the player.volume according volume_current_bar's width ratio;
                 var ratio = $(".volume_current_bar").width() / $(".volume_full_bar").width();
                 player.volume = parseFloat(ratio);
             }
 
+            function change_volume_bar(client_x){
+                // change the volume_current_bar's width and volume_button's position
+                $(".volume_current_bar").width(client_x - $(".volume_full_bar").offset().left);
+                $(".volume_button").css({"left": $(".volume_current_bar").width() - $(".volume_button").width() / 2});
+            }
+
             $(".music_control,.volume_full_bar,.volume_current_bar,.volume_button").mousemove(function(e){
                 if(mouse_is_down){
-                    var dx = e.pageX - x;
-                    var lnew = $(".volume_button").position().left + dx;
-                    lnew = Math.max(lmin, lnew);
-                    lnew = Math.min(lnew, lmax);
-                    $(".volume_button").css({"left": lnew});
-                    $(".volume_current_bar").width(lnew - lmin);
-                    x = e.pageX;
-
+                    change_volume_bar(e.clientX);
                 }
             }).mouseup(function(){
                 if(mouse_is_down){
-                    change_volume();
+                    change_player_volume();
                 }
                 mouse_is_down = false;
             });
 
             $(".music_control").mouseleave(function(){
                 if(mouse_is_down){
-                    change_volume();
+                    change_player_volume();
                 }
                 mouse_is_down = false;
             });
 
             $(".volume_current_bar,.volume_full_bar").click(function(e){
-                $(".volume_current_bar").width(e.clientX - $(".volume_full_bar").offset().left);
-                $(".volume_button").css({"left": $(".volume_current_bar").width() - $(".volume_button").width() / 2});
-                change_volume();
+                change_volume_bar(e.clientX);
+                change_player_volume();
             });
 
         })();
