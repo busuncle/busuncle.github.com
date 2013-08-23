@@ -95,7 +95,7 @@ footer h2 {
     position: absolute; 
     height: 100%;
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
-    background-color: #363636;
+    background-color: #4F4F4F;
     /*border: solid 1px #363636;*/
 }
 .elaspe_bar:hover {
@@ -190,30 +190,32 @@ footer h2 {
     right: 6px; top: 3px;
 }
 
+.volume_wrapper {
+    position: absolute;
+    left: 30%; bottom: 8%; width: 182px; height: 24px;
+}
 .volume_icon {
     position: absolute; 
-    /*border: solid 1px;*/
-    bottom: 8px; left: 160px; width: 22px; height: 22px;
+    width: 20%; height: 100%; top: 0; left: 0;
 }
 .volume_icon_rect {
     position: absolute; 
     -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px;
-    background-color: #363636;
-    border: solid 1px #363636;
-    width: 8px; height: 8px; left: 2px; top: 6px;
+    background-color: #828282;
+    width: 10px; height: 8px; left: 4px; top: 8px;
 }
 .volume_icon_triangle {
     position: absolute; 
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
-    border-top: solid 6px transparent;
-    border-bottom: solid 6px transparent;
-    border-right: solid 10px #363636;
-    width: 0; height: 8px; left: 9px; top: 1px;
+    border-top: solid 7px transparent;
+    border-bottom: solid 7px transparent;
+    border-right: solid 10px #828282;
+    width: 0; height: 8px; left: 12px; top: 1px;
 }
 .volume_full_bar {
     position: absolute; 
     width: 120px; height: 12px;
-    left: 200px; bottom: 13px;
+    right: 16px; top: 6px;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     box-shadow: 1px 1px 1px 1px #4F4F4F inset;
     border: solid 1px #4F4F4F;
@@ -226,8 +228,7 @@ footer h2 {
     position: absolute; 
     height: 12px;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
-    background-color: #363636;
-    /*border: solid 1px #363636;*/
+    background-color: #4F4F4F;
 }
 .volume_current_bar:hover {
     cursor: pointer;
@@ -285,7 +286,7 @@ footer h2 {
 <audio id="player" type="audio/mpeg"></audio>
 <div class="music_box">
     <div class="music_control">
-        <div class="music_name">iZumi</div>
+        <div class="music_name">iZumi &hearts;</div>
         <div class="music_progress">
             <div class="elaspe_time">00:00</div>
             <div class="duration_bar">
@@ -312,16 +313,17 @@ footer h2 {
             </div>
         </div>
 
-
-        <div class="volume_icon">
-            <div class="volume_icon_rect"></div>
-            <div class="volume_icon_triangle"></div>
+        <div class="volume_wrapper">
+            <div class="volume_icon">
+                <div class="volume_icon_rect"></div>
+                <div class="volume_icon_triangle"></div>
+            </div>
+            <div class="volume_full_bar">
+                <div class="volume_current_bar"></div>
+                <div class="volume_button"></div>
+            </div>
         </div>
 
-        <div class="volume_full_bar">
-            <div class="volume_current_bar"></div>
-            <div class="volume_button"></div>
-        </div>
         <div id="play_mode" class="play_mode_circle"></div>
     </div>
     <div class="music_list">
