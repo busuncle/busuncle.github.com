@@ -126,40 +126,32 @@ footer h2 {
 .duration_bar:hover {
     cursor: pointer;
 }
-.control_button {
-    position: absolute; 
-    -moz-border-radius: 18px; -webkit-border-radius: 18px; border-radius: 18px;
-    border: solid 3px #363636;
-    width: 22px; height: 22px; bottom: 6px;
-    -webkit-box-shadow: 1px 1px 1px #4F4F4F;
-    -moz-box-shadow: 1px 1px 1px #4F4F4F;
-    box-shadow: 1px 1px 1px #4F4F4F;
-    cursor: pointer;
-}
 .control_button_wrapper {
     position: absolute; 
-    border: solid 1px;
-    left: 6%; bottom: 6%; width: 96px; height: 24px;
+    left: 6%; bottom: 7%; width: 96px; height: 24px;
 }
-.control_button:hover {
+.control_button_wrapper .pre_button:hover, .play_button:hover, .next_button:hover {
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    border: solid 1px #828282;
     opacity: 0.6;
+    cursor: pointer;
 }
 .button_rect {
     position: absolute; 
-    background-color: #363636;
+    background-color: #828282;
     width: 6px; height: 18px; 
 }
 .pre_button {
     position: absolute;
     left: 0; top: 0; width: 33%; height: 100%;
-    border: solid 1px;
+    border: solid 1px transparent;
 }
 .pre_button_rect {
-    left: 6px; top: 2px;
+    left: 6px; top: 3px;
 }
 .pre_button_triangle {
-    border-right: solid 15px #363636;
-    right: 6px; top: 2px;
+    border-right: solid 15px #828282;
+    right: 6px; top: 3px;
 }
 .pre_and_next_button_triangle {
     position: absolute; 
@@ -170,36 +162,34 @@ footer h2 {
 .play_button {
     position: absolute; 
     left: 33%; width: 34%; height: 100%; top: 0;
-    border: solid 1px;
+    border: solid 1px transparent;
 }
 .play_button_triangle {
     position: absolute; 
-    border-left: solid 17px #363636;
+    border-left: solid 17px #828282;
     border-top: solid 10px transparent;
     border-bottom: solid 10px transparent;
-    width: 0; height: 0; left: 9px; top: 1px;
+    width: 0; height: 0; left: 9px; top: 2px;
 }
 .pause_button_rect_x_2 {
     position: absolute; 
-    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
-    border-top: solid 1px transparent;
-    border-bottom: solid 1px transparent;
-    border-left: solid 5px #363636;
-    border-right: solid 5px #363636;
-    width: 4px; height: 16px; left: 4px; top: 2px;
+    border-left: solid 6px #828282;
+    border-right: solid 6px #828282;
+    width: 6px; height: 19px; left: 8px; top: 2px;
 }
 .next_button {
     position: absolute; 
     left: 67%; top: 0; width: 33%; height: 100%;
-    border: solid 1px;
+    border: solid 1px transparent;
 }
 .next_button_triangle {
-    border-left: solid 15px #363636;
-    left: 6px; top: 2px;
+    border-left: solid 15px #828282;
+    left: 6px; top: 3px;
 }
 .next_button_rect {
-    right: 6px; top: 2px;
+    right: 6px; top: 3px;
 }
+
 .volume_icon {
     position: absolute; 
     /*border: solid 1px;*/
@@ -312,6 +302,9 @@ footer h2 {
             </div>
             <div id="play_control" class="play_button">
                 <div class="play_button_triangle"></div>
+                <!--
+                <div class="pause_button_rect_x_2"></div>
+                -->
             </div>
             <div class="next_button">
                 <div class="next_button_rect button_rect"></div>
