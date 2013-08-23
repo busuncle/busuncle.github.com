@@ -6,7 +6,7 @@
 <style>
 * {
     margin: 0; padding: 0;
-    font-family: "Microsoft YaHei", Arial, Sans-Serif;
+    font-family: 16px "Microsoft YaHei", Arial, Sans-Serif;
 }
 html {height: 100%;}
 body {
@@ -442,6 +442,14 @@ footer h2 {
                     elaspe_timer.pause();
                 }
             }
+        });
+
+        player.addEventListener("progress", function(){
+
+        });
+
+        player.addEventListener("canplay", function(){
+
         });
 
         player.addEventListener("ended", function(){
