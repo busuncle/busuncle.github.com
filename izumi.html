@@ -55,13 +55,28 @@ footer h2 {
     position: relative; 
     width: 512px; height: 102px; background-color: #CFCFCF;
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
-    opacity: 0.8; border: solid 1px #B5B5B5;
+    opacity: 0.8;
+    /*
     background-image: -webkit-gradient(linear, left top, left bottom, from(#696969), to(#CFCFCF));
     background-image: -webkit-linear-gradient(top, #696969, #CFCFCF);
     background-image: -moz-linear-gradient(top, #696969, #CFCFCF);
     background-image: -ms-linear-gradient(top, #696969, #CFCFCF);
     background-image: -o-linear-gradient(top, #696969, #CFCFCF);
     background-image: linear-gradient(top, #696969, #CFCFCF);
+    */
+
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#CFCFCF), to(#FFFFFF));
+    background-image: -webkit-linear-gradient(top, #CFCFCF, #FFFFFF);
+    background-image: -moz-linear-gradient(top, #CFCFCF, #FFFFFF);
+    background-image: -ms-linear-gradient(top, #CFCFCF, #FFFFFF);
+    background-image: -o-linear-gradient(top, #CFCFCF, #FFFFFF);
+    background-image: linear-gradient(top, #CFCFCF, #FFFFFF);
+
+    border-right: solid 1px #B5B5B5;
+    border-bottom: solid 1px #B5B5B5;
+    -webkit-box-shadow: 1px 1px 1px #4F4F4F;
+    -moz-box-shadow: 1px 1px 1px #4F4F4F;
+    box-shadow: 1px 1px 1px #4F4F4F;
 }
 .box_shadow {
     -webkit-box-shadow: 4px 4px 8px #4F4F4F;
@@ -90,7 +105,7 @@ footer h2 {
     height: 100%;
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
     background-color: #363636;
-    border: solid 1px #363636;
+    /*border: solid 1px #363636;*/
 }
 .elaspe_bar:hover {
     cursor: pointer;
@@ -122,12 +137,12 @@ footer h2 {
 }
 .control_button {
     position: absolute; 
-    -moz-border-radius: 13px; -webkit-border-radius: 13px; border-radius: 13px;
+    -moz-border-radius: 18px; -webkit-border-radius: 18px; border-radius: 18px;
     border: solid 3px #363636;
     width: 22px; height: 22px; bottom: 6px;
-    -webkit-box-shadow: 1px 1px 2px #4F4F4F;
-    -moz-box-shadow: 1px 1px 2px #4F4F4F;
-    box-shadow: 1px 1px 2px #4F4F4F;
+    -webkit-box-shadow: 1px 1px 1px #4F4F4F;
+    -moz-box-shadow: 1px 1px 1px #4F4F4F;
+    box-shadow: 1px 1px 1px #4F4F4F;
     cursor: pointer;
 }
 .control_button:hover {
@@ -224,7 +239,7 @@ footer h2 {
     height: 12px;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     background-color: #363636;
-    border: solid 1px #363636;
+    /*border: solid 1px #363636;*/
 }
 .volume_current_bar:hover {
     cursor: pointer;
@@ -281,7 +296,7 @@ footer h2 {
 <header><h2>iZumi</h2></header>
 <audio id="player" type="audio/mpeg"></audio>
 <div class="music_box">
-    <div class="music_control box_shadow">
+    <div class="music_control">
         <div class="music_name">music box</div>
         <div class="music_progress">
             <div class="elaspe_time">00:00</div>
@@ -315,7 +330,7 @@ footer h2 {
         </div>
         <div id="play_mode" class="play_mode_circle"></div>
     </div>
-    <div class="music_list box_shadow">
+    <div class="music_list">
         <ul>
             <!-- preserve a dom structure
             <li><a href="#1"><span>01. </span><span>song name</span></a></li>
