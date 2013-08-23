@@ -17,15 +17,21 @@ body {
 a {color: #000000; text-decoration: none;}
 header {
     border-bottom: solid 4px #87CEFA;
-    padding: 36px 0 24px;
-    height: 30px;
+    padding: 24px 0 8px;
+    height: 40px;
+    cursor: default;
 }
 header h2 {
+    line-height: 100%; 
+    vertical-align: middle;
     text-align: center;
     font-family: "Microsoft YaHei", Arial, Sans-Serif;
     font-size: 36px;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
     opacity: 0.7;
+}
+header h2:hover {
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
 }
 footer {
     border-top: solid 4px #87CEFA;
@@ -99,17 +105,12 @@ footer h2 {
     position: absolute; 
     right: 18px;
 }
-.duration_wrapper {
-    position: absolute; 
-    width: 68%; height: 100%;
-    margin-left: 16%; margin-right: 16%;
-}
 .duration_bar {
     position: absolute; 
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
-    width: 100%; height: 100%;
-    background-color: #000000;
-    opacity: 0.2;
+    width: 68%; height: 100%;
+    margin-left: 16%; margin-right: 16%;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 .duration_bar:hover {
     cursor: pointer;
@@ -201,17 +202,12 @@ footer h2 {
     border-right: solid 10px #363636;
     width: 0; height: 8px; left: 9px; top: 1px;
 }
-.volume_bar_wrapper {
-    position: absolute; 
-    width: 120px; height: 12px;
-    left: 200px; bottom: 13px;
-}
 .volume_full_bar {
     position: absolute; 
     width: 120px; height: 12px;
+    left: 200px; bottom: 13px;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
-    background-color: #000000;
-    opacity: 0.2;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 .volume_full_bar:hover {
     cursor: pointer;
@@ -280,8 +276,7 @@ footer h2 {
         <div class="music_name">music box</div>
         <div class="music_progress">
             <div class="elaspe_time">00:00</div>
-            <div class="duration_wrapper">
-                <div class="duration_bar"></div>
+            <div class="duration_bar">
                 <div class="elaspe_bar"></div>
                 <div class="elaspe_button"></div>
             </div>
@@ -305,8 +300,7 @@ footer h2 {
             <div class="volume_icon_triangle"></div>
         </div>
 
-        <div class="volume_bar_wrapper">
-            <div class="volume_full_bar"></div>
+        <div class="volume_full_bar">
             <div class="volume_current_bar"></div>
             <div class="volume_button"></div>
         </div>
