@@ -459,11 +459,18 @@ footer h2 {
             });
 
             function change_player_current_time(){
+                if(player.currentSrc == ""){
+                    return;
+                }
                 var ratio = $(".elaspe_bar").width() / $(".duration_bar").width();
                 player.currentTime = ratio * player.duration;
+                $(".elaspe_time").text(convert_seconds_to_time(player.currentTime));
             }
             
             function change_elaspe_bar(client_x){
+                if(player.currentSrc == ""){
+                    return;
+                }
                 // change elaspe_bar's width and elaspe_button's position
                 var full_width = $(".duration_bar").width();
                 var new_width = client_x - $(".duration_bar").offset().left;
