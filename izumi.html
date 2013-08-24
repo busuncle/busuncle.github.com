@@ -206,12 +206,19 @@ footer h2 {
 .volume_icon {
     position: absolute; 
     width: 20%; height: 100%; top: 0; left: 0;
+    border: solid 1px transparent;
+}
+.volume_icon:hover {
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    border: solid 1px #828282;
+    opacity: 0.6;
+    cursor: pointer;
 }
 .volume_icon_rect {
     position: absolute; 
     -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px;
     background-color: #828282;
-    width: 10px; height: 8px; left: 4px; top: 8px;
+    width: 10px; height: 8px; left: 8px; top: 8px;
 }
 .volume_icon_triangle {
     position: absolute; 
@@ -219,7 +226,7 @@ footer h2 {
     border-top: solid 7px transparent;
     border-bottom: solid 7px transparent;
     border-right: solid 10px #828282;
-    width: 0; height: 8px; left: 12px; top: 1px;
+    width: 0; height: 8px; left: 16px; top: 1px;
 }
 .volume_full_bar {
     position: absolute; 
