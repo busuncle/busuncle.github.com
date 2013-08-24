@@ -75,6 +75,7 @@ footer h2 {
     box-shadow: 4px 4px 8px #4F4F4F;
 }
 .music_name {
+    cursor: default;
     position: absolute; 
     font: 16px "Microsoft YaHei",Arial,Sans-Serif;
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
@@ -88,6 +89,7 @@ footer h2 {
     vertical-align:middle; line-height: 16px;
 }
 .elaspe_time {
+    cursor: default;
     position: absolute; 
     left: 18px;
 }
@@ -110,6 +112,7 @@ footer h2 {
     cursor: pointer;
 }
 .duration_time {
+    cursor: default;
     position: absolute; 
     right: 18px;
 }
@@ -509,7 +512,7 @@ footer h2 {
                 $(".elaspe_button").css({"left": $(".elaspe_bar").width() - $(".elaspe_button").width() / 2});
             }
 
-            $(".music_control,.music_name,.elaspe_time,.duration_bar,.elaspe_bar,.elaspe_button,.duration_time").mousemove(function(e){
+            $(".duration_bar,.elaspe_bar,.elaspe_button").mousemove(function(e){
                 if(mouse_is_down){
                     change_elaspe_bar(e.clientX);
                 }
@@ -521,7 +524,7 @@ footer h2 {
                 elaspe_button_locked = false;
             });
 
-            $(".music_control").mouseleave(function(){
+            $(".duration_bar").mouseleave(function(){
                 if(mouse_is_down){
                     change_player_current_time();
                 }
@@ -565,7 +568,7 @@ footer h2 {
                 $(".volume_button").css({"left": $(".volume_current_bar").width() - $(".volume_button").width() / 2});
             }
 
-            $(".music_control,.volume_full_bar,.volume_current_bar,.volume_button").mousemove(function(e){
+            $(".volume_full_bar,.volume_current_bar,.volume_button").mousemove(function(e){
                 if(mouse_is_down){
                     change_volume_bar(e.clientX);
                 }
@@ -576,7 +579,7 @@ footer h2 {
                 mouse_is_down = false;
             });
 
-            $(".music_control").mouseleave(function(){
+            $(".volume_full_bar").mouseleave(function(){
                 if(mouse_is_down){
                     change_player_volume();
                 }
