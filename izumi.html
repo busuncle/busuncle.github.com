@@ -584,7 +584,7 @@ footer h2 {
             }
         });
 
-        player.addEventListener("progress", function(){
+        player.addEventListener("loadstart", function(){
             var cur = $(".music_list ul li.playing");
             if(cur.find(".spinner").length ==0){
                 var spinner = $('<div class="spinner"></div>');
