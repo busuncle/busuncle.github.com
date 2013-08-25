@@ -335,6 +335,17 @@ footer h2 {
     -webkit-animation: spinner_rotate 0.7s linear 0s infinite;
     -o-animation: spinner_rotate 0.7s linear 0s infinite;
 }
+.mini_control {
+    display:none;
+    cursor: pointer;
+    font-weight: bold;
+    color: #FFFFFF;
+    position: fixed;
+    padding: 5px;
+    width: 40px; height: 40px;
+    right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
 </style>
 </head>
 
@@ -401,7 +412,7 @@ footer h2 {
             -->
         </ul>
     </div>
-
+    <div class="mini_control">回到顶部</div> 
 </div>
 
 <footer><h2>&copy;busuncle</h2></footer>
@@ -755,6 +766,23 @@ footer h2 {
             })());
 
         })();
+
+        $(window).bind("scroll", (function(){
+            var show_mini_control_scroll_top = $(".music_control").offset().top + $(".music_control").height();
+            return function(){
+                if($(document).scrollTop() > show_mini_control_scroll_top){
+                    $(".mini_control").show();
+                    //console.log($(document).scrollTop());
+                } else {
+                    $(".mini_control").hide();
+                }
+            }
+        })());
+
+        $(".mini_control").click(function(){
+            $("html, body").animate({ scrollTop: 0 }, 120);
+        });
+
     }
 </script>
 
