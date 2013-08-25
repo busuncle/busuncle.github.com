@@ -583,20 +583,33 @@ footer h2 {
             }
         });
 
-        player.addEventListener("loadstart", function(){
-            $(".music_name").text("歌曲加载中...");
+        function add_spinner_to_current_playing(){
             // clean old spinner
             $(".music_list ul li").find(".spinner").remove();
             var cur = $(".music_list ul li.playing");
             var spinner = $('<div class="spinner"></div>');
             spinner.css({"right": 10, "top": 12});
             cur.append(spinner);
+        }
+
+        player.addEventListener("loadstart", function(){
+            $(".music_name").text("歌曲加载中...");
+            add_spinner_to_current_playing();
+        });
+
+        player.addEventListener("waiting", function(){
+            add_spinner_to_current_playing();
         });
 
         player.addEventListener("canplay", function(){
             var cur = $(".music_list ul li.playing");
             cur.find(".spinner").remove();
             $(".music_name").text(cur.find("a").text());
+        });
+
+        player.addEventListener("error", function(){
+            $(".music_name").text("加载失败 :(");
+            $(".music_list ul li").find(".spinner").remove();
         });
 
         player.addEventListener("ended", function(){
