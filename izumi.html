@@ -585,12 +585,12 @@ footer h2 {
         });
 
         function add_spinner_to_current_playing(){
-            // clean old spinner
-            $(".music_list ul li").find(".spinner").remove();
             var cur = $(".music_list ul li.playing");
-            var spinner = $('<div class="spinner"></div>');
-            spinner.css({"right": 10, "top": 12});
-            cur.append(spinner);
+            if(cur.find(".spinner").length == 0){
+                var spinner = $('<div class="spinner"></div>');
+                spinner.css({"right": 10, "top": 12});
+                cur.append(spinner);
+            }
         }
 
         player.addEventListener("loadstart", function(){
