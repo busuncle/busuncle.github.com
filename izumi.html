@@ -302,6 +302,35 @@ footer h2 {
     font-weight: bold;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
+@keyframes spinner_rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@-moz-keyframes spinner_rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@-webkit-keyframes spinner_rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@-o-keyframes spinner_rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.spinner {
+    position: absolute; 
+    -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;
+    border-left: solid 5px rgba(0, 0, 0, 0.3);
+    border-top: solid 5px rgba(0, 0, 0, 0.35);
+    border-right: solid 5px rgba(0, 0, 0, 0.4);
+    border-bottom: solid 5px rgba(0, 0, 0, 0.5);
+    width: 10px; height: 10px;
+    animation: spinner_rotate 0.7s linear 0s infinite;
+    -moz-animation: spinner_rotate 0.7s linear 0s infinite;
+    -webkit-animation: spinner_rotate 0.7s linear 0s infinite;
+    -o-animation: spinner_rotate 0.7s linear 0s infinite;
+}
 /*
 .music_list ul li.playing:before {
     content: ">>"; width: 14px; height: 14px; padding: 3px; line-height: 14px; 
@@ -359,6 +388,9 @@ footer h2 {
         <div id="play_mode" class="play_mode_circle"></div>
     </div>
     <div class="music_list">
+        <!--
+        <div class="spinner"></div>
+        -->
         <ul>
             <li>正在加载列表...</li>
             <!-- preserve a dom structure
@@ -510,7 +542,7 @@ footer h2 {
         $(".music_list li a").click(function(){
             $(".music_list li.playing").removeClass("playing");
             $(this).parent().addClass("playing");
-            $(".music_name").text($(this).text());
+            $(".music_name").text("歌曲加载中...");
             $("#play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
             player.src = "./music/" + $(this).find("span").eq(1).text();
             player.play();
@@ -553,11 +585,16 @@ footer h2 {
         });
 
         player.addEventListener("progress", function(){
-
+            var cur = $(".music_list ul li.playing");
+            var spinner = $('<div class="spinner"></div>');
+            spinner.css({"right": 10, "top": 12});
+            cur.append(spinner);
         });
 
         player.addEventListener("canplay", function(){
-
+            var cur = $(".music_list ul li.playing");
+            cur.find(".spinner").remove();
+            $(".music_name").text(cur.find("a").text());
         });
 
         player.addEventListener("ended", function(){
