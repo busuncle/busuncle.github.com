@@ -30,6 +30,12 @@ header h2 {
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
     opacity: 0.7;
 }
+p.for_old_ie {
+    width: 100%;
+    line-height: 24px;
+    text-align: center;
+    background-color: rgba(0,0,0, 0.4);
+}
 header h2:hover {
     text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
 }
@@ -343,7 +349,12 @@ footer h2 {
 </head>
 
 <body>
-<header><h2>iZumi</h2></header>
+<!--[if lt IE 10]>
+<p class="for_old_ie">请使用IE10+或者其它新版本的Firefox、Chrome、Opera、Safari浏览</p>
+<![endif]-->
+<header>
+<h2>iZumi</h2>
+</header>
 <audio id="player" type="audio/mpeg"></audio>
 <div class="music_box">
     <div class="music_control">
