@@ -228,6 +228,16 @@ footer h2 {
     border-right: solid 10px #828282;
     width: 0; height: 8px; left: 16px; top: 1px;
 }
+.volume_mute {
+    position: absolute; 
+    left: 14px; top: 4px;
+    width: 18px; height: 18px;
+    line-height: 18px;
+    font-weight: bold;
+    font-size: 24px;
+    color: #FFFFFF;
+    display:none;
+}
 .volume_full_bar {
     position: absolute; 
     width: 120px; height: 12px;
@@ -338,6 +348,7 @@ footer h2 {
             <div class="volume_icon">
                 <div class="volume_icon_rect"></div>
                 <div class="volume_icon_triangle"></div>
+                <div class="volume_mute">&times;</div>
             </div>
             <div class="volume_full_bar">
                 <div class="volume_current_bar"></div>
@@ -615,16 +626,6 @@ footer h2 {
 
         (function(){
             // control volume bar related
-            var init_volume = 0.7;
-            $(".volume_current_bar").width($(".volume_full_bar").width() * init_volume);
-            $(".volume_button").css({"left": $(".volume_current_bar").width() - $(".volume_button").width() / 2});
-            change_player_volume();
-
-            var mouse_is_down = false;
-
-            $(".volume_button").mousedown(function(e){
-                mouse_is_down = true;
-            });
 
             function change_player_volume(){
                 // change the player.volume according volume_current_bar's width ratio;
@@ -632,19 +633,41 @@ footer h2 {
                 player.volume = parseFloat(ratio);
             }
 
-            function change_volume_bar(client_x){
+            function change_volume_bar_by_ratio(ratio){
+                $(".volume_current_bar").width($(".volume_full_bar").width() * ratio);
+                $(".volume_button").css({"left": $(".volume_current_bar").width() - $(".volume_button").width() / 2});
+                if(ratio > 0){  // additional volume_mute status setting
+                    $(".volume_mute").hide();
+                } else {
+                    $(".volume_mute").show();
+                }
+            }
+
+            function change_volume_bar_by_mouse(client_x){
                 // change the volume_current_bar's width and volume_button's position
                 var full_width = $(".volume_full_bar").width();
                 var new_width = client_x - $(".volume_full_bar").offset().left;
                 new_width = Math.max(0, new_width);
                 new_width = Math.min(new_width, full_width);
-                $(".volume_current_bar").width(new_width);
-                $(".volume_button").css({"left": $(".volume_current_bar").width() - $(".volume_button").width() / 2});
+                change_volume_bar_by_ratio(new_width / full_width);
             }
+
+            function auto_set_volume(ratio){
+                // change volume by script, both appearance and api
+                change_volume_bar_by_ratio(ratio);
+                change_player_volume();
+            }
+
+            auto_set_volume(0.7);
+            var mouse_is_down = false;
+
+            $(".volume_button").mousedown(function(e){
+                mouse_is_down = true;
+            });
 
             $(".volume_full_bar,.volume_current_bar,.volume_button").mousemove(function(e){
                 if(mouse_is_down){
-                    change_volume_bar(e.clientX);
+                    change_volume_bar_by_mouse(e.clientX);
                 }
             }).mouseup(function(){
                 if(mouse_is_down){
@@ -661,9 +684,21 @@ footer h2 {
             });
 
             $(".volume_current_bar,.volume_full_bar").click(function(e){
-                change_volume_bar(e.clientX);
+                change_volume_bar_by_mouse(e.clientX);
                 change_player_volume();
             });
+
+            $(".volume_icon").click((function(){
+                var volume_before_mute = null;
+                return function(){
+                    if(player.volume > 0){
+                        volume_before_mute = player.volume;
+                        auto_set_volume(0);
+                    } else {
+                        auto_set_volume(volume_before_mute);
+                    }
+                };
+            })());
 
         })();
     }
