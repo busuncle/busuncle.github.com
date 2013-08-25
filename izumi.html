@@ -542,7 +542,6 @@ footer h2 {
         $(".music_list li a").click(function(){
             $(".music_list li.playing").removeClass("playing");
             $(this).parent().addClass("playing");
-            $(".music_name").text("歌曲加载中...");
             $("#play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
             player.src = "./music/" + $(this).find("span").eq(1).text();
             player.play();
@@ -585,12 +584,13 @@ footer h2 {
         });
 
         player.addEventListener("loadstart", function(){
+            $(".music_name").text("歌曲加载中...");
+            // clean old spinner
+            $(".music_list ul li").find(".spinner").remove();
             var cur = $(".music_list ul li.playing");
-            if(cur.find(".spinner").length ==0){
-                var spinner = $('<div class="spinner"></div>');
-                spinner.css({"right": 10, "top": 12});
-                cur.append(spinner);
-            }
+            var spinner = $('<div class="spinner"></div>');
+            spinner.css({"right": 10, "top": 12});
+            cur.append(spinner);
         });
 
         player.addEventListener("canplay", function(){
