@@ -586,9 +586,11 @@ footer h2 {
 
         player.addEventListener("progress", function(){
             var cur = $(".music_list ul li.playing");
-            var spinner = $('<div class="spinner"></div>');
-            spinner.css({"right": 10, "top": 12});
-            cur.append(spinner);
+            if(cur.find(".spinner").length ==0){
+                var spinner = $('<div class="spinner"></div>');
+                spinner.css({"right": 10, "top": 12});
+                cur.append(spinner);
+            }
         });
 
         player.addEventListener("canplay", function(){
