@@ -428,7 +428,6 @@ footer h2 {
 
 <div class="bottom_music_control">
     <div class="mini_control">
-        
     </div>
     <div class="back_to_top">回到顶部</div> 
 </div>
@@ -751,11 +750,9 @@ footer h2 {
             $(".volume_full_bar,.volume_current_bar,.volume_button").mousemove(function(e){
                 if(mouse_is_down){
                     change_volume_bar_by_mouse(e.clientX);
-                }
-            }).mouseup(function(){
-                if(mouse_is_down){
                     change_player_volume();
                 }
+            }).mouseup(function(){
                 mouse_is_down = false;
             });
 
