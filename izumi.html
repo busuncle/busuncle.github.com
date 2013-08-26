@@ -291,7 +291,7 @@ footer h2 {
     border-bottom: solid 1px #B5B5B5;
     line-height: 48px;
     padding-left: 5px;
-    vertical-align:middle;
+    vertical-align: middle;
     margin: 5px;
 }
 .music_list ul li:hover {
@@ -357,6 +357,34 @@ footer h2 {
     position: absolute;
     width: 160px; height: 100%; top: 0;
     color: #FFFFFF;
+}
+.mini_music_status {
+    position: relative;
+    margin: 0 auto;
+    height: 100%; width: 512px;
+}
+.mini_duration_bar {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 512px; height: 10%;
+    left: 1px;
+    display: none;
+}
+.mini_elaspe_bar {
+    position: absolute; 
+    height: 100%;
+    background-color: rgba(0, 255, 255, 0.7);
+}
+.mini_music_name {
+    position: absolute;
+    color: #FFFFFF;
+    width: 100%; height: 70%;
+    text-align: center;
+    left: 0; bottom: 0;
+}
+.mini_music_status .spinner {
+    display: none;
+    bottom: 8px; right: 2px;
 }
 </style>
 </head>
@@ -427,6 +455,13 @@ footer h2 {
 </div>
 
 <div class="bottom_music_control">
+    <div class="mini_music_status">
+        <div class="mini_duration_bar">
+            <div class="mini_elaspe_bar"></div>
+        </div>
+        <div class="mini_music_name"></div>
+        <div class="spinner"></div>
+    </div>
     <div class="mini_control">
     </div>
     <div class="back_to_top">回到顶部</div> 
@@ -520,24 +555,31 @@ footer h2 {
         })();
 
         var player = $("#player").get(0);
-        var elaspe_button_locked = false;
         var elaspe_timer = {
             run_id: null, 
             duration_time: null,
+            button_locked: false;
+            change_elaspe_show: function(ratio){
+                // change elaspe_bar and elaspe_button, by mouse or script
+                $(".elaspe_bar").width($(".duration_bar").width() * ratio);
+                $(".elaspe_button").css({"left": $(".elaspe_bar").width() - $(".elaspe_button").width() / 2});
+                // for mini_elaspe_bar
+                $(".mini_elaspe_bar").width($(".mini_duration_bar").width() * ratio);
+            },
             run: function(){
                 var elaspe_time = convert_seconds_to_time(player.currentTime);
                 $(".elaspe_time").text(elaspe_time);
                 if(!this.duration_time){
+                    // a trick, player doesn't return exact duration immediately
                     var duration_time = convert_seconds_to_time(player.duration);
                     if(duration_time){
                         $(".duration_time").text(duration_time);
                         this.duration_time = duration_time;
                     }
                 }
-                if(!elaspe_button_locked){
+                if(!button_locked){
                     var elaspe_ratio = player.currentTime / player.duration;
-                    $(".elaspe_bar").width($(".duration_bar").width() * elaspe_ratio);
-                    $(".elaspe_button").css({"left": $(".elaspe_bar").width() - $(".elaspe_button").width() / 2});
+                    this.change_elaspe_show(elaspe_ratio);
                 }
                 var _this = this;
                 this.run_id = setTimeout(function(){
@@ -551,8 +593,7 @@ footer h2 {
                 this.duration_time = null;
                 $(".elaspe_time").text("00:00");
                 $(".duration_time").text("00:00");
-                $(".elaspe_bar").width(0);
-                $(".elaspe_button").css({"left": $(".elaspe_button").width() / 2});
+                this.change_elaspe_show(0);
                 clearTimeout(this.run_id);    
             }
         }
@@ -620,10 +661,14 @@ footer h2 {
                 spinner.css({"right": 10, "top": 12});
                 cur.append(spinner);
             }
+            // spinner at bottom
+            $(".mini_music_status .spinner").show();
         }
 
         player.addEventListener("loadstart", function(){
             $(".music_name").text("歌曲加载中...");
+            $(".mini_music_name").text("歌曲加载中...");
+            $(".mini_duration_bar").hide();
             add_spinner_to_current_playing();
         });
 
@@ -634,12 +679,18 @@ footer h2 {
         player.addEventListener("canplay", function(){
             var cur = $(".music_list ul li.playing");
             cur.find(".spinner").remove();
-            $(".music_name").text(cur.find("a").text());
+            var m_name = cur.find("a").text();
+            $(".music_name").text(m_name);
+            $(".mini_music_name").text(m_name);
+            $(".mini_music_status .spinner").hide();
+            $(".mini_music_status .mini_duration_bar").show();
         });
 
         player.addEventListener("error", function(){
             $(".music_name").text("加载失败 :(");
+            $(".mini_music_name").text("加载失败 :(");
             $(".music_list ul li").find(".spinner").remove();
+            $(".mini_music_status .spinner").hide();
             $("#play_control").find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
         });
 
@@ -649,13 +700,13 @@ footer h2 {
 
         (function(){
             // control duration bar related logic
-            $(".elaspe_button").css({"left": - $(".elaspe_button").width() / 2});
+            elaspe_timer.change_elaspe_show(0);
 
             var mouse_is_down = false;
 
             $(".elaspe_button").mousedown(function(e){
                 mouse_is_down = true;
-                elaspe_button_locked = true;
+                elaspe_timer.button_locked = true;
             });
 
             function change_player_current_time(){
@@ -667,7 +718,7 @@ footer h2 {
                 $(".elaspe_time").text(convert_seconds_to_time(player.currentTime));
             }
             
-            function change_elaspe_bar(client_x){
+            function change_elaspe_bar_by_mouse(client_x){
                 if(player.currentSrc == ""){
                     return;
                 }
@@ -676,20 +727,19 @@ footer h2 {
                 var new_width = client_x - $(".duration_bar").offset().left;
                 new_width = Math.max(0, new_width);
                 new_width = Math.min(new_width, full_width);
-                $(".elaspe_bar").width(new_width);
-                $(".elaspe_button").css({"left": $(".elaspe_bar").width() - $(".elaspe_button").width() / 2});
+                elaspe_timer.change_elaspe_show(new_width / full_width);
             }
 
             $(".duration_bar,.elaspe_bar,.elaspe_button").mousemove(function(e){
                 if(mouse_is_down){
-                    change_elaspe_bar(e.clientX);
+                    change_elaspe_bar_by_mouse(e.clientX);
                 }
             }).mouseup(function(){
                 if(mouse_is_down){
                     change_player_current_time();
                 }
                 mouse_is_down = false;
-                elaspe_button_locked = false;
+                elaspe_timer.button_locked = false;
             });
 
             $(".duration_bar").mouseleave(function(){
@@ -697,11 +747,11 @@ footer h2 {
                     change_player_current_time();
                 }
                 mouse_is_down = false;
-                elaspe_button_locked = false;
+                elaspe_timer.button_locked = false;
             });
 
             $(".duration_bar,.elaspe_bar").click(function(e){
-                change_elaspe_bar(e.clientX);
+                change_elaspe_bar_by_mouse(e.clientX);
                 change_player_current_time();
             });
 
