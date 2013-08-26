@@ -640,6 +640,7 @@ footer h2 {
         player.addEventListener("error", function(){
             $(".music_name").text("加载失败 :(");
             $(".music_list ul li").find(".spinner").remove();
+            $("#play_control").find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
         });
 
         player.addEventListener("ended", function(){
