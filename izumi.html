@@ -558,7 +558,7 @@ footer h2 {
         var elaspe_timer = {
             run_id: null, 
             duration_time: null,
-            button_locked: false;
+            button_locked: false,
             change_elaspe_show: function(ratio){
                 // change elaspe_bar and elaspe_button, by mouse or script
                 $(".elaspe_bar").width($(".duration_bar").width() * ratio);
@@ -577,7 +577,7 @@ footer h2 {
                         this.duration_time = duration_time;
                     }
                 }
-                if(!button_locked){
+                if(!this.button_locked){
                     var elaspe_ratio = player.currentTime / player.duration;
                     this.change_elaspe_show(elaspe_ratio);
                 }
