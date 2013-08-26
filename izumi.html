@@ -335,16 +335,28 @@ footer h2 {
     -webkit-animation: spinner_rotate 0.7s linear 0s infinite;
     -o-animation: spinner_rotate 0.7s linear 0s infinite;
 }
-.mini_control {
+.bottom_music_control {
     display:none;
-    cursor: pointer;
     font-weight: bold;
-    color: #FFFFFF;
     position: fixed;
-    padding: 5px;
-    width: 40px; height: 40px;
-    right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%; height: 40px;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.back_to_top {
+    cursor: pointer;
+    color: #FFFFFF;
+    position: absolute;
+    width: 80px; height: 40px;
+    right: 0; top: 0;
+    line-height: 40px;
+    vertical-align: middle;
+    text-align: center;
+}
+.mini_control {
+    position: absolute;
+    width: 160px; height: 100%; top: 0;
+    color: #FFFFFF;
 }
 </style>
 </head>
@@ -412,7 +424,13 @@ footer h2 {
             -->
         </ul>
     </div>
-    <div class="mini_control">回到顶部</div> 
+</div>
+
+<div class="bottom_music_control">
+    <div class="mini_control">
+        
+    </div>
+    <div class="back_to_top">回到顶部</div> 
 </div>
 
 <footer><h2>&copy;busuncle</h2></footer>
@@ -768,18 +786,23 @@ footer h2 {
         })();
 
         $(window).bind("scroll", (function(){
-            var show_mini_control_scroll_top = $(".music_control").offset().top + $(".music_control").height();
+            // some init
+            var show_bottom_control_top = $(".music_control").offset().top + $(".music_control").height();
+            $(".mini_control").css("left", $(".music_list").offset().left + $(".music_list").width());
             return function(){
-                if($(document).scrollTop() > show_mini_control_scroll_top){
-                    $(".mini_control").show();
-                    //console.log($(document).scrollTop());
+                if($(document).scrollTop() > show_bottom_control_top){
+                    $(".bottom_music_control").fadeIn();
                 } else {
-                    $(".mini_control").hide();
+                    $(".bottom_music_control").fadeOut();
                 }
             }
         })());
 
-        $(".mini_control").click(function(){
+        $(window).resize(function(){
+            $(".mini_control").css("left", $(".music_list").offset().left + $(".music_list").width());
+        });
+
+        $(".back_to_top").click(function(){
             $("html, body").animate({ scrollTop: 0 }, 120);
         });
 
