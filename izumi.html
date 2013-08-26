@@ -688,8 +688,8 @@ footer h2 {
         });
 
         player.addEventListener("error", function(){
-            $(".music_name").text("加载失败 :(");
-            $(".mini_music_name").text("加载失败 :(");
+            $(".music_name").text("加载失败，建议用Chrome浏览 :(");
+            $(".mini_music_name").text("加载失败，建议用Chrome浏览 :(");
             $(".music_list ul li").find(".spinner").remove();
             $(".mini_music_status .spinner").hide();
             $("#play_control").find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
