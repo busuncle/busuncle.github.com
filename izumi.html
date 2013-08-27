@@ -436,25 +436,16 @@ footer h2 {
 .mini_next_button .button_rect {
     right: 16px; top: 11px;
 }
-.music_roll {
-    display: none;
+.music_slide {
     position: absolute;
     width: 20px; height: 18px;
     border-bottom: solid 2px;
 }
-@keyframes rolling_bar {
-    from { height: 0%; }
-    to { height: 40%; }
-}
-.music_roll .music_bar {
+.music_slide .music_bar {
     position: absolute;
     width: 3px;
     background-color: #000000;
     bottom: 0;
-    animation: rolling_bar 0.7s linear 0s infinite;
-    -moz-animation: rolling_bar 0.7s linear 0s infinite;
-    -webkit-animation: rolling_bar 0.7s linear 0s infinite;
-    -o-animation: rolling_bar 0.7s linear 0s infinite;
 }
 </style>
 </head>
@@ -553,7 +544,7 @@ footer h2 {
 
 <footer><h2>&copy;busuncle</h2></footer>
 
-<div class="music_roll" id="music_roll_model">
+<div class="music_slide" style="display:none">
     <div style="left: 2px; height: 1px;"></div>
     <div style="left: 5px; height: 1px;"></div>
     <div style="left: 8px; height: 1px;"></div>
@@ -686,7 +677,7 @@ footer h2 {
                 $(".elaspe_time").text("00:00");
                 $(".duration_time").text("00:00");
                 this.change_elaspe_show(0);
-                $(".music_list .music_roll").remove();
+                $(".music_list div.music_slide").remove();
                 clearTimeout(this.run_id);    
             }
         }
@@ -777,18 +768,31 @@ footer h2 {
             $(".mini_music_name").text(m_name);
             $(".mini_music_status .spinner").hide();
             $(".mini_music_status .mini_duration_bar").show();
-            // add music_roll to the current playing music
-            var music_roll = $("#music_roll_model");
-            music_roll.find("div").each(function(idx){
-                (function(bar_object, i){
-                    setTimeout(function(){
-                        bar_object.attr("class", "music_bar");
-                    }, i * 1000 * Math.random());
-                })($(this), idx);
-            });
-            music_roll.css({"right": 10, "top": 12});
-            music_roll.show();
-            cur.append(music_roll);
+            // add music_slide to the current playing music
+            function rock_and_roll(bar){
+                setTimeout(function(){
+                    var height_ratio = parseInt(Math.random() * 100) + "%";
+                    bar.animate({height: height_ratio}, 500).animate({height: "0%"}, 500, function(){
+                        rock_and_roll(bar);
+                    });
+                }, Math.random() * 500);
+            }
+            if(cur.find(".music_slide").length == 0){
+                var music_slide = $("<div>");
+                music_slide.attr("class", "music_slide");
+                music_slide.css({"right": 10, "top": 12});
+                var left = 2;
+                while(left <= 14){
+                    var bar = $("<div>");
+                    bar.attr("class", "music_bar");
+                    bar.css("left", left);
+                    bar.css("height", 0);
+                    music_slide.append(bar);
+                    rock_and_roll(bar);
+                    left += 3;
+                }
+                cur.append(music_slide);
+            }
         });
 
         player.addEventListener("error", function(){
