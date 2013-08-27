@@ -344,14 +344,18 @@ footer h2 {
     background-color: rgba(0, 0, 0, 0.6);
 }
 .back_to_top {
-    cursor: pointer;
     color: #FFFFFF;
+    opacity: 0.8;
     position: absolute;
     width: 80px; height: 40px;
     right: 0; top: 0;
     line-height: 40px;
     vertical-align: middle;
     text-align: center;
+}
+.back_to_top:hover {
+    cursor: pointer;
+    opacity:1;
 }
 .mini_control {
     position: absolute;
@@ -386,6 +390,13 @@ footer h2 {
 .mini_music_status .spinner {
     display: none;
     bottom: 8px; right: 2px;
+}
+.mini_control .mini_pre_button, .mini_play_button, .mini_next_button {
+    opacity: 0.8;
+}
+.mini_control .mini_pre_button:hover, .mini_play_button:hover, .mini_next_button:hover {
+    cursor: pointer;
+    opacity: 1;
 }
 .mini_control .button_rect {
     background-color: #FFFFFF;
