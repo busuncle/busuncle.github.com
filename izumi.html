@@ -355,7 +355,7 @@ footer h2 {
 }
 .mini_control {
     position: absolute;
-    width: 160px; height: 100%; top: 0;
+    width: 150px; height: 100%; top: 0;
     color: #FFFFFF;
 }
 .mini_music_status {
@@ -387,17 +387,43 @@ footer h2 {
     display: none;
     bottom: 8px; right: 2px;
 }
+.mini_control .button_rect {
+    background-color: #FFFFFF;
+}
+.mini_pre_button .pre_button_triangle {
+    border-right-color: #FFFFFF;
+    right: 16px; top: 11px;
+}
 .mini_pre_button {
     position: absolute; 
     height: 100%; width: 32%; left: 0; top: 0;
+}
+.mini_pre_button .button_rect {
+    left: 16px; top: 11px;
 }
 .mini_play_button {
     position: absolute; 
     height: 100%; width: 32%; left: 34%; top: 0;
 }
+.mini_play_button .play_button_triangle {
+    border-left-color: #FFFFFF;
+    left: 18px; top: 11px;
+}
+.mini_play_button .pause_button_rect_x_2 {
+    border-left-color: #FFFFFF;
+    border-right-color: #FFFFFF;
+    left: 16px; top: 11px;
+}
 .mini_next_button {
     position: absolute; 
     height: 100%; width: 32%; left: 68%; top: 0;
+}
+.mini_next_button .next_button_triangle {
+    border-left-color: #FFFFFF;
+    left: 16px; top: 11px;
+}
+.mini_next_button .button_rect {
+    right: 16px; top: 11px;
 }
 </style>
 </head>
@@ -476,9 +502,20 @@ footer h2 {
         <div class="spinner"></div>
     </div>
     <div class="mini_control">
-        <div class="mini_pre_button"></div>
-        <div class="mini_play_button"></div>
-        <div class="mini_next_button"></div>
+        <div class="mini_pre_button">
+            <div class="button_rect"></div>
+            <div class="pre_button_triangle pre_and_next_button_triangle"></div>
+        </div>
+        <div class="mini_play_button">
+            <div class="play_button_triangle"></div>
+            <!--
+            <div class="pause_button_rect_x_2"></div>
+            -->
+        </div>
+        <div class="mini_next_button">
+            <div class="next_button_triangle pre_and_next_button_triangle"></div>
+            <div class="button_rect"></div>
+        </div>
     </div>
     <div class="back_to_top">回到顶部</div> 
 </div>
