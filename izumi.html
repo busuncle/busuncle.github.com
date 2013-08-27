@@ -436,10 +436,25 @@ footer h2 {
 .mini_next_button .button_rect {
     right: 16px; top: 11px;
 }
+.bottom_left_music_info {
+    position: absolute;
+    height: 100%; width: 80px;
+    top: 0;
+}
+.bottom_left_music_info .music_slide {
+    border-bottom-color: #FFFFFF;
+}
+.bottom_left_music_info .music_slide .music_bar {
+    background-color: #FFFFFF;
+}
+.bottom_left_music_info .spinner {
+    bottom: 10px; top: 12px;
+}
 .music_slide {
     position: absolute;
     width: 20px; height: 18px;
-    border-bottom: solid 2px;
+    border-bottom: solid 2px #000000;
+    right: 10px; top: 12px;
 }
 .music_slide .music_bar {
     position: absolute;
@@ -516,6 +531,7 @@ footer h2 {
 </div>
 
 <div class="bottom_music_control">
+    <div class="bottom_left_music_info"></div>
     <div class="mini_music_status">
         <div class="mini_duration_bar">
             <div class="mini_elaspe_bar"></div>
@@ -760,6 +776,39 @@ footer h2 {
             add_spinner_to_current_playing();
         });
 
+        function add_music_slide(){
+            function rock_and_roll(bar){
+                setTimeout(function(){
+                    var height_ratio = parseInt(Math.random() * 100) + "%";
+                    bar.animate({height: height_ratio}, 500).animate({height: "0%"}, 500, function(){
+                        rock_and_roll(bar);
+                    });
+                }, Math.random() * 500);
+            }
+            function append_to_some_object(obj){
+                if(obj.find(".music_slide").length == 0){
+                    var music_slide = $("<div>");
+                    music_slide.attr("class", "music_slide");
+                    var left = 2;
+                    while(left <= 14){
+                        var bar = $("<div>");
+                        bar.attr("class", "music_bar");
+                        bar.css("left", left);
+                        bar.css("height", 0);
+                        music_slide.append(bar);
+                        rock_and_roll(bar);
+                        left += 3;
+                    }
+                    obj.append(music_slide);
+                }
+
+            }
+            var playing_li = $(".music_list ul li.playing");
+            append_to_some_object(playing_li);
+            var bottom_left_music_info = $(".bottom_left_music_info");
+            append_to_some_object(bottom_left_music_info);
+        }
+
         player.addEventListener("canplay", function(){
             var cur = $(".music_list ul li.playing");
             cur.find(".spinner").remove();
@@ -769,30 +818,7 @@ footer h2 {
             $(".mini_music_status .spinner").hide();
             $(".mini_music_status .mini_duration_bar").show();
             // add music_slide to the current playing music
-            function rock_and_roll(bar){
-                setTimeout(function(){
-                    var height_ratio = parseInt(Math.random() * 100) + "%";
-                    bar.animate({height: height_ratio}, 500).animate({height: "0%"}, 500, function(){
-                        rock_and_roll(bar);
-                    });
-                }, Math.random() * 500);
-            }
-            if(cur.find(".music_slide").length == 0){
-                var music_slide = $("<div>");
-                music_slide.attr("class", "music_slide");
-                music_slide.css({"right": 10, "top": 12});
-                var left = 2;
-                while(left <= 14){
-                    var bar = $("<div>");
-                    bar.attr("class", "music_bar");
-                    bar.css("left", left);
-                    bar.css("height", 0);
-                    music_slide.append(bar);
-                    rock_and_roll(bar);
-                    left += 3;
-                }
-                cur.append(music_slide);
-            }
+            add_music_slide();
         });
 
         player.addEventListener("error", function(){
@@ -946,6 +972,7 @@ footer h2 {
             // some init
             var show_bottom_control_top = $(".music_control").offset().top + $(".music_control").height();
             $(".mini_control").css("left", $(".music_list").offset().left + $(".music_list").width());
+            $(".bottom_left_music_info").css("left", $(".music_list").offset().left - $(".bottom_left_music_info").width());
             return function(){
                 if($(document).scrollTop() > show_bottom_control_top){
                     $(".bottom_music_control").fadeIn();
@@ -957,6 +984,7 @@ footer h2 {
 
         $(window).resize(function(){
             $(".mini_control").css("left", $(".music_list").offset().left + $(".music_list").width());
+            $(".bottom_left_music_info").css("left", $(".music_list").offset().left - $(".bottom_left_music_info").width());
         });
 
         $(".back_to_top").click(function(){
