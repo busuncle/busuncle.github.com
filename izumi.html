@@ -506,7 +506,7 @@ footer h2 {
             <div class="button_rect"></div>
             <div class="pre_button_triangle pre_and_next_button_triangle"></div>
         </div>
-        <div class="mini_play_button">
+        <div id="mini_play_control" class="mini_play_button">
             <div class="play_button_triangle"></div>
             <!--
             <div class="pause_button_rect_x_2"></div>
@@ -666,14 +666,14 @@ footer h2 {
         $(".music_list li a").click(function(){
             $(".music_list li.playing").removeClass("playing");
             $(this).parent().addClass("playing");
-            $("#play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
+            $("#play_control,#mini_play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
             player.src = "./music/" + $(this).find("span").eq(1).text();
             player.play();
             elaspe_timer.stop();
             elaspe_timer.run();
         });
 
-        $(".next_button").click(function(){
+        $(".next_button,.mini_next_button").click(function(){
             var next_music = $(".music_list li.playing").next();
             if(next_music.length == 1){
                 next_music.find("a").click();
@@ -682,7 +682,7 @@ footer h2 {
             }
         });
 
-        $(".pre_button").click(function(){
+        $(".pre_button,.mini_pre_button").click(function(){
             var pre_music = $(".music_list li.playing").prev();
             if(pre_music.length == 1){
                 pre_music.find("a").click();
@@ -691,7 +691,7 @@ footer h2 {
             }
         });
 
-        $("#play_control").click(function(){
+        $("#play_control,#mini_play_control").click(function(){
             if($(".music_list li.playing").length == 0){
                 $(".music_list li a").first().click();
             } else {
@@ -744,7 +744,7 @@ footer h2 {
             $(".mini_music_name").text("加载失败，建议用Chrome浏览 :(");
             $(".music_list ul li").find(".spinner").remove();
             $(".mini_music_status .spinner").hide();
-            $("#play_control").find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
+            $("#play_control,#mini_play_control").find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
         });
 
         player.addEventListener("ended", function(){
