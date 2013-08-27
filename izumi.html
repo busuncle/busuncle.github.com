@@ -436,6 +436,26 @@ footer h2 {
 .mini_next_button .button_rect {
     right: 16px; top: 11px;
 }
+.music_roll {
+    display: none;
+    position: absolute;
+    width: 20px; height: 18px;
+    border-bottom: solid 2px;
+}
+@keyframes rolling_bar {
+    from { height: 0%; }
+    to { height: 40%; }
+}
+.music_roll .music_bar {
+    position: absolute;
+    width: 3px;
+    background-color: #000000;
+    bottom: 0;
+    animation: rolling_bar 0.7s linear 0s infinite;
+    -moz-animation: rolling_bar 0.7s linear 0s infinite;
+    -webkit-animation: rolling_bar 0.7s linear 0s infinite;
+    -o-animation: rolling_bar 0.7s linear 0s infinite;
+}
 </style>
 </head>
 
@@ -532,6 +552,14 @@ footer h2 {
 </div>
 
 <footer><h2>&copy;busuncle</h2></footer>
+
+<div class="music_roll" id="music_roll_model">
+    <div style="left: 2px; height: 1px;"></div>
+    <div style="left: 5px; height: 1px;"></div>
+    <div style="left: 8px; height: 1px;"></div>
+    <div style="left: 11px; height: 1px;"></div>
+    <div style="left: 14px; height: 1px;"></div>
+</div>
 
 <!--
 <script src="./javascripts/jquery.min.js"></script>
@@ -658,6 +686,7 @@ footer h2 {
                 $(".elaspe_time").text("00:00");
                 $(".duration_time").text("00:00");
                 this.change_elaspe_show(0);
+                $(".music_list .music_roll").remove();
                 clearTimeout(this.run_id);    
             }
         }
@@ -748,6 +777,18 @@ footer h2 {
             $(".mini_music_name").text(m_name);
             $(".mini_music_status .spinner").hide();
             $(".mini_music_status .mini_duration_bar").show();
+            // add music_roll to the current playing music
+            var music_roll = $("#music_roll_model");
+            music_roll.find("div").each(function(idx){
+                (function(bar_object, i){
+                    setTimeout(function(){
+                        bar_object.attr("class", "music_bar");
+                    }, i * 1000 * Math.random());
+                })($(this), idx);
+            });
+            music_roll.css({"right": 10, "top": 12});
+            music_roll.show();
+            cur.append(music_roll);
         });
 
         player.addEventListener("error", function(){
