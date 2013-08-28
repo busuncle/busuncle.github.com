@@ -818,8 +818,12 @@ footer h2 {
         });
 
         player.addEventListener("error", function(){
-            $(".music_name").text("加载失败，建议用Chrome浏览 :(");
-            $(".mini_music_name").text("加载失败，建议用Chrome浏览 :(");
+            var error_msg = "加载失败 :(";
+            if(player.error.code == 4){
+                error_msg = "加载失败，浏览器无法播放此格式，建议用Chrome :(";
+            }
+            $(".music_name").text(error_msg);
+            $(".mini_music_name").text(error_msg);
             $(".music_list ul li").find(".spinner").remove();
             $(".mini_music_status .spinner").hide();
             $("#play_control,#mini_play_control").find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
