@@ -653,8 +653,7 @@ footer h2 {
         })();
 
         var player = $("#player").get(0);
-        var elaspe_timer = {
-            run_id: null, 
+        var elaspe_controller = {
             duration_time: null,
             button_locked: false,
             change_elaspe_show: function(ratio){
@@ -686,7 +685,6 @@ footer h2 {
                 $(".duration_time").text("00:00");
                 this.change_elaspe_show(0);
                 $(".music_list div.music_slide").remove();
-                clearTimeout(this.run_id);    
             }
         }
 
@@ -708,7 +706,7 @@ footer h2 {
             $("#play_control,#mini_play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
             player.src = "./music/" + $(this).find("span").eq(1).text();
             player.play();
-            elaspe_timer.stop();
+            elaspe_controller.stop();
         });
 
         $(".next_button,.mini_next_button").click(function(){
@@ -813,7 +811,7 @@ footer h2 {
         player.addEventListener("canplay", start_play_music);
         player.addEventListener("canplaythrough", start_play_music);
         player.addEventListener("timeupdate", function(){
-            elaspe_timer.run();
+            elaspe_controller.run();
         });
 
         player.addEventListener("error", function(){
@@ -834,13 +832,13 @@ footer h2 {
 
         (function(){
             // control duration bar related logic
-            elaspe_timer.change_elaspe_show(0);
+            elaspe_controller.change_elaspe_show(0);
 
             var mouse_is_down = false;
 
             $(".elaspe_button").mousedown(function(e){
                 mouse_is_down = true;
-                elaspe_timer.button_locked = true;
+                elaspe_controller.button_locked = true;
             });
 
             function change_player_current_time(){
@@ -861,7 +859,7 @@ footer h2 {
                 var new_width = client_x - $(".duration_bar").offset().left;
                 new_width = Math.max(0, new_width);
                 new_width = Math.min(new_width, full_width);
-                elaspe_timer.change_elaspe_show(new_width / full_width);
+                elaspe_controller.change_elaspe_show(new_width / full_width);
             }
 
             $(".duration_bar,.elaspe_bar,.elaspe_button").mousemove(function(e){
@@ -873,7 +871,7 @@ footer h2 {
                     change_player_current_time();
                 }
                 mouse_is_down = false;
-                elaspe_timer.button_locked = false;
+                elaspe_controller.button_locked = false;
             });
 
             $(".duration_bar").mouseleave(function(){
@@ -881,7 +879,7 @@ footer h2 {
                     change_player_current_time();
                 }
                 mouse_is_down = false;
-                elaspe_timer.button_locked = false;
+                elaspe_controller.button_locked = false;
             });
 
             $(".duration_bar,.elaspe_bar").click(function(e){
