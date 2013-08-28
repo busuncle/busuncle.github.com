@@ -680,13 +680,6 @@ footer h2 {
                     var elaspe_ratio = player.currentTime / player.duration;
                     this.change_elaspe_show(elaspe_ratio);
                 }
-                var _this = this;
-                this.run_id = setTimeout(function(){
-                    _this.run();
-                }, 1000);
-            },
-            pause: function() {
-                clearTimeout(this.run_id);    
             },
             stop: function(){
                 this.duration_time = null;
@@ -717,7 +710,6 @@ footer h2 {
             player.src = "./music/" + $(this).find("span").eq(1).text();
             player.play();
             elaspe_timer.stop();
-            elaspe_timer.run();
         });
 
         $(".next_button,.mini_next_button").click(function(){
@@ -743,13 +735,11 @@ footer h2 {
                 $(".music_list li a").first().click();
             } else {
                 if(player.paused){
-                    $(this).find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
+                    $("#play_control,#mini_play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
                     player.play();
-                    elaspe_timer.run();
                 } else {
-                    $(this).find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
+                    $("#play_control,#mini_play_control").find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
                     player.pause(); 
-                    elaspe_timer.pause();
                 }
             }
         });
@@ -809,7 +799,7 @@ footer h2 {
             append_to_some_object(bottom_left_music_info);
         }
 
-        player.addEventListener("canplay", function(){
+        function start_play_music(){
             var cur = $(".music_list ul li.playing");
             cur.find(".spinner").remove();
             var m_name = cur.find("a").text();
@@ -819,6 +809,12 @@ footer h2 {
             $(".mini_music_status .mini_duration_bar").show();
             // add music_slide to the current playing music
             add_music_slide();
+        }
+
+        player.addEventListener("canplay", start_play_music);
+        player.addEventListener("canplaythrough", start_play_music);
+        player.addEventListener("timeupdate", function(){
+            elaspe_timer.run();
         });
 
         player.addEventListener("error", function(){
