@@ -387,10 +387,6 @@ footer h2 {
     vertical-align: middle;
     left: 0; bottom: 0;
 }
-.mini_music_status .spinner {
-    display: none;
-    bottom: 8px; right: 2px;
-}
 .mini_control .mini_pre_button, .mini_play_button, .mini_next_button {
     opacity: 0.8;
 }
@@ -448,13 +444,17 @@ footer h2 {
     background-color: #FFFFFF;
 }
 .bottom_left_music_info .spinner {
-    bottom: 10px; top: 12px;
+    right: 12px; top: 12px;
+    border-left-color: rgba(255, 255, 255, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.55);
+    border-right-color: rgba(255, 255, 255, 0.6);
+    border-bottom-color: rgba(255, 255, 255, 0.7);
 }
 .music_slide {
     position: absolute;
     width: 20px; height: 18px;
     border-bottom: solid 2px #000000;
-    right: 10px; top: 12px;
+    right: 12px; top: 12px;
 }
 .music_slide .music_bar {
     position: absolute;
@@ -537,7 +537,6 @@ footer h2 {
             <div class="mini_elaspe_bar"></div>
         </div>
         <div class="mini_music_name"></div>
-        <div class="spinner"></div>
     </div>
     <div class="mini_control">
         <div class="mini_pre_button">
@@ -751,8 +750,8 @@ footer h2 {
                 spinner.css({"right": 10, "top": 12});
                 cur.append(spinner);
             }
-            // spinner at bottom
-            $(".mini_music_status .spinner").show();
+            // spinner at bottom left
+            $(".bottom_left_music_info").html($('<div class="spinner"></div>'));
         }
 
         player.addEventListener("loadstart", function(){
@@ -805,7 +804,7 @@ footer h2 {
             var m_name = cur.find("a").text();
             $(".music_name").text(m_name);
             $(".mini_music_name").text(m_name);
-            $(".mini_music_status .spinner").hide();
+            $(".bottom_left_music_info .spinner").remove();
             $(".mini_music_status .mini_duration_bar").show();
             // add music_slide to the current playing music
             add_music_slide();
@@ -825,7 +824,7 @@ footer h2 {
             $(".music_name").text(error_msg);
             $(".mini_music_name").text(error_msg);
             $(".music_list ul li").find(".spinner").remove();
-            $(".mini_music_status .spinner").hide();
+            $(".bottom_left_music_info .spinner").remove();
             $("#play_control,#mini_play_control").find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
         });
 
