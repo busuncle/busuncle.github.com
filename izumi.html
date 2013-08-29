@@ -663,6 +663,42 @@ footer h2 {
                 // for mini_elaspe_bar
                 $(".mini_elaspe_bar").width($(".mini_duration_bar").width() * ratio);
             },
+            add_music_slide: function(){
+                var left_start = 2;
+                var left_end = 14;
+                var left_delta = 3;
+                var animate_time = 500;
+                function recursive_slide(bar){
+                    setTimeout(function(){
+                        var height_ratio = parseInt(Math.random() * 100) + "%";
+                        bar.animate({height: height_ratio}, animate_time).animate({height: "0%"}, animate_time, function(){
+                            recursive_slide(bar);
+                        });
+                    }, Math.random() * animate_time);
+                }
+                function append_to_some_object(obj){
+                    if(obj.find(".music_slide").length == 0){
+                        var music_slide = $("<div>");
+                        music_slide.attr("class", "music_slide");
+                        var left = left_start;
+                        while(left <= left_end){
+                            var bar = $("<div>");
+                            bar.attr("class", "music_bar");
+                            bar.css("left", left);
+                            bar.css("height", 0);
+                            music_slide.append(bar);
+                            recursive_slide(bar);
+                            left += left_delta;
+                        }
+                        obj.append(music_slide);
+                    }
+
+                }
+                var playing_li = $(".music_list ul li.playing");
+                append_to_some_object(playing_li);
+                var bottom_left_music_info = $(".bottom_left_music_info");
+                append_to_some_object(bottom_left_music_info);
+            },
             run: function(){
                 var elaspe_time = convert_seconds_to_time(player.currentTime);
                 $(".elaspe_time").text(elaspe_time);
@@ -766,43 +802,6 @@ footer h2 {
             add_spinner_to_current_playing();
         });
 
-        function add_music_slide(){
-            var left_start = 2;
-            var left_end = 14;
-            var left_delta = 3;
-            var animate_time = 500;
-            function rock_and_roll(bar){
-                setTimeout(function(){
-                    var height_ratio = parseInt(Math.random() * 100) + "%";
-                    bar.animate({height: height_ratio}, animate_time).animate({height: "0%"}, animate_time, function(){
-                        rock_and_roll(bar);
-                    });
-                }, Math.random() * animate_time);
-            }
-            function append_to_some_object(obj){
-                if(obj.find(".music_slide").length == 0){
-                    var music_slide = $("<div>");
-                    music_slide.attr("class", "music_slide");
-                    var left = left_start;
-                    while(left <= left_end){
-                        var bar = $("<div>");
-                        bar.attr("class", "music_bar");
-                        bar.css("left", left);
-                        bar.css("height", 0);
-                        music_slide.append(bar);
-                        rock_and_roll(bar);
-                        left += left_delta;
-                    }
-                    obj.append(music_slide);
-                }
-
-            }
-            var playing_li = $(".music_list ul li.playing");
-            append_to_some_object(playing_li);
-            var bottom_left_music_info = $(".bottom_left_music_info");
-            append_to_some_object(bottom_left_music_info);
-        }
-
         function start_play_music(){
             var cur = $(".music_list ul li.playing");
             cur.find(".spinner").remove();
@@ -812,7 +811,7 @@ footer h2 {
             $(".bottom_left_music_info .spinner").remove();
             $(".mini_music_status .mini_duration_bar").show();
             // add music_slide to the current playing music
-            add_music_slide();
+            elaspe_controller.add_music_slide();
         }
 
         player.addEventListener("canplay", start_play_music);
