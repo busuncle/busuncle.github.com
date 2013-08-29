@@ -646,7 +646,7 @@ footer h2 {
                 span_name.text(music_list[i]);
                 a.append(span_order);
                 a.append(span_name);
-                a.attr("href", "#" + j);
+                a.attr("href", "javascript:;");
                 li.append(a);
                 $(".music_list ul").append(li);
             }
@@ -684,7 +684,11 @@ footer h2 {
                 $(".elaspe_time").text("00:00");
                 $(".duration_time").text("00:00");
                 this.change_elaspe_show(0);
+                $(".music_list li.playing").removeClass("playing");
                 $(".music_list div.music_slide").remove();
+                $(".music_list div.spinner").remove();
+                $(".bottom_left_music_info div.music_slide").remove();
+                $(".bottom_left_music_info div.spinner").remove();
             }
         }
 
@@ -701,12 +705,11 @@ footer h2 {
         }
 
         $(".music_list li a").click(function(){
-            $(".music_list li.playing").removeClass("playing");
+            elaspe_controller.stop();
             $(this).parent().addClass("playing");
             $("#play_control,#mini_play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
             player.src = "./music/" + $(this).find("span").eq(1).text();
             player.play();
-            elaspe_controller.stop();
         });
 
         $(".next_button,.mini_next_button").click(function(){
@@ -764,27 +767,31 @@ footer h2 {
         });
 
         function add_music_slide(){
+            var left_start = 2;
+            var left_end = 14;
+            var left_delta = 3;
+            var animate_time = 500;
             function rock_and_roll(bar){
                 setTimeout(function(){
                     var height_ratio = parseInt(Math.random() * 100) + "%";
-                    bar.animate({height: height_ratio}, 500).animate({height: "0%"}, 500, function(){
+                    bar.animate({height: height_ratio}, animate_time).animate({height: "0%"}, animate_time, function(){
                         rock_and_roll(bar);
                     });
-                }, Math.random() * 500);
+                }, Math.random() * animate_time);
             }
             function append_to_some_object(obj){
                 if(obj.find(".music_slide").length == 0){
                     var music_slide = $("<div>");
                     music_slide.attr("class", "music_slide");
-                    var left = 2;
-                    while(left <= 14){
+                    var left = left_start;
+                    while(left <= left_end){
                         var bar = $("<div>");
                         bar.attr("class", "music_bar");
                         bar.css("left", left);
                         bar.css("height", 0);
                         music_slide.append(bar);
                         rock_and_roll(bar);
-                        left += 3;
+                        left += left_delta;
                     }
                     obj.append(music_slide);
                 }
