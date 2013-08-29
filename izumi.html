@@ -77,6 +77,11 @@ footer h2 {
     -moz-box-shadow: 4px 4px 8px #4F4F4F;
     box-shadow: 4px 4px 8px #4F4F4F;
 }
+.box_shadow2 {
+    -webkit-box-shadow: 0 0 8px #4F4F4F;
+    -moz-box-shadow: 0 0 8px #4F4F4F;
+    box-shadow: 0 0 8px #4F4F4F;
+}
 .music_name {
     cursor: default;
     position: absolute; 
@@ -386,6 +391,7 @@ footer h2 {
     text-align: center;
     vertical-align: middle;
     left: 0; bottom: 0;
+    cursor: default;
 }
 .mini_control .mini_pre_button, .mini_play_button, .mini_next_button {
     opacity: 0.8;
@@ -516,7 +522,7 @@ footer h2 {
 
         <div id="play_mode" class="play_mode_circle"></div>
     </div>
-    <div class="music_list">
+    <div class="music_list box_shadow2">
         <!--
         <div class="spinner"></div>
         -->
