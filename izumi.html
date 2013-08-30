@@ -717,6 +717,8 @@ footer h2 {
                     var elaspe_ratio = player.currentTime / player.duration;
                     this.change_elaspe_show(elaspe_ratio);
                 }
+                // add music_slide to the current playing music
+                this.add_music_slide();
             },
             stop: function(){
                 this.duration_time = null;
@@ -815,8 +817,6 @@ footer h2 {
             $(".mini_music_name").text(m_name);
             $(".bottom_left_music_info .spinner").remove();
             $(".mini_music_status .mini_duration_bar").show();
-            // add music_slide to the current playing music
-            elaspe_controller.add_music_slide();
         }
 
         player.addEventListener("canplay", start_play_music);
