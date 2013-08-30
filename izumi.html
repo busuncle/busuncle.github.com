@@ -680,6 +680,8 @@ footer h2 {
                 }
                 function append_to_some_object(obj){
                     if(obj.find(".music_slide").length == 0){
+                        // clean other div first if necessary
+                        obj.find("div").remove();
                         var music_slide = $("<div>");
                         music_slide.attr("class", "music_slide");
                         var left = left_start;
@@ -785,6 +787,8 @@ footer h2 {
         function add_spinner_to_current_playing(){
             var cur = $(".music_list ul li.playing");
             if(cur.find(".spinner").length == 0){
+                // clean other div first if necessary
+                cur.find("div").remove();
                 var spinner = $('<div class="spinner"></div>');
                 spinner.css({"right": 10, "top": 12});
                 cur.append(spinner);
@@ -842,10 +846,7 @@ footer h2 {
             // control duration bar related logic
             elaspe_controller.change_elaspe_show(0);
 
-            var mouse_is_down = false;
-
             $(".elaspe_button").mousedown(function(e){
-                mouse_is_down = true;
                 elaspe_controller.button_locked = true;
             });
 
@@ -871,22 +872,20 @@ footer h2 {
             }
 
             $(".duration_bar,.elaspe_bar,.elaspe_button").mousemove(function(e){
-                if(mouse_is_down){
+                if(elaspe_controller.button_locked){
                     change_elaspe_bar_by_mouse(e.clientX);
                 }
             }).mouseup(function(){
-                if(mouse_is_down){
+                if(elaspe_controller.button_locked){
                     change_player_current_time();
                 }
-                mouse_is_down = false;
                 elaspe_controller.button_locked = false;
             });
 
             $(".duration_bar").mouseleave(function(){
-                if(mouse_is_down){
+                if(elaspe_controller.button_locked){
                     change_player_current_time();
                 }
-                mouse_is_down = false;
                 elaspe_controller.button_locked = false;
             });
 
