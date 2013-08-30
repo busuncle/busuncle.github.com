@@ -133,7 +133,6 @@ footer h2 {
     margin-left: 16%; margin-right: 16%;
     box-shadow: 1px 1px 1px 1px #4F4F4F inset;
     border: solid 1px #B5B5B5;
-    /*background-color: rgba(0, 0, 0, 0.2);*/
 }
 .duration_bar:hover {
     cursor: pointer;
@@ -142,11 +141,14 @@ footer h2 {
     position: absolute; 
     left: 6%; bottom: 8%; width: 96px; height: 24px;
 }
-.control_button_wrapper .pre_button:hover, .play_button:hover, .next_button:hover {
+.control_button_wrapper .pre_button, .play_button, .next_button, .volume_icon {
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     border: solid 1px #828282;
     opacity: 0.6;
     cursor: pointer;
+}
+.control_button_wrapper .pre_button:hover, .play_button:hover, .next_button:hover, .volume_icon:hover {
+    opacity: 1;
 }
 .button_rect {
     position: absolute; 
@@ -155,8 +157,7 @@ footer h2 {
 }
 .pre_button {
     position: absolute;
-    left: 0; top: 0; width: 32%; height: 100%;
-    border: solid 1px transparent;
+    left: 0; top: 0; width: 30%; height: 100%;
 }
 .pre_button_rect {
     left: 6px; top: 3px;
@@ -173,8 +174,7 @@ footer h2 {
 }
 .play_button {
     position: absolute; 
-    left: 34%; width: 32%; height: 100%; top: 0;
-    border: solid 1px transparent;
+    left: 35%; width: 30%; height: 100%; top: 0;
 }
 .play_button_triangle {
     position: absolute; 
@@ -191,8 +191,7 @@ footer h2 {
 }
 .next_button {
     position: absolute; 
-    left: 68%; top: 0; width: 32%; height: 100%;
-    border: solid 1px transparent;
+    left: 70%; top: 0; width: 30%; height: 100%;
 }
 .next_button_triangle {
     border-left: solid 12px #828282;
@@ -209,13 +208,6 @@ footer h2 {
 .volume_icon {
     position: absolute; 
     width: 28px; height: 100%; top: 0; left: 0;
-    border: solid 1px transparent;
-}
-.volume_icon:hover {
-    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
-    border: solid 1px #828282;
-    opacity: 0.6;
-    cursor: pointer;
 }
 .volume_icon_rect {
     position: absolute; 
@@ -249,7 +241,6 @@ footer h2 {
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     box-shadow: 1px 1px 1px 1px #4F4F4F inset;
     border: solid 1px #B5B5B5;
-    /*background-color: rgba(0, 0, 0, 0.2);*/
 }
 .volume_full_bar:hover {
     cursor: pointer;
