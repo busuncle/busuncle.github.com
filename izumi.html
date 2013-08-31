@@ -97,6 +97,9 @@ footer h2 {
     height: 16px; width: 100%; top: 40px;
     vertical-align:middle; line-height: 16px;
 }
+.elaspe_bar:hover, .duration_bar:hover, .volume_full_bar:hover, .volume_current_bar:hover {
+    cursor: pointer;
+}
 .elaspe_time {
     height: 100%;
     vertical-align:middle; line-height: 100%;
@@ -109,9 +112,6 @@ footer h2 {
     height: 100%;
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
     background-color: rgba(0, 0, 0,0.2);
-}
-.elaspe_bar:hover {
-    cursor: pointer;
 }
 .elaspe_button {
     position: absolute; 
@@ -139,9 +139,6 @@ footer h2 {
     box-shadow: 1px 1px 1px #4F4F4F inset;
     border: solid 1px #B5B5B5;
 }
-.duration_bar:hover {
-    cursor: pointer;
-}
 .control_button_wrapper {
     position: absolute; 
     left: 6%; bottom: 8%; width: 96px; height: 24px;
@@ -158,10 +155,16 @@ footer h2 {
     -moz-box-shadow: 0 0 2px 2px #FFFFFF;
     box-shadow: 0 0 2px 2px #FFFFFF;
 }
-.button_rect {
+.pre_button_rect, .next_button_rect {
     position: absolute; 
     background-color: #828282;
     width: 6px; height: 18px; 
+}
+.pre_button_triangle, .next_button_triangle {
+    position: absolute; 
+    border-top: solid 9px transparent;
+    border-bottom: solid 9px transparent;
+    width: 0; height: 0; 
 }
 .pre_button {
     position: absolute;
@@ -173,12 +176,6 @@ footer h2 {
 .pre_button_triangle {
     border-right: solid 12px #828282;
     right: 6px; top: 3px;
-}
-.pre_and_next_button_triangle {
-    position: absolute; 
-    border-top: solid 9px transparent;
-    border-bottom: solid 9px transparent;
-    width: 0; height: 0; 
 }
 .play_button {
     position: absolute; 
@@ -252,17 +249,11 @@ footer h2 {
     box-shadow: 1px 1px 1px #4F4F4F inset;
     border: solid 1px #B5B5B5;
 }
-.volume_full_bar:hover {
-    cursor: pointer;
-}
 .volume_current_bar {
     position: absolute; 
     height: 100%;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     background-color: rgba(0, 0, 0, 0.2);
-}
-.volume_current_bar:hover {
-    cursor: pointer;
 }
 .volume_button {
     position: absolute; 
@@ -397,9 +388,6 @@ footer h2 {
     cursor: pointer;
     opacity: 1;
 }
-.mini_control .button_rect {
-    background-color: #FFFFFF;
-}
 .mini_pre_button .pre_button_triangle {
     border-right-color: #FFFFFF;
     right: 16px; top: 11px;
@@ -408,7 +396,8 @@ footer h2 {
     position: absolute; 
     height: 100%; width: 32%; left: 0; top: 0;
 }
-.mini_pre_button .button_rect {
+.mini_pre_button .pre_button_rect {
+    background-color: #FFFFFF;
     left: 16px; top: 11px;
 }
 .mini_play_button {
@@ -432,7 +421,8 @@ footer h2 {
     border-left-color: #FFFFFF;
     left: 16px; top: 11px;
 }
-.mini_next_button .button_rect {
+.mini_next_button .next_button_rect {
+    background-color: #FFFFFF;
     right: 16px; top: 11px;
 }
 .bottom_left_music_info {
@@ -490,8 +480,8 @@ footer h2 {
 
         <div class="control_button_wrapper">
             <div class="pre_button">
-                <div class="pre_button_rect button_rect"></div>
-                <div class="pre_button_triangle pre_and_next_button_triangle"></div>
+                <div class="pre_button_rect"></div>
+                <div class="pre_button_triangle"></div>
             </div>
             <div id="play_control" class="play_button">
                 <div class="play_button_triangle"></div>
@@ -500,8 +490,8 @@ footer h2 {
                 -->
             </div>
             <div class="next_button">
-                <div class="next_button_rect button_rect"></div>
-                <div class="next_button_triangle pre_and_next_button_triangle"></div>
+                <div class="next_button_rect"></div>
+                <div class="next_button_triangle"></div>
             </div>
         </div>
 
@@ -543,8 +533,8 @@ footer h2 {
     </div>
     <div class="mini_control">
         <div class="mini_pre_button">
-            <div class="button_rect"></div>
-            <div class="pre_button_triangle pre_and_next_button_triangle"></div>
+            <div class="pre_button_rect"></div>
+            <div class="pre_button_triangle"></div>
         </div>
         <div id="mini_play_control" class="mini_play_button">
             <div class="play_button_triangle"></div>
@@ -553,8 +543,8 @@ footer h2 {
             -->
         </div>
         <div class="mini_next_button">
-            <div class="next_button_triangle pre_and_next_button_triangle"></div>
-            <div class="button_rect"></div>
+            <div class="next_button_triangle"></div>
+            <div class="next_button_rect"></div>
         </div>
     </div>
     <div class="back_to_top">&uarr; &uarr; &uarr;</div> 
