@@ -19,14 +19,17 @@ header {
     border-bottom: solid 4px #87CEFA;
     padding: 24px 0 8px;
     height: 40px;
+    width: 100%;
     cursor: default;
 }
 header h2 {
     line-height: 100%; 
+    margin: auto;
+    width: 120px;
     vertical-align: middle;
     text-align: center;
     font-size: 36px;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
     opacity: 0.7;
 }
 p.for_old_ie {
@@ -36,7 +39,7 @@ p.for_old_ie {
     background-color: rgba(0,0,0, 0.4);
 }
 header h2:hover {
-    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 footer {
     border-top: solid 4px #87CEFA;
@@ -635,6 +638,7 @@ footer h2 {
                 "坂井泉水 - 突然.mp3",
             ];
             $(".music_list ul").empty();
+            $(".music_list").hide();
             for(var i = 0; i < music_list.length; i++){
                 // notice that i starts from 0
                 var li = $("<li>");
@@ -651,6 +655,7 @@ footer h2 {
                 li.append(a);
                 $(".music_list ul").append(li);
             }
+            $(".music_list").fadeIn(800);
         })();
 
         var player = $("#player").get(0);
