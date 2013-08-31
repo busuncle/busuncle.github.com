@@ -776,11 +776,16 @@ footer h2 {
         });
 
         $(".pre_button,.mini_pre_button").click(function(){
-            var pre_music = $(".music_list li.playing").prev();
-            if(pre_music.length == 1){
-                pre_music.find("a").click();
+            if(player.currentTime > 5){
+                // restart current playing if currentTime greater than 5
+                $(".music_list li.playing a").click();
             } else {
-                $(".music_list li a").last().click();
+                var pre_music = $(".music_list li.playing").prev();
+                if(pre_music.length == 1){
+                    pre_music.find("a").click();
+                } else {
+                    $(".music_list li a").last().click();
+                }
             }
         });
 
