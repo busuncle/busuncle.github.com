@@ -87,7 +87,7 @@ footer h2 {
 .music_name {
     cursor: default;
     position: absolute; 
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
     top: 7px; width: 90%;
     margin-left: 5%; margin-right: 5%;
 }
@@ -597,20 +597,20 @@ footer h2 {
         (function(){
             // init music_list;
             var music_list = [
+                "坂井泉水 - 揺れる想い.mp3",
                 "坂井泉水 - きっと忘れない.mp3",
+                "坂井泉水 - 负けないで.mp3",
                 "坂井泉水 - 少女の頃に戻ったみたいに.mp3",
                 "坂井泉水 - DAN DAN 心魅かれて.mp3",
                 "坂井泉水 - Oh My Love.mp3",
                 "坂井泉水 - 息もできない.mp3",
                 "坂井泉水 - 夏を待つセイル(帆)のように.mp3",
                 "坂井泉水 - Forever You.mp3",
-                "坂井泉水 - 揺れる想い.mp3",
                 "坂井泉水 - My Friend.mp3",
                 "坂井泉水 - 君とのふれあい.mp3",
                 "坂井泉水 - Good-bye My Loneliness.mp3",
                 "坂井泉水 - 運命のルーレット廻して.mp3",
                 "坂井泉水 - Hero.mp3",
-                "坂井泉水 - 负けないで.mp3",
                 "坂井泉水 - IN MY ARMS TONIGHT.mp3",
                 "坂井泉水 - Just For You.mp3",
                 "坂井泉水 - サヨナラは今もこの胸に居ます.mp3",
@@ -675,12 +675,20 @@ footer h2 {
                 var left_delta = 3;
                 var animate_time = 500;
                 function recursive_slide(bar){
+                    var height_ratio = null;
+                    var time_delta = null;
+                    if(player.paused){
+                        height_ratio = "5%";
+                        time_delta = 500;
+                    } else {
+                        height_ratio = parseInt(Math.random() * 100) + "%";
+                        time_delta = Math.random() * animate_time;
+                    }
                     setTimeout(function(){
-                        var height_ratio = parseInt(Math.random() * 100) + "%";
                         bar.animate({height: height_ratio}, animate_time).animate({height: "0%"}, animate_time, function(){
                             recursive_slide(bar);
                         });
-                    }, Math.random() * animate_time);
+                    }, time_delta);
                 }
                 function append_to_some_object(obj){
                     if(obj.find(".music_slide").length == 0){
