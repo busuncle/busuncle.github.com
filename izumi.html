@@ -872,7 +872,7 @@ footer h2 {
             }
             
             function change_elaspe_bar_by_mouse(client_x){
-                if(player.currentSrc == ""){
+                if(player.currentSrc == "" || !elaspe_controller.duration_time){
                     return;
                 }
                 // change elaspe_bar's width and elaspe_button's position
