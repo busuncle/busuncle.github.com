@@ -107,20 +107,25 @@ footer h2 {
     position: absolute; 
     left: 18px;
 }
+.elaspe_button, .volume_button {
+    position: absolute; 
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    border: solid 1px rgba(130, 130, 130, 0.5);
+    cursor: pointer;
+}
 .elaspe_bar {
     position: absolute; 
     height: 100%;
     -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;
-    background-color: rgba(0, 0, 0,0.2);
+    background-color: rgba(0, 0, 0, 0.2);
 }
 .elaspe_button {
     position: absolute; 
     height: 20px; width: 10px;
-    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
-    border: solid 1px rgba(130, 130, 130, 0.4);
-    background-color: rgba(130, 130, 130, 0.4);
     top: -3px; left: -5px;
-    cursor: pointer;
+    -webkit-box-shadow: 0 0 2px 2px #FFFFFF;
+    -moz-box-shadow: 0 0 2px 2px #FFFFFF;
+    box-shadow: 0 0 2px 2px #FFFFFF;
 }
 .duration_time {
     height: 100%;
@@ -148,12 +153,12 @@ footer h2 {
     border: solid 1px #828282;
     opacity: 0.6;
     cursor: pointer;
-}
-.pre_button:hover, .play_button:hover, .next_button:hover, .volume_icon:hover, .elaspe_button:hover, .volume_button:hover {
-    opacity: 1;
     -webkit-box-shadow: 0 0 2px 2px #FFFFFF;
     -moz-box-shadow: 0 0 2px 2px #FFFFFF;
     box-shadow: 0 0 2px 2px #FFFFFF;
+}
+.pre_button:hover, .play_button:hover, .next_button:hover, .volume_icon:hover {
+    opacity: 1;
 }
 .pre_button_rect, .next_button_rect {
     position: absolute; 
@@ -258,11 +263,10 @@ footer h2 {
 .volume_button {
     position: absolute; 
     height: 16px; width: 8px;
-    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
-    border: solid 1px rgba(130, 130, 130, 0.4);
-    background-color: rgba(130, 130, 130, 0.4);
     top: -3px;
-    cursor: pointer;
+    -webkit-box-shadow: 0 0 1px 1px #FFFFFF;
+    -moz-box-shadow: 0 0 1px 1px #FFFFFF;
+    box-shadow: 0 0 1px 1px #FFFFFF;
 }
 .music_list {
     position: relative; 
