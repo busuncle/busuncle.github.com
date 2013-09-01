@@ -866,11 +866,13 @@ p.for_old_ie {
                 var cur = $(".music_list ul li.playing");
                 cur.find(".spinner").remove();
                 var m_name = cur.find("a").text();
-                $("#play_control,#mini_play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
                 $(".music_name").text(m_name);
                 $(".mini_music_name").text(m_name);
                 $(".bottom_left_music_info .spinner").remove();
                 $(".mini_music_status .mini_duration_bar").show();
+                if(!player.paused){
+                    $("#play_control,#mini_play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
+                }
             }
         }
 
