@@ -414,10 +414,10 @@ p.for_old_ie {
     background-color: rgba(0, 0, 0, 0.6);
 }
 .back_to_top {
+    position: absolute;
     color: #FFFFFF;
     opacity: 0.8;
-    position: absolute;
-    width: 80px; height: 40px;
+    width: 60px; height: 40px;
     right: 0; top: 0;
     line-height: 40px;
     vertical-align: middle;
@@ -427,6 +427,20 @@ p.for_old_ie {
     font-weight: bold;
     cursor: pointer;
     opacity:1;
+}
+.back_to_top_triangle {
+    position: absolute;
+    border-left: solid 12px transparent;
+    border-right: solid 12px transparent;
+    border-bottom: solid 12px #FFFFFF;
+    width: 0; height: 0; 
+    top: 8px; right: 18px;
+}
+.back_to_top_rect {
+    position: absolute;
+    width: 12px; height: 12px;
+    left: -6px; top: 12px;
+    background-color: #FFFFFF;
 }
 .mini_control {
     position: absolute;
@@ -652,7 +666,11 @@ p.for_old_ie {
             <div class="next_button_rect"></div>
         </div>
     </div>
-    <div class="back_to_top">&uarr; &uarr; &uarr;</div> 
+    <div class="back_to_top">
+        <div class="back_to_top_triangle">
+            <div class="back_to_top_rect"></div>
+        </div>
+    </div> 
 </div>
 
 <footer><h2>&copy;busuncle</h2></footer>
