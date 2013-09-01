@@ -157,7 +157,7 @@ p.for_old_ie {
     -moz-box-shadow: 0 0 2px 2px #FFFFFF;
     box-shadow: 0 0 2px 2px #FFFFFF;
 }
-.pre_button:hover, .play_button:hover, .next_button:hover, .volume_icon:hover {
+.pre_button:hover, .play_button:hover, .next_button:hover, .volume_icon:hover, .play_mode_button:hover {
     opacity: 1;
 }
 .pre_button_rect, .next_button_rect {
@@ -267,6 +267,80 @@ p.for_old_ie {
     -webkit-box-shadow: 0 0 1px 1px #FFFFFF;
     -moz-box-shadow: 0 0 1px 1px #FFFFFF;
     box-shadow: 0 0 1px 1px #FFFFFF;
+}
+.play_mode_button {
+    position: absolute;
+    right: 16%; bottom: 7%; width: 48px; height: 24px;
+    -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+    border: solid 1px #828282;
+    opacity: 0.6;
+    cursor: pointer;
+    -webkit-box-shadow: 0 0 2px 2px #FFFFFF;
+    -moz-box-shadow: 0 0 2px 2px #FFFFFF;
+    box-shadow: 0 0 2px 2px #FFFFFF;
+}
+.play_shape_circle {
+    position: absolute;
+    -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;
+    border: solid 3px #828282;
+    width: 28px; height: 10px;
+    top: 4px; left: 7px;
+}
+.play_shape_circle .play_shape_circle_for_one {
+    position: absolute;
+    width: 8px; height: 14px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 1px #000000;
+    right: 0; bottom: -6px;
+}
+.play_shape_triangle_left, .play_shape_triangle_right {
+    position: absolute; 
+    border-top: solid 5px transparent;
+    border-bottom: solid 5px transparent;
+    width: 0; height: 0; 
+}
+.play_shape_triangle_left {
+    border-right: solid 7px #828282;
+    left: 4px; bottom: -6px;
+}
+.play_shape_triangle_right {
+    border-left: solid 7px #828282;
+    right: 4px; top: -6px;
+}
+.play_shape_rect_x_2 {
+    position: absolute; 
+    border-top: solid 3px #828282;
+    border-bottom: solid 3px #828282;
+    width: 32px; height: 6px;
+    top: 6px; left: 6px;
+}
+.play_shape_rect_x_2 .play_shape_triangle_right1 {
+    position: absolute; 
+    border-top: solid 5px transparent;
+    border-bottom: solid 5px transparent;
+    width: 0; height: 0; 
+    border-left: solid 7px #828282;
+    right: -6px; top: -6px;
+}
+.play_shape_rect_x_2 .play_shape_triangle_right2 {
+    position: absolute; 
+    border-top: solid 5px transparent;
+    border-bottom: solid 5px transparent;
+    width: 0; height: 0; 
+    border-left: solid 7px #828282;
+    right: -6px; bottom: -6px;
+}
+.play_shape_rect_x_2 .play_shape_rect_x_2_random {
+    position: absolute;
+    width: 10px; height: 18px;
+    line-height: 18px;
+    font-weight: bold;
+    font-size: 20px;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 1px #000000;
+    left: 12px; top: -7px;
 }
 .music_list {
     position: relative; 
@@ -511,7 +585,34 @@ p.for_old_ie {
             </div>
         </div>
 
-        <div id="play_mode" class="play_mode_circle"></div>
+        <div id="play_mode" class="play_mode_button">
+            <div class="play_list_circle">
+                <div class="play_shape_circle">
+                    <div class="play_shape_triangle_left"></div>
+                    <div class="play_shape_triangle_right"></div>
+                </div>
+            </div>
+            <div class="play_one_circle" style="display:none">
+                <div class="play_shape_circle">
+                    <div class="play_shape_triangle_left"></div>
+                    <div class="play_shape_triangle_right"></div>
+                    <div class="play_shape_circle_for_one">1</div>
+                </div>
+            </div>
+            <div class="play_in_order" style="display:none">
+                <div class="play_shape_rect_x_2">
+                    <div class="play_shape_triangle_right1"></div>
+                    <div class="play_shape_triangle_right2"></div>
+                </div>
+            </div>
+            <div class="play_random" style="display:none">
+                <div class="play_shape_rect_x_2">
+                    <div class="play_shape_triangle_right1"></div>
+                    <div class="play_shape_triangle_right2"></div>
+                    <div class="play_shape_rect_x_2_random">?</div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="music_list box_shadow2">
         <!--
@@ -653,7 +754,8 @@ p.for_old_ie {
         })();
 
         var player = $("#player").get(0);
-        var elaspe_controller = {
+        var music_controller = {
+            play_mode: 0,
             duration_time: null,
             button_locked: false,
             change_elaspe_show: function(ratio){
@@ -733,10 +835,23 @@ p.for_old_ie {
                 $(".duration_time").text("00:00");
                 this.change_elaspe_show(0);
                 $(".music_list li.playing").removeClass("playing");
+                $("#play_control,#mini_play_control").find("div").removeClass("pause_button_rect_x_2").addClass("play_button_triangle");
+                $(".music_name").text("");
+                $(".mini_music_name").text("");
                 $(".music_list div.music_slide").remove();
                 $(".music_list div.spinner").remove();
                 $(".bottom_left_music_info div.music_slide").remove();
                 $(".bottom_left_music_info div.spinner").remove();
+            },
+            start: function(){
+                var cur = $(".music_list ul li.playing");
+                cur.find(".spinner").remove();
+                var m_name = cur.find("a").text();
+                $("#play_control,#mini_play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
+                $(".music_name").text(m_name);
+                $(".mini_music_name").text(m_name);
+                $(".bottom_left_music_info .spinner").remove();
+                $(".mini_music_status .mini_duration_bar").show();
             }
         }
 
@@ -752,8 +867,17 @@ p.for_old_ie {
             return m + ":" + s;
         }
 
+        $("#play_mode").click(function(){
+            var mode_divs = $(this).find(".play_list_circle,.play_one_circle,.play_in_order,.play_random");
+            var next_mode = (music_controller.play_mode + 1) % 4;
+            var next_mode_div = mode_divs.eq(next_mode);
+            mode_divs.hide();
+            next_mode_div.show();
+            music_controller.play_mode = next_mode;
+        });
+
         $(".music_list li a").click(function(){
-            elaspe_controller.stop();
+            music_controller.stop();
             $(this).parent().addClass("playing");
             $("#play_control,#mini_play_control").find("div").removeClass("play_button_triangle").addClass("pause_button_rect_x_2");
             player.src = "./music/" + $(this).find("span").eq(1).text();
@@ -821,20 +945,10 @@ p.for_old_ie {
             add_spinner_to_current_playing();
         });
 
-        function start_play_music(){
-            var cur = $(".music_list ul li.playing");
-            cur.find(".spinner").remove();
-            var m_name = cur.find("a").text();
-            $(".music_name").text(m_name);
-            $(".mini_music_name").text(m_name);
-            $(".bottom_left_music_info .spinner").remove();
-            $(".mini_music_status .mini_duration_bar").show();
-        }
-
-        player.addEventListener("canplay", start_play_music);
-        player.addEventListener("canplaythrough", start_play_music);
+        player.addEventListener("canplay", music_controller.start);
+        player.addEventListener("canplaythrough", music_controller.start);
         player.addEventListener("timeupdate", function(){
-            elaspe_controller.run();
+            music_controller.run();
         });
 
         player.addEventListener("error", function(){
@@ -850,15 +964,40 @@ p.for_old_ie {
         });
 
         player.addEventListener("ended", function(){
-            $(".next_button").click();
+            if(music_controller.play_mode == 0){
+                // play list circle
+                $(".next_button").click();
+            } else if (music_controller.play_mode == 1){
+                // play one circle
+                $(".music_list li.playing a").click();
+            } else if (music_controller.play_mode == 2){
+                // play in order
+                var next_music = $(".music_list li.playing").next();
+                if(next_music.length == 1){
+                    next_music.find("a").click();
+                } else {
+                    music_controller.stop();
+                }
+            } else if (music_controller.play_mode == 3){
+                // play random
+                var music_list = $(".music_list li");
+                var current_index = music_list.index($(".music_list li.playing"));
+                var rand_num = current_index;
+                while(rand_num == current_index){
+                    rand_num = parseInt(Math.random() * music_list.length * 2) % music_list.length;
+                }
+                music_list.eq(rand_num).find("a").click();
+            } else {
+                alert("错误的播放模式 :(");
+            }
         });
 
         (function(){
             // control duration bar related logic
-            elaspe_controller.change_elaspe_show(0);
+            music_controller.change_elaspe_show(0);
 
             $(".elaspe_button").mousedown(function(e){
-                elaspe_controller.button_locked = true;
+                music_controller.button_locked = true;
             });
 
             function change_player_current_time(){
@@ -871,7 +1010,7 @@ p.for_old_ie {
             }
             
             function change_elaspe_bar_by_mouse(client_x){
-                if(player.currentSrc == "" || !elaspe_controller.duration_time){
+                if(player.currentSrc == "" || !music_controller.duration_time){
                     return;
                 }
                 // change elaspe_bar's width and elaspe_button's position
@@ -879,25 +1018,25 @@ p.for_old_ie {
                 var new_width = client_x - $(".duration_bar").offset().left;
                 new_width = Math.max(0, new_width);
                 new_width = Math.min(new_width, full_width);
-                elaspe_controller.change_elaspe_show(new_width / full_width);
+                music_controller.change_elaspe_show(new_width / full_width);
             }
 
             $(".duration_bar,.elaspe_bar,.elaspe_button").mousemove(function(e){
-                if(elaspe_controller.button_locked){
+                if(music_controller.button_locked){
                     change_elaspe_bar_by_mouse(e.clientX);
                 }
             }).mouseup(function(){
-                if(elaspe_controller.button_locked){
+                if(music_controller.button_locked){
                     change_player_current_time();
                 }
-                elaspe_controller.button_locked = false;
+                music_controller.button_locked = false;
             });
 
             $(".duration_bar").mouseleave(function(){
-                if(elaspe_controller.button_locked){
+                if(music_controller.button_locked){
                     change_player_current_time();
                 }
-                elaspe_controller.button_locked = false;
+                music_controller.button_locked = false;
             });
 
             $(".duration_bar,.elaspe_bar").click(function(e){
