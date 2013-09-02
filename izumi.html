@@ -1149,7 +1149,7 @@ p.for_old_ie {
 
         $(window).bind("scroll", (function(){
             // some init
-            var show_bottom_control_top = $(".music_control").offset().top + $(".music_control").height();
+            var show_bottom_control_top = $(".music_control").offset().top;
             $(".mini_control").css("left", $(".music_list").offset().left + $(".music_list").width());
             $(".bottom_left_music_info").css("left", $(".music_list").offset().left - $(".bottom_left_music_info").width());
             return function(){
