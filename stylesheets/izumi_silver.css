@@ -111,7 +111,7 @@ p.for_old_ie {
     position: absolute; 
     height: 100%;
     -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.1);
 }
 .elaspe_button {
     position: absolute; 
@@ -145,14 +145,14 @@ p.for_old_ie {
 .control_button_wrapper .pre_button, .play_button, .next_button, .volume_icon, .play_mode_button {
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
     border: solid 1px #828282;
-    opacity: 0.6;
+    opacity: 0.4;
     cursor: pointer;
     -webkit-box-shadow: 0 0 2px 2px #FFFFFF;
     -moz-box-shadow: 0 0 2px 2px #FFFFFF;
     box-shadow: 0 0 2px 2px #FFFFFF;
 }
 .pre_button:hover, .play_button:hover, .next_button:hover, .volume_icon:hover, .play_mode_button:hover {
-    opacity: 1;
+    opacity: 0.6;
 }
 .pre_button_rect, .next_button_rect {
     position: absolute; 
@@ -252,7 +252,7 @@ p.for_old_ie {
     position: absolute; 
     height: 100%;
     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.1);
 }
 .volume_button {
     position: absolute; 
