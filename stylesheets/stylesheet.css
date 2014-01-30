@@ -89,6 +89,18 @@ section img {
   max-width: 100%
 }
 
+footer {
+  background: rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border-top: 1px dashed #b5e853;
+  padding: 20px 0;
+  margin: 60px 0 0 0;
+}
+
+footer p {
+    text-align: center;
+}
+
 div #renne2 {
     /*background: url("../images/renne2.png") 0 0;*/
     width: 640px;
@@ -138,6 +150,14 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
   color: #999;
   margin: 0 0 5px 0;
+}
+
+#main_content .para {
+  border-bottom: 1px solid #666666;
+}
+
+#main_content p.text_right {
+    text-align: right;
 }
 
 dt {
