@@ -68,8 +68,8 @@ header h1:before {
 
 header h2 {
   font-size: 18px;
-  font-weight: 300;
-  color: #666;
+  color: #666666;
+  font-family: "Microsoft YaHei", Sans-Serif, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
 #downloads .btn {
@@ -159,6 +159,10 @@ h1, h2, h3, h4, h5, h6 {
 
 #main_content p.text_right {
     text-align: right;
+}
+
+#main_content p.text_center {
+    text-align: center;
 }
 
 dt {
