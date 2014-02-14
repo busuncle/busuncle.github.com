@@ -5,8 +5,7 @@ body {
   color: #eaeaea;
   font: 16px;
   line-height: 1.5;
-  /*font-family: "Microsoft YaHei", Sans-Serif, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;*/
-  font-family: Sans-Serif, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  font-family: "Microsoft YaHei", Sans-Serif, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
 /* General & 'Reset' Stuff */
@@ -71,8 +70,7 @@ header h1:before {
 header h2 {
   font-size: 18px;
   color: #666666;
-  /*font-family: "Microsoft YaHei", Sans-Serif, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;*/
-  font-family: Sans-Serif, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  font-family: "Microsoft YaHei", Sans-Serif, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
 #downloads .btn {
