@@ -42,8 +42,10 @@ def gen(args):
         with open(out_file, "w") as fp:
             fp.write(template.render().encode("utf8"))
     else:
-        print template.render()
-
+        #print template.render()
+        out_file = pat_name
+        with open(out_file, "w") as fp:
+            fp.write(template.render().encode("utf8"))
 
 
 
