@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>Python运行环境初始化</h1>
+    <link rel="stylesheet" type="text/css" href="stylesheets/shCoreRDark.css" media="screen" />
+{% endblock %}
+
+
+{% block content %}
+        <p class="idt">Python运行环境初始化所指的是在进入字节码虚拟机之前所做的一切准备工作，这里包括了很多事情，包括建立进程、线程，加载多个基础module，建立类型系统，初始化对象系统，对系统module的设置，对第三方库的搜索路径的设置，当然还有编译这个重要的工作了。直到进入之前剖析过的PyEval_EvalCode，我们就认为初始化的阶段真正的完成了。</p>
+        <p class="idt">首先说说Python的进程和线程。Python对进程的模拟是一个叫PyInterpreterState的对象，而线程则是PyThreadState。我们平时经常提到的字节码，它对应的活动对象实际上就是由PyThreadState来抽象的，而PyInterpreterState则是PyThreadState的活动环境。Python运行时，在通常情况下只有一个进程对象，而进程里则可能有多个线程对象。Python的一个线程就是操作系统上的一个原生线程，不同线程活在一个进程里，共享进程的一些资源，例如下面的程序：</p>
+        <p><pre class="brush: python;">
+path1 = None
+path2 = None
+
+def f1():
+    import sys
+    sys.path.append("/tmp/test1")
+    path1 = sys.path
+
+def f2():
+    import sys
+    sys.path.append("/tmp/test2")
+    path2 = sys.path
+
+f1()
+f2()
+print path1 == path2 
+        </pre></p>
+        <p class="idt">程序的输出是True。在不同线程里，我们进行同一个动作——import sys，其实它是被放在进程来全局共享的，不然每个线程持有一份sys module，消耗将是非常的大（这里涉及import，也就是Python模块的动态加载机制，比较复杂，不深入叙述）。 </p>
+        <p class="idt">介绍了进程和线程，是时候介绍下Python的初始化过程，看Python的源码： </p>
+        <p><pre class="brush: c;">
+int Py_Main(intargc, char **argv)
+{
+    Py_Initialize();
+    ...
+    PyRun_AnyFileExFlags(
+        fp,
+        filename == NULL ? "&lt;stdin&gt;" : filename,
+        filename != NULL, &amp;cf);
+    ...
+} 
+        </pre></p>
+        <p class="idt">其中，Py_Initialize完成了运行环境初始化的最主要工作，而PyRun_AnyFileExFlags则是根据是交互方式还是脚本方式来启动Python，然后编译执行。 </p>
+        <p class="idt">先看Py_Initialize。Py_Initialize里面其实仅调用了一个函数——Py_InitializeEx，所以我们观察Py_InitializeEx。Py_InitializeEx首先会调用PyInterpreterState_New创建一个PyInterpreterState对象（进程的模拟），接着，调用PyThreadState_New创建一个PyThreadState对象（线程的模拟），并且在它们之间通过指针的指向来建立相互的联系（这部分的图都好难用纯文本字符画，所以省略了，其实不难理解的）。 </p>
+        <p class="idt">接下来，Python会调用_Py_ReadyTypes对类型系统进行初始化，除了其内置类型，还会处理用户的自定义类型。再做一些琐碎的事情，例如初始化整数对象系统等。 </p>
+        <p class="idt">一个重要阶段结束了，Python进入下一个相对独立的阶段——设置系统module。首先是新建一个PyDictObject来维护系统所有的module，然后第一个要设置的module是__builtin__，就是那个“__builtins__”： </p>
+        <p><pre>
+&gt;&gt;&gt; __builtins__
+&lt;module '__builtin__' (built-in)&gt;
+&gt;&gt;&gt; __builtins__.__name__
+'__builtin__' 
+        </pre></p>
+        <p class="idt">具体做的事情包括：1、调用Py_InitModule4，来创建module对象，并将一些属于它的属性，例如__doc__、__name__，还有内建的方法，max、len等等，加入到这个新建的module。2、将所有Python内建类型，如int，dict，也加入到__builtin__ module。</p>
+        <p class="idt">设置完__builtin__ module后，Python会以类似的流程设置sys module，建立module备份机制（在标准扩展module被动态删除时能够得到恢复），设置module搜索路径（sys.path所看到的），初始化内建异常，初始化import机制，设置__main__ module（进入Python交互式环境的第一个module），设置site-specific module的搜索路径（也就是将第三方库的路径加入到sys.path），等等等等。 </p>
+        <p class="idt">到这里，Python建设基础设施的重要阶段过去了，接下来是激活虚拟机。我们知道，运行Python有两种形式，一种是交互式，一种是执行脚本文件，它们的分叉点就在于PyRun_AnyFileExFlags的参数fp，如果是指向stdin，则是交互模式，否则就是脚本模式。在交互模式下，Python顺序要做的事情是：1、设置我们熟悉的提示符“&gt;&gt;&gt;”、“...” 2、编译Python语句得到AST（抽象语法树） 3、取得__main__ module维护的dict对象，作为global和local名字空间，传给一个叫run_mode的函数运行。在脚本模式下，相应的顺序是：1、取得__main__ module维护的dict对象，并将“__file__”属性加进去 2、编译Python语句得到AST 3、同样，将__main__ module的dict对象作为global和local名字空间，调用run_mode。两种运行方式最终都会调用run_mode，而run_mode里面做的是根据AST创建PyCodeObject，然后不用多说了，就是集齐我们需要的参数，调用我们相当熟悉的PyEval_EvalCodeEx。 </p>
+        <p class="idt">最后说一下的是，Python所有线程都会共享相同的builtin名字空间。它的表现在于，在PyFrame_New设置builtin名字空间时，会根据PyFrameObject的back指针（指向调用者的PyFrameObject）是否为NULL，来指向__main__的global名字空间的builtin_object（也就是我们刚才介绍的“__builtins__”字符串对象），或是指向调用者的builtin_object。</p>
+
+<!-- code syntax highlighter -->
+<script type="text/javascript" src="javascripts/shCore.js"></script>
+<script type="text/javascript" src="javascripts/shBrushPython.js"></script>
+<script type="text/javascript" src="javascripts/shBrushCpp.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+{% endblock %}
