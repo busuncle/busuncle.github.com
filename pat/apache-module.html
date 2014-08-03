@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>Apache体系结构、运行流程与自定义模块</h1>
+    <link rel="stylesheet" type="text/css" href="stylesheets/shCoreRDark.css" media="screen" />
+    <style>
+    .auto-cr {
+    white-space: pre-wrap;       /* css-3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    }
+
+    </style>
+{% endblock %}
+
+
+{% block content %}
+
+        <p class="idt">Apache是一个高度模块化的服务器，除了提供基本的Web应用服务，例如Http、授权处理等，还支持开发人员根据实际应用进行功能扩展。利用其hook机制，我们可以编写自己的处理模块，通过DSO（Dynamic Shared Object，类似Windows下的dll）的支持，将模块挂载到 Apache处理请求的任何一个阶段，来实现我们的功能需求，可以说定制性非常的高。 </p>
+        <p class="idt">Apache的层次结构可以用下面的图进行描述：</p>
+        <p><pre>
+------------------------
+（5.第三方支持库）
+OpenSSL
+PHP
+...
+------------------------
+（4.可选功能层）
+mod_alias
+mod_wsgi
+...
+------------------------
+（3.核心功能层）
+核心程序        |核心模块
+http_core       |mod_so
+http_request    |mod_core
+...             |...
+------------------------
+（2.可移植运行库，即APR）
+libapr
+libpcre
+...
+------------------------
+（1.操作系统）
+------------------------ 
+        </pre></p>
+        <p class="idt">跟Apache直接联系最大的是其中的2、3、4层。第2层，其实是对操作系统的API进行封装 ，使得开发者不用考虑不同系统API的细节。例如我们要创建一个进程，就可以统一用 apr_proc_create来创建，不用想到底是Unix的fork()，还是Windows下的CreateProcess()。 第3层还分两个部分：核心程序和核心模块。核心程序实现的是作为HTTP服务器的最基本功能 ：启动和停止；处理配置文件；处理HTTP相关的连接、请求、协议等。核心模块则是对Apache 相当重要的模块，虽然对于核心程序来说，它跟可选模块外貌是完全相同的，但核心模块已经 接近不能失去的地步（缺少了会影响运行，不能动态加载，必须静态编译）。第4层则是丰富 Apache功能性的各种模块，俗称可选模块。在这里，不但有很多现成的模块可供使用，还能编 写我们自己想要的模块。</p>
+        <p class="idt">Apache的运行流程如下：</p>
+        <p><pre style="color: white;" class="auto-cr">
+<strong>1、启动过程</strong>
+首先以root身份启动，初始化内存池资源，读取并解析配置文件，模块加载（例如 mod_php.so、mod_perl.so）。接着初始化虚拟主机和数据库连接（如果有的话）。最后以普 通用户身份把执行权交给MPM模块（Multi-Process Modules），来监听用户的连接请求。
+
+<strong>2、运行过程</strong>
+这个过程将是一个循环，直到Apache停止或重启。这里分为好多阶段，包括：
+1）HTTP连接处理，最主要任务是调用预先定义好的连接处理挂钩process_connection， 这里也是第一个可以插入我们的挂钩程序的阶段。
+2）报文读取。对报文的三部分（请求头、请求域、请求体）进行parse，并且对报文进行 过滤（filter处理）。
+3）URL转义和映射。从URL映射到服务器本地文件的过程。
+4）访问控制。例如根据用户IP决定是否可以访问。
+5）认证阶段。确认用户身份。
+6）授权控制阶段。防止合法用户进行越权访问。
+7）资源类型检查。确定用户需要访问的是html，还是gif等等。
+8）fixups阶段。在生成响应内容前的最后一个阶段，也算一个通用的“挂钩”阶段。
+9）内容生成阶段。根据请求返回静态html、gif，或是cgi动态生成的内容等。
+10）Logging阶段。在返回用户response后记录事务，例如access.log。
+11）cleanup阶段。清理请求完成后的环境，例如关闭socket等。 
+        </pre></p>
+        <p class="idt">下面来关注一下如何写一个自定义的模块，并挂载到Apache中，让它参与到Apache的请求处理。示例程序如下： </p>
+
+        <p><pre class="brush: c;">
+// [my_module.c]
+#include &lt;httpd.h&gt;
+#include &lt;http_protocol.h&gt;
+#include &lt;http_config.h&gt;
+
+static char* filepath = "/home/lizhijian/tmp/out.txt";
+
+/* 回调函数，参与请求处理的主要工作部分 */
+static int my_module_handler(request_rec *r)
+{
+    /* 判断是否自己handler处理的请求 */
+    if (!r-&gt;handler || strcmp(r-&gt;handler, "my_module")) {
+        return DECLINED;
+    }
+
+    /* 加入自己的处理，这里是把IP写入一个文件 */
+    char* ip = (char *)r-&gt;connection-&gt;remote_ip;
+    FILE* fp = fopen(filepath, "at");
+    fwrite(ip, strlen(ip), 1, fp);
+    fwrite("\n", 1, 1, fp);
+    fclose(fp);
+
+    return OK;
+}
+
+/* 钩子注册函数 */
+static void my_module_hooks(apr_pool_t *pool)
+{
+    ap_hook_handler(my_module_handler, NULL, NULL, APR_HOOK_MIDDLE);
+}
+
+/* 将自定义的my_module_module数据结构导出 */
+module AP_MODULE_DECLARE_DATA my_module_module = {
+    STANDARD20_MODULE_STUFF,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    my_module_hooks
+}; 
+        </pre></p>
+
+        <p class="idt">一个非常简单的C程序，它的功能是当请求是“my_module”的时候，函数 my_module_handler会把用户的IP写入“out.txt”这个文件。注意这里为了程序简短易懂，用了一些fopen、fwrite之类的比较原生的调用，较好的实践当然是利用Apache提供的ARP（Apache Runtime Portable）调用，例如apr_file_open、apr_file_puts。</p>
+        <p class="idt">程序写完当然还不会work了，我们还必须编译，加载，利用apxs工具（笔者的系统里是 apxs2）：</p>
+        <p><pre class="brush: bash;">
+    apxs2 -c my_module.c
+    apxs2 -i my_module.la
+        </pre></p>
+        <p class="idt">接着修改httpd.conf，让对应的请求发生时调用我们的模块处理（一般不修改httpd.conf，而是在mods-enable里添加相应的load文件和conf文件，这里为了方便）：</p>
+        <p><pre>
+[httpd.conf]
+LoadModule my_module_module /usr/lib/apache2/modules/mod_my_module.so
+&lt;Location /my_module&gt;
+    SetHandler my_module
+&lt;/Location&gt;
+        </pre></p>
+        <p class="idt">最后重启Apache： </p>
+        <p><pre class="brush: bash;">
+        /etc/init.d/apache2 restart
+        </pre></p>
+        <p class="idt">完了之后，我们就可以打开浏览器，输入http://ip/my_module（例如 http://localhost/my_module），页码虽然看到是一片空白，但我们服务器里的文件已经记录下我们用来访问服务器那台电脑的IP了。 </p>
+        <p class="idt">自定义模块的编写基本上需要遵循这样的格式，有些常量和参数的意思还有待考究，但已经可以看出，Apache为开发人员提供了一个很方便，很简单，平台无关的途径来实现自己想要的功能，非常给力。</p>
+        
+<!-- code syntax highlighter -->
+<script type="text/javascript" src="javascripts/shCore.js"></script>
+<script type="text/javascript" src="javascripts/shBrushPython.js"></script>
+<script type="text/javascript" src="javascripts/shBrushCpp.js"></script>
+<script type="text/javascript" src="javascripts/shBrushBash.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+
+{% endblock %}

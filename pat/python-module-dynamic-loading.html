@@ -10,7 +10,7 @@
         <p class="idt">上一节讲Python运行环境初始化的时候，曾经提到一个阶段是加载sys module，其实不只sys，还有很多常用的内建module，例如os、exceptions等，都会被加载到内存。但当我们打开Python解释器，敲“sys”时，它会提示你“NameError: name 'sys' is not defined”，需要我们输入“import sys”后，sys才变得“可用”。 </p>
         <p class="idt">其实在Python，有一个module pool的概念，顾名思义，是一个放置模块的池，池是什么概念？其实就是缓存。对于每一个被加载到内存的module，Python都将它放置在这个池里，以供程序的不同地方使用。而这个池，就是我们的sys.modules。Python启动时虽然加载了很多module到sys.modules，但大部分都没有将它们“映射”到local里，需要我们用的时候“手动指定”哪个“可用”。所以对于“import”这个词的理解，应该是这样的：当程序某个部分通过import希望加载某个module时，Python先在sys.modules里面寻找，如果找到了，就引入一个符号（这取决于你用怎样的import形式，有from？有as？）到该处的local名字空间，指向找到的这个module，否则就执行动态加载机制，加载相应模块，当然也需要在相应名字空间增加其关联的符号。</p>
         <p class="idt">下面我们通过构造一个例子，逐步深入源代码来剖析其原理。假设我们有以下一个文件夹结构（Debian环境下）：</p>
-        <p><pre>
+        <p><pre class="brush: bash;">
 user@debian:~$ls
 test
 user@debian:~$ls test
@@ -28,7 +28,7 @@ user@debian:~$python
 [..., 'test', 'test.test2', 'test.test2.m2', ...]
         </pre></p>
         <p class="idt">可以看到，直接通过“.”（dot）符号来加载“m2”，local里增加的是test这个顶层package符号，而sys.modules增加了3个module：“test”，“test.test2”，“test.test2.m2”。我们试试新开一个terminal，用“from”来import：</p>
-        <p><pre>
+        <p><pre class="brush: bash;">
 ...
 &gt;&gt;&gt;from test.test2 import m2
 &gt;&gt;&gt;dir()
@@ -37,7 +37,7 @@ user@debian:~$python
 [..., 'test', 'test.test2', 'test.test2.m2', ...]
         </pre></p>
         <p class="idt">跟上一个情况类似，增加了3个相同的module，而local里却没有了“test”，取而代之的是“m2”。如果是加as呢？看看：</p>
-        <p><pre>
+        <p><pre class="brush: bash;">
 ...
 &gt;&gt;&gt;from test.test2 import m2 as mm2
 &gt;&gt;&gt;dir()
@@ -116,5 +116,6 @@ import_module_level(char *name, PyObject *globals, PyObject *locals,
 <script type="text/javascript" src="javascripts/shCore.js"></script>
 <script type="text/javascript" src="javascripts/shBrushPython.js"></script>
 <script type="text/javascript" src="javascripts/shBrushCpp.js"></script>
+<script type="text/javascript" src="javascripts/shBrushBash.js"></script>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
 {% endblock %}

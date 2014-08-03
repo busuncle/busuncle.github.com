@@ -45,7 +45,7 @@ int Py_Main(intargc, char **argv)
         <p class="idt">先看Py_Initialize。Py_Initialize里面其实仅调用了一个函数——Py_InitializeEx，所以我们观察Py_InitializeEx。Py_InitializeEx首先会调用PyInterpreterState_New创建一个PyInterpreterState对象（进程的模拟），接着，调用PyThreadState_New创建一个PyThreadState对象（线程的模拟），并且在它们之间通过指针的指向来建立相互的联系（这部分的图都好难用纯文本字符画，所以省略了，其实不难理解的）。 </p>
         <p class="idt">接下来，Python会调用_Py_ReadyTypes对类型系统进行初始化，除了其内置类型，还会处理用户的自定义类型。再做一些琐碎的事情，例如初始化整数对象系统等。 </p>
         <p class="idt">一个重要阶段结束了，Python进入下一个相对独立的阶段——设置系统module。首先是新建一个PyDictObject来维护系统所有的module，然后第一个要设置的module是__builtin__，就是那个“__builtins__”： </p>
-        <p><pre>
+        <p><pre class="brush: bash;">
 &gt;&gt;&gt; __builtins__
 &lt;module '__builtin__' (built-in)&gt;
 &gt;&gt;&gt; __builtins__.__name__
@@ -60,5 +60,6 @@ int Py_Main(intargc, char **argv)
 <script type="text/javascript" src="javascripts/shCore.js"></script>
 <script type="text/javascript" src="javascripts/shBrushPython.js"></script>
 <script type="text/javascript" src="javascripts/shBrushCpp.js"></script>
+<script type="text/javascript" src="javascripts/shBrushBash.js"></script>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
 {% endblock %}
