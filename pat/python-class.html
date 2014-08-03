@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>Python类机制-Bound Method与Unbound Method</h1>
+    <link rel="stylesheet" type="text/css" href="stylesheets/shCoreRDark.css" media="screen" />
+{% endblock %}
+
+
+{% block content %}
+        <p class="idt">Bound Method和Unbound Method是Python中访问作为属性的函数的两种形式。简单的说，Bound Method是通过类的实例对象进行属性引用，Unbound Method则是直接通过类名进行属性引用。用以下的小程序组合展现一下它们的样子：</p>
+        <p><pre class="brush: python;">
+##############################################
+# [A.py]
+class A:
+    def f(self):
+        pass
+
+##############################################
+# [test1.py]
+import timeit
+
+test_str = """
+    a = A()
+    for i in range(10000000):
+        a.f() # Bound Method
+    """
+
+t = timeit.Timer(test_str, "from A import A")
+print min(t.repeat(3, 1)) # 1
+
+##############################################
+# [test2.py]
+import timeit
+
+test_str = """
+    a = A()
+    for i in range(10000000):
+        A.f(a) # Unbound Method
+    """
+
+t = timeit.Timer(test_str, "from A import A")
+print min(t.repeat(3, 1)) # 2
+        </pre></p>
+        <p class="idt">显然，我们不会简单的为了看这两种引用形式的外延，所以在test1.py和test2.py中都分别加上了计时代码，看两者的效率差距，并从中找到它们的本质区别。对于Bound Method和Unbound Method，它们某次测试的耗时分别是2.60687589645和7.64465117455（注：单位为秒，笔者进行过多次测试，结果相差不大。两个文件中“min(t.repeat(3, 1))”表示运行该程序3次并取最少值，取最少值而不取平均值是因为尽量让结果受系统调度的影响最少）。可以看出，两者的效率差距是比较大的，究竟为什么，我们看看字节码：</p>
+        <p><pre>
+a.f() # Bound Method
+LOAD_NAME                1 (a)
+LOAD_ATTR                2 (f)
+CALL_FUNCTION            0
+
+A.f(a) # Unbound Method
+LOAD_NAME                0 (A)
+LOAD_ATTR                2 (f)
+LOAD_NAME                1 (a)
+CALL_FUNCTION            1
+        </pre></p>
+        <p class="idt">可以看出，在关键的一千万次循环里，Bound Method和Unbound Method的字节码是有差异的。粗略地看，Unbound Method比Bound Method多了一条字节码“LOAD_NAME”，是不是多了这一千万次“LOAD_NAME”的循环而造成7秒多跟2秒多的差距呢？现在还言之过早，可能不单单是这个原因，让我们先看看这里面比较陌生的字节码——“LOAD_ATTR”的实现：</p>
+        <p><pre class="brush: c;">
+// LOAD_ATTR
+w = GETITEM(names, oparg);
+v = TOP();
+x = PyObject_GetAttr(v, w);
+Py_DECREF(v);
+SET_TOP(x);
+        </pre></p>
+        <p class="idt">可以告诉大家，最后被LOAD_ATTR放到栈顶的“x”是一个PyMethodObject对象，它实际上是PyFunctionObject和instance对象绑定在一起的结果。对于“a.f()”，“f”实际上就是那个PyFunctionObject，而“a”就是instance对象，也就是我们经常说的“self”。而对于“A.f(a)”，虽然也是得到一个PyMethodObject对象，但它里面绑定的instance对象却是为空的，需要我们显式地传进一个instance对象“a”。 </p>
+        <p class="idt">知道这个区别，那么就好办了，因为下一个字节码是CALL_FUNCTION（属性为函数的引用，当然是CALL_FUNCTION啦）。还记得CALL_FUNCTION里经常折腾的call_function吗：</p>
+        <p><pre class="brush: c;">
+static PyObject* call_function(Pyobject ***pp_stack, int oparg)
+{
+    /* 关于参数、函数对象指针的一些处理 */
+    ...
+    PyObject *x;
+
+    if (PyCFunction_check(func) &amp;&amp; nk == 0) {
+        ...
+    } else {
+        // [1]检查是否PyMethodObject对象和是否有self参数（也就是Bound Method）
+        if (PyMethod_check(func) &amp;&amp; PyMethod_GET_SELF(func) != NULL) {
+            PyObject *self = PyMethod_GET_SELF(func);
+            func = PyMethod_GET_FUNCTION(func);
+            // [2]self参数入栈，调整参数信息变量
+            *pfunc = self;
+            na++;
+            n++;
+        }
+        // [3]快速函数入口
+        if (PyFunction_Check(func))
+            x = fast_function(func, pp_stack, n, na, nk);
+        else
+            // [4]效率较低的函数入口
+            x = do_call(func, pp_stack, na, nk);
+    }
+    ...
+    return x;
+}
+        </pre></p>
+        <p class="idt">根据绑定的结果，“a.f()”在[1]处的判断是为真，于是进入里面进行相应的处理。这里要做的是将PyMethodObject拆分，得到一个PyFunctionObject和一个“self”（instance对象），分别赋给func和pfunc。到了下面[3]的判断，PyFunction_check(func)为真，于是进入快速函数入口“fast_function”，执行效率较高的处理。而对于“A.f(a)”，虽然它得到的也是一个PyMethodObject，但其指向self对象的域是为空的，也就是说[1]的判断中“PyMethod_GET_SELF(func) != NULL”为假，直接跑到[3]。而由于没有经过拆分，func还是指向PyMethodObject这样一个对象，所以[3]的PyFunction_Check(func)判断为假，只好进入[4]的do_call调用了，这是一个比fast_function效率要低很多的调用。 </p>
+        <p class="idt">到了这里，我们大概明白“Unbound Method”和“Bound Method”为何有这样的效率差距了。不过，我们还不满足，因为就算是Bound Method，在一千万次的循环里，我们就做了一千万次的PyMethodObject绑定，这会不会太傻了点呢？答案是肯定的，于是，我们改变了一下绑定的位置，得到下面这个程序：</p>
+        <p><pre class="brush: python;">
+# [test3.py]
+import timeit
+
+test_str = """
+    a = A()
+    func = a.f # bound here, outside the loop
+    for i in range(10000000):
+        func()
+    """
+
+t = timeit.Timer(test_str, "from A import A")
+print min(t.repeat(3, 1))
+        </pre></p>
+        <p class="idt">绑定放到循环外面，循环里面只剩下“func()”，它对应的字节码也就短短两个：</p>
+        <p><pre>
+LOAD_NAME                3 (func)
+CALL_FUNCTION            0
+        </pre></p>
+        <p class="idt">运行一下，得到的结果是1.71142983437，又比循环里进行绑定快了一点，这次心满意足地结束了。</p>
+
+<!-- code syntax highlighter -->
+<script type="text/javascript" src="javascripts/shCore.js"></script>
+<script type="text/javascript" src="javascripts/shBrushPython.js"></script>
+<script type="text/javascript" src="javascripts/shBrushCpp.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+{% endblock %}
