@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>SICP第一章读书笔记</h1>
+    <link rel="stylesheet" type="text/css" href="stylesheets/shCoreRDark.css" media="screen" />
+{% endblock %}
+
+{% block content %}
+        <p class="idt">先用一个简单问题带起节奏：请用你熟悉的语言实现求平方根过程sqrt。</p>
+        <p class="idt">你可能会问，这有什么好实现的呢？</p>
+        <p><pre class="brush: python;">
+    import math
+    print math.sqrt(100)
+        </pre></p>
+        <p class="idt">没错，当通用的算法都有现成的库对其封装，确实没有实现的意义。但是，我可以说，从现实意义上，这至少可以作为一道面试题（不是开玩笑，Google的面试会考你快排的实现，微软的面试会让你当面写出二分查找）。</p>
+        <p class="idt">求平方根，站在计算机的角度看，就是找到一个 X 使得 X * X=Y（实际上，应该是 Y - X * X 的绝对值少于某个足够少的阈值）。所以从某个猜测值 X0 开始，采用某种逼近策略，让 X0 逐渐靠近我们要求的 X，这就是求平方根的计算过程描述。而由于实数的稠密性，我们不可能采用诸如每次增加或减少0.0001的步进方法，而必须选取一种较好的策略。我们观察到，对于迭代过程中某次得到的 Xn，有 Y / Xn = Xn'，换个思路，不就是每次让 Xn 和 Xn' 更加接近么？如何接近？可以考虑每次求出Xn与Xn'的平均值。所以对于每一次的 Xn，检测这个 Xn 是否“足够好”（可以有基于不同精度的准则），是则得出最终的X；否则求出 Xn+1 = （Xn + Xn'）/ 2，继续检测上面条件。这也是牛顿法的一个特例：</p>
+        <p><pre class="brush: python;">
+    guess = 1.0
+    delta = 0.00001
+    def sqrt(x):
+        def good_enough(guess, x):
+                return abs(guess * guess - x) &lt; delta
+        while not good_enough(guess, x):
+                guess = 0.5 * (guess + x / guess)
+        return guess
+        </pre></p>
+        <p class="idt">事实上，由于阈值delta的精度问题，上面这种检测是否“足够好”的方法是比较粗糙的，它对于一个很小很小的数会失效：</p>
+        <p><pre>
+    0.5 * (1.0 + Min / 1.0) = 0.5 + Min / 2 ≈ 0.5
+    0.5 *（0.5 + Min / 0.5) = 0.25 + Min ≈ 0.25
+    0.5 * (0.25 + Min / 0.25) = 0.125 + Min * 2 ≈ 0.125
+    ...
+        </pre></p>
+        <p class="idt">假如Min足够小，那么猜测值Xn会比Xn'（也就是Y / Xn）更快收敛到delta的平方根，从而使good_enough成立，但此时得出的 Xn 显然不是Min的平方根。一个更好的策略是检测猜测值从一次迭代到下一次的变化，当改变值相对于猜测值的比率很少时就结束。</p>
+        <p class="idt">对于一般的面试，到这里也就差不多了，但作为读书笔记，似乎有点短。下面先来看一下函数不动点的概念（有点穿越，无碍，先接受这种设定，一切都会变得可爱起来）：</p>
+        <p class="idt">X 称为函数 F 的不动点，如果 X 满足方程 F(X) = X。对于某些函数，从某个猜测值开始反复地应用 F：</p>
+        <p class="idt">F(X)，F(F(X))，F(F(F(X)))，……</p>
+        <p class="idt">直到值的变化不大时，就可以找到它的一个不动点：</p>
+        <p><pre class="brush: python;">
+    delta = 0.00001
+    def fixed_point(f, guess):
+       while abs(f(guess) - guess) &gt; delta:
+            guess = f(guess)
+        return f(guess)
+        </pre></p>
+        <p class="idt">我们发现，求不动点跟刚才求平方根的思想有着惊人的相似，是否可以将平方根的方法更加general，更加形式化地抽象为求不动点的过程呢？由 Y = X * X 变换一下得到 X = Y / X，实际上就是求F(X) = Y / X 关于 X 的不动点：</p>
+        <p><pre class="brush: python;">
+    def sqrt(y):
+        return fixed_point(lambda x:y / x, 1.0)
+        </pre></p>
+        <p class="idt">请注意，若直接按照这种变换进行迭代，搜寻并不收敛。考虑初始值X0，下一个猜测是X1 = Y / X0，再下一个猜测将是 X2 = Y / X1 = Y / (Y / X0) = X0，无限循环了。所以，我们必须引入一种技术减少相邻两个猜测值震动的幅度，让其尽快收敛。这里，我们考虑下一个猜测值是(1/2)(X + Y / X)，而不是 Y / X：</p>
+        <p><pre class="brush: python;">
+    def sqrt(y):
+        return fixed_point(lambda x:0.5 * (x + y / x), 1.0)
+        </pre></p>
+        <p class="idt">这种控制震荡，帮助收敛的方法我们称为平均阻尼技术。而且有没有发现，通过不动点结合平均阻尼的这种方法展开得到的求近似值序列，正好跟刚才介绍的牛顿法特例的序列一样？为了接下来的扩展，我们将平均阻尼的思想抽象出一个过程，作为返回值：</p>
+        <p><pre class="brush: python;">
+    def average_damp(f):
+        return lambda x:0.5 * (x + f(x))
+        </pre></p>
+        <p class="idt">相应地，求平方根的函数可以改写为：</p>
+        <p><pre class="brush: python;">
+    def sqrt(y):
+        return fixed_point(average_damp(lambda x:y / x), 1.0)
+        </pre></p>
+        <p class="idt">接下来，我们考虑牛顿法的一般形式（为的也是求平方根）：如果G(X)是一个可微函数，那么方程G(X) = 0的一个解就是函数 F(X) = X 的一个不动点，其中：</p>
+        <p class="idt">F(X) = X - G(X) / D(G(X))        // D(G(X))是函数G在X点的导数</p>
+        <p class="idt">导数的定义我们直接用程序给出：</p>
+        <p><pre class="brush: python;">
+    def deriv(g):
+        dx = 0.00001
+        return lambda x:(g(x + dx) - g(x)) / dx
+        </pre></p>
+        <p class="idt"> 有了deriv，牛顿法也可以方便地用程序表达出来了：</p>
+        <p><pre class="brush: python;">
+    def newton_transform(g):
+        return lambda x:x - g(x) / deriv(g)(x)
+    def newton_method(g, guess):
+        return fixed_point(newton_transform(g), guess)
+        </pre></p>
+        <p class="idt">令G(X) = X * X - Y，通过牛顿法去找G(X) = 0的点，就可以确定 Y 的平方根了：</p>
+        <p><pre class="brush: python;">
+    def sqrt(y):
+        return newton_method(lambda x: x * x - y, 1.0)
+        </pre></p>
+        <p class="idt">上面的两种求解平方根的方法，一个是求不动点，一个是使用牛顿法（实际上其表述也是一个不动点的计算过程），它们都将求平方根表述为更general的过程（相比于问题一开始给出的特例解答），通过对两个过程中间的一些构件比较，我们发现了以下特征：</p>
+        <p><pre>
+                   求不动点          牛顿法
+过程参数g          lambda x:y/x      lambda x:x*x - y
+变换g的过程        average_damp      newton_transform
+初始猜想guess      1.0               1.0
+        </pre></p>
+        <p class="idt">作为普通程序员，数学公式可能会忘了，但是对于如何识别出程序里的基本抽象，基于它们进行进一步的构造，以创建威力更大的抽象，这样一种程序设计的思想应该保持高度敏感。这也正是后半部分的戏玉所在。在这两种方法上，我们实际上可以抽象出一个更general的过程，这个高阶过程可以灵活自如地操纵这些一般性的方法构件：</p>
+        <p><pre class="brush: python;">
+    def fixed_point_of_transform(g, transform, guess):
+        return fixed_point(transform(g), guess)
+        </pre></p>
+        <p class="idt">对于求不动点方法，我们重塑为：</p>
+        <p><pre class="brush: python;">
+    def sqrt(y):
+        return fixed_point_of_transform(lambda x:y / x, average_damp, 1.0)
+        </pre></p>
+        <p class="idt">而牛顿法，则可以重塑为：</p>
+        <p><pre class="brush: python;">
+    def sqrt(y):
+        return fixed_point_of_transform(lambda x:x * x - y, newton_transform, 1.0)
+        </pre></p>
+        <p class="idt">所以到最后，你会发现这里重点分享的不是什么数学理论，而是要唤醒我们对过程抽象的触觉。作为实际应用的程序员，我们不是要对每个问题都进行尽可能抽象的描述，而是要根据工作中的实际情况，选择一个合适的抽象层次。这又回到了工程性思想的问题了，用我最喜欢的一个词，就是tradeoff。</p>
+
+<!-- code syntax highlighter -->
+<script type="text/javascript" src="javascripts/shCore.js"></script>
+<script type="text/javascript" src="javascripts/shBrushPython.js"></script>
+<script type="text/javascript" src="javascripts/shBrushCpp.js"></script>
+<script type="text/javascript" src="javascripts/shBrushBash.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+{% endblock %}
