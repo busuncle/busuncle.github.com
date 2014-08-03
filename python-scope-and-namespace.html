@@ -23,222 +23,220 @@
 <div class="container">
     <section id="main_content">
         
-        <section id="main_content">
-            <p class="idt">名字空间是Python的一个非常核心的概念，而作用域则是跟名字空间紧密联系的一个概念。Python有3个独立的名字空间：local、global、builtin。在Python中，类、函数、module都对应着一个独立的名字空间。名字空间是程序运行时的概念，而作用域则是与之对应的静态的东西，也就是说它是由源程序的文本决定的。由于我们经常要对作用域中的名字做直接访问（这类行为我们称为名字引用），所以Python中就要有一定规则，这个规则叫做“最内嵌套作用域规则”。看下面这个简单的例子：</p>
-            <p><pre class="brush: python;">
-            a = 1
-             
-            def f():
-                a = 2
-                print "a in f: ", a
-                def g():
-                    a = 3
-                    print "a in g: ", a
-                return g
-             
-            def h():
-                print "a in h: ", a
-                def h2():
-                    print "a in h2: ", a
-                return h2
-             
-            print "global a: ", a
-            func = f()
-            func()
-            func2 = h()
-            func2() 
-
-            """
-            程序的输出结果是：
-            global a:  1
-            a in f:  2
-            a in g:  3
-            a in h:  1
-            a in h2:  1 
-            """
-            </pre></p>
-
-            <p class="idt">可以看出，由一个赋值语句绑定的名字在这个赋值语句的作用域是可见的（从“global a:  1”得出），而且在其内部嵌套的每个作用域也是可见的（从“a in h:  1，a in h2:  1”得出），除非它被嵌套于内部的，引进同样名字的另一条赋值语句所遮蔽（从“a in f:  2，a in g:  3”得出）。 </p>
-            <p class="idt">这个例子是很容易理解，因为像C/C++等语言也符合这个规则，所以不用深究，想当然地也不会出错。值得注意的是，Python没有C/C++那种“块作用域”的概念，也就是说，类似这样的C程序：</p>
-
-            <p><pre class="brush: c;">
-            #include&lt;stdio.h&gt;
-            int main(){
-                if(1){
-                    int a = 1;
-                }
-                printf("%d\n", a);
-                return 0;
-            } 
-            </pre></p>
-
-            <p class="idt">程序会提示a未声明，而在Python程序： </p>
-            <p><pre class="brush: python;">
-            if True:
-                a = 1
-            print a 
-            </pre></p>
-            <p class="idt">程序则会正常地输出a的值为1。那是因为if这样的语句在Python中不作为一个新的Code Block，也就没用其相应的名字空间和作用域，所以“a = 1”这样的绑定语句其实跟下面“print a”是在同一个作用域里面的，它的作用是使a这个变量在当前作用域及其内部嵌套的每个作用域可见。但是可见不见得一定能够引用成功，可以看看这一个例子（书上的例子，这个例子是为再下面的例子做铺垫的）： </p>
-
-            <p><pre class="brush: python;">
-            a = 1 
-             
+        <p class="idt">名字空间是Python的一个非常核心的概念，而作用域则是跟名字空间紧密联系的一个概念。Python有3个独立的名字空间：local、global、builtin。在Python中，类、函数、module都对应着一个独立的名字空间。名字空间是程序运行时的概念，而作用域则是与之对应的静态的东西，也就是说它是由源程序的文本决定的。由于我们经常要对作用域中的名字做直接访问（这类行为我们称为名字引用），所以Python中就要有一定规则，这个规则叫做“最内嵌套作用域规则”。看下面这个简单的例子：</p>
+        <p><pre class="brush: python;">
+        a = 1
+         
+        def f():
+            a = 2
+            print "a in f: ", a
             def g():
+                a = 3
+                print "a in g: ", a
+            return g
+         
+        def h():
+            print "a in h: ", a
+            def h2():
+                print "a in h2: ", a
+            return h2
+         
+        print "global a: ", a
+        func = f()
+        func()
+        func2 = h()
+        func2() 
+
+        """
+        程序的输出结果是：
+        global a:  1
+        a in f:  2
+        a in g:  3
+        a in h:  1
+        a in h2:  1 
+        """
+        </pre></p>
+
+        <p class="idt">可以看出，由一个赋值语句绑定的名字在这个赋值语句的作用域是可见的（从“global a:  1”得出），而且在其内部嵌套的每个作用域也是可见的（从“a in h:  1，a in h2:  1”得出），除非它被嵌套于内部的，引进同样名字的另一条赋值语句所遮蔽（从“a in f:  2，a in g:  3”得出）。 </p>
+        <p class="idt">这个例子是很容易理解，因为像C/C++等语言也符合这个规则，所以不用深究，想当然地也不会出错。值得注意的是，Python没有C/C++那种“块作用域”的概念，也就是说，类似这样的C程序：</p>
+
+        <p><pre class="brush: c;">
+        #include&lt;stdio.h&gt;
+        int main(){
+            if(1){
+                int a = 1;
+            }
+            printf("%d\n", a);
+            return 0;
+        } 
+        </pre></p>
+
+        <p class="idt">程序会提示a未声明，而在Python程序： </p>
+        <p><pre class="brush: python;">
+        if True:
+            a = 1
+        print a 
+        </pre></p>
+        <p class="idt">程序则会正常地输出a的值为1。那是因为if这样的语句在Python中不作为一个新的Code Block，也就没用其相应的名字空间和作用域，所以“a = 1”这样的绑定语句其实跟下面“print a”是在同一个作用域里面的，它的作用是使a这个变量在当前作用域及其内部嵌套的每个作用域可见。但是可见不见得一定能够引用成功，可以看看这一个例子（书上的例子，这个例子是为再下面的例子做铺垫的）： </p>
+
+        <p><pre class="brush: python;">
+        a = 1 
+         
+        def g():
+            print a
+         
+        def f():
+            print a  # [1]
+            a = 2  # [2]
+            print a  # [3]
+         
+        g()
+        f() 
+        </pre></p>
+        
+
+        <p class="idt">包括我在内的很多Python初学者，看到这个程序，会觉得[1]肯定是输出1，[3]会输出2。但事实上，[1]这里会抛出一个异常，说a未赋值先引用。之前说过，只要出现赋值语句（除了“=”外，“def”、“class”、“import”等等也是赋值语句），那么该赋值的符号在其作用域是可见的，也就说在[1]这个地方，“print a”已经看到局部里面的“a”，而不是找全局的那个“a”，但是“a”的赋值却是在[2]这个地方才出现，所以[1]这里实际上是引用了一个可见的但未赋值的局部变量。 </p>
+        <p class="idt">说了几个例子，似乎对Python作用域有了一定了解。下面是一个更进阶的例子，之前学习decorator的时候，遇到过这样的一个程序（为了简单突出地说明问题，做了删减和修改）：</p>
+
+        <p><pre class="brush: python;">
+        # test1.py
+        def f():
+            a = [0]
+            def g():
+                a[0] = a[0] + 1
+                print a[0]
+            return g
+        f()() 
+        </pre></p>
+
+        <p class="idt">我很好奇，为什么a要是一个列表，我尝试把a改为一个整数：</p>
+        <p><pre class="brush: python;">
+        # test2.py
+        def f():
+            a = 0
+            def g():
+                a = a + 1
                 print a
-             
-            def f():
-                print a  # [1]
-                a = 2  # [2]
-                print a  # [3]
-             
-            g()
-            f() 
-            </pre></p>
-            
+            return g
+        f()() 
+        </pre></p>
 
-            <p class="idt">包括我在内的很多Python初学者，看到这个程序，会觉得[1]肯定是输出1，[3]会输出2。但事实上，[1]这里会抛出一个异常，说a未赋值先引用。之前说过，只要出现赋值语句（除了“=”外，“def”、“class”、“import”等等也是赋值语句），那么该赋值的符号在其作用域是可见的，也就说在[1]这个地方，“print a”已经看到局部里面的“a”，而不是找全局的那个“a”，但是“a”的赋值却是在[2]这个地方才出现，所以[1]这里实际上是引用了一个可见的但未赋值的局部变量。 </p>
-            <p class="idt">说了几个例子，似乎对Python作用域有了一定了解。下面是一个更进阶的例子，之前学习decorator的时候，遇到过这样的一个程序（为了简单突出地说明问题，做了删减和修改）：</p>
+        <p class="idt">这个时候，得到的是一个异常：UnboundLocalError: local variable 'a' referenced before assignment。当时觉得非常诡异，为什么“a”会出现这个异常而“a[0]”这样的引用又不会呢，这里就算搬出“最内嵌套作用域规则”，似乎也不好解释，所以需要分析它的字节码。首先，我们分析错误的那个程序[test2.py]，在“def g():”下面，加入“dis.dis(g)”这个语句（dis是一个Python提供的反汇编Python源代码得到字节码的一个工具，需要import dis），得到下面这样一组字节码（经过删减加工，混入了Python源码作对比）：</p>
 
-            <p><pre class="brush: python;">
-            # test1.py
-            def f():
-                a = [0]
-                def g():
-                    a[0] = a[0] + 1
-                    print a[0]
-                return g
-            f()() 
-            </pre></p>
+        <pre>
+a = a + 1:
+6          13 LOAD_FAST                0 (a)
+         16 LOAD_CONST               1 (1)
+         19 BINARY_ADD          
+         20 STORE_FAST               0 (a)
+print a:
+7          23 LOAD_FAST                0 (a)
+         26 PRINT_ITEM          
+         27 PRINT_NEWLINE   
+        </pre>
 
-            <p class="idt">我很好奇，为什么a要是一个列表，我尝试把a改为一个整数：</p>
-            <p><pre class="brush: python;">
-            # test2.py
+        <p class="idt">对于“a = a + 1”，它生成了4条字节码：LOAD_FAST、LOAD_CONST、BINARY_ADD、STORE_FAST。LOAD_FAST要做的是把一个对局部变量“a”的引用压到栈顶。LOAD_CONST把常量“1”压到栈顶。BINARY_ADD把栈顶的两个元素（一个最顶，另一个被它“压着”）弹出来，作加法，然后把结果又压到栈顶。STORE_FAST把栈顶元素存储到局部变量“a”。在这里，我们可以看到，决定“a”是一个局部变量的行为，在编译的时候就落实了，而运行时，执行LOAD_FAST，才发现“a”这个局部变量不存在。这里可能有疑问，为什么Python要在编译时把“a”理解成一个局部变量呢？回想我们刚才例子，其实答案呼之欲出了。Python说了，只要在一个作用域里出现赋值语句，那么这个被赋值的符号就在这个作用域里可见。明显，“a = a + 1”是一个赋值语句，“a”又出现在左值，所以编译器把“a”这个符号理解成局部变量，在执行“a + 1”的时候，自然会从局部变量里找这个值，再进行加法。 </p>
+        <p class="idt">解决了这个问题，我们又看看为什么a[0]这种形式又可以呢。同样地，对[test1.py]进行反汇编操作： </p>
+        <pre>
+a[0] = a[0] + 1
+6          13 LOAD_DEREF               0 (a)
+         16 LOAD_CONST               1 (0)
+         19 BINARY_SUBSCR       
+         20 LOAD_CONST               2 (1)
+         23 BINARY_ADD          
+         24 LOAD_DEREF               0 (a)
+         27 LOAD_CONST               1 (0)
+         30 STORE_SUBSCR        
+print a[0]
+7          31 LOAD_DEREF               0 (a)
+         34 LOAD_CONST               1 (0)
+         37 BINARY_SUBSCR       
+         38 PRINT_ITEM          
+         39 PRINT_NEWLINE        
+        </pre>
+        <p class="idt">对于“a[0] = a[0] + 1”，多了三条新的字节码：LOAD_DEREF、BINARY_SUBSCR、STORE_SUBSCR。LOAD_DEREF在这里做的是往栈顶压入一个对cell[i]的引用（cell是一个被内嵌函数引用的局部变量名的tuple，在这里只有一个“a”，所以i为0），BINARY_SUBSCR实现的是“TOS = TOS1[TOS]”（解释一下，TOS指栈顶元素，TOS1指紧接着栈顶的元素，由于是先压“a”，再压“0”，所以TOS是“0”，TOS1是“a”，而“TOS = TOS1[TOS]”就是先后弹出“0”和“a”，然后吧“a[0]”的值压回栈顶）。STORE_SUBSCR实现的是“TOS1[TOS] = TOS2”（类似地，TOS2表示TOS1下面的元素，这时TOS、TOS1、TOS2分别是符号“0”,符号“a”，a[0]+1的值），就是把栈顶最上面的3个元素弹出来，然后调用PyObject_SetItem，把“a[0]”赋值为“a[0]+1”。有了对这三个新指令的描述，再用一个运行时栈的示意图来描述，就更清楚了：</p>
+
+        <pre>
+LOAD_DEREF 0  
+
+           |---|                    
+           | a |                                            
+           |---|                                           
+           | ? |                                              
+                                   
+LOAD_CONST 1  
+
+           |---|
+           | 0 |
+           |---|
+           | a |
+           |---|
+
+BINARY_SUBSCR     
+
+               |----|
+               |a[0]|
+               |----|
+               | ?  |
+
+LOAD_CONST 2     
+
+              |----|
+              | 1  |
+              |----|
+              |a[0]|
+              |----|
+
+BINARY_ADD      
+
+             |------|
+             |a[0]+1|
+             |------|
+             |   ?  |
+
+LOAD_DEREF 0    
+
+             |------|
+             |   a  |
+             |------|
+             |a[0]+1|
+             |------|
+
+LOAD_CONST 1    
+
+             |------|
+             |   0  |
+             |------|
+             |   a  |
+             |------|
+             |a[0]+1|
+             |------|
+
+STORE_SUBSCR    
+
+             |------|        ---&gt; PyObject_SetItem(a, 0, a[0] + 1)
+             |   ?  |
+             |------| 
+
+        </pre>
+        <p class="idt">执行完STORE_SUBSCR后，栈顶已经没有了“a”、“0”、“a[0]+1”这些东西了（注意，紧接着STORE_SUBSCR后它们还在原来的地方，只是Python源码用一个叫stack_pointer的东西表示栈顶，stack_pointer在STORE_SUBSCR后把指针移到“a[0]+1”下面，所以看起来它们不在栈里了，至于接下来它们被怎样覆盖，这是不管的，因为它们不再属于栈）原来的“a[0]”也被替换成“a[0] + 1”。下面的“print a[0]”，原理很简单，就不详细解释了。</p>
+        <p class="idt">讲到这里，感觉这种情况下，要用“a[0]”代替“a”，还是有点别扭的，毕竟我们会经常这样用。例如要设置一个计数器，统计闭包函数的调用次数，这时就要用“a[0]”了，而不能用“a”。而由于“a”也不是全局变量，又不能通过声明“global a”来做，很tricky。不过听说Python 3引入了一个新的关键字“nonlocal”，有了这个，就可以写下面的语句了：</p>
+        <p><pre class="brush: python;">
             def f():
                 a = 0
                 def g():
+                    nonlocal a
                     a = a + 1
                     print a
                 return g
-            f()() 
-            </pre></p>
+             
+            func = f()
+            func()
+            func() 
+        </pre></p>
 
-            <p class="idt">这个时候，得到的是一个异常：UnboundLocalError: local variable 'a' referenced before assignment。当时觉得非常诡异，为什么“a”会出现这个异常而“a[0]”这样的引用又不会呢，这里就算搬出“最内嵌套作用域规则”，似乎也不好解释，所以需要分析它的字节码。首先，我们分析错误的那个程序[test2.py]，在“def g():”下面，加入“dis.dis(g)”这个语句（dis是一个Python提供的反汇编Python源代码得到字节码的一个工具，需要import dis），得到下面这样一组字节码（经过删减加工，混入了Python源码作对比）：</p>
-
-            <pre>
-  a = a + 1:
-  6          13 LOAD_FAST                0 (a)
-             16 LOAD_CONST               1 (1)
-             19 BINARY_ADD          
-             20 STORE_FAST               0 (a)
-  print a:
-  7          23 LOAD_FAST                0 (a)
-             26 PRINT_ITEM          
-             27 PRINT_NEWLINE   
-            </pre>
-
-            <p class="idt">对于“a = a + 1”，它生成了4条字节码：LOAD_FAST、LOAD_CONST、BINARY_ADD、STORE_FAST。LOAD_FAST要做的是把一个对局部变量“a”的引用压到栈顶。LOAD_CONST把常量“1”压到栈顶。BINARY_ADD把栈顶的两个元素（一个最顶，另一个被它“压着”）弹出来，作加法，然后把结果又压到栈顶。STORE_FAST把栈顶元素存储到局部变量“a”。在这里，我们可以看到，决定“a”是一个局部变量的行为，在编译的时候就落实了，而运行时，执行LOAD_FAST，才发现“a”这个局部变量不存在。这里可能有疑问，为什么Python要在编译时把“a”理解成一个局部变量呢？回想我们刚才例子，其实答案呼之欲出了。Python说了，只要在一个作用域里出现赋值语句，那么这个被赋值的符号就在这个作用域里可见。明显，“a = a + 1”是一个赋值语句，“a”又出现在左值，所以编译器把“a”这个符号理解成局部变量，在执行“a + 1”的时候，自然会从局部变量里找这个值，再进行加法。 </p>
-            <p class="idt">解决了这个问题，我们又看看为什么a[0]这种形式又可以呢。同样地，对[test1.py]进行反汇编操作： </p>
-            <pre>
-  a[0] = a[0] + 1
-  6          13 LOAD_DEREF               0 (a)
-             16 LOAD_CONST               1 (0)
-             19 BINARY_SUBSCR       
-             20 LOAD_CONST               2 (1)
-             23 BINARY_ADD          
-             24 LOAD_DEREF               0 (a)
-             27 LOAD_CONST               1 (0)
-             30 STORE_SUBSCR        
-  print a[0]
-  7          31 LOAD_DEREF               0 (a)
-             34 LOAD_CONST               1 (0)
-             37 BINARY_SUBSCR       
-             38 PRINT_ITEM          
-             39 PRINT_NEWLINE        
-            </pre>
-            <p class="idt">对于“a[0] = a[0] + 1”，多了三条新的字节码：LOAD_DEREF、BINARY_SUBSCR、STORE_SUBSCR。LOAD_DEREF在这里做的是往栈顶压入一个对cell[i]的引用（cell是一个被内嵌函数引用的局部变量名的tuple，在这里只有一个“a”，所以i为0），BINARY_SUBSCR实现的是“TOS = TOS1[TOS]”（解释一下，TOS指栈顶元素，TOS1指紧接着栈顶的元素，由于是先压“a”，再压“0”，所以TOS是“0”，TOS1是“a”，而“TOS = TOS1[TOS]”就是先后弹出“0”和“a”，然后吧“a[0]”的值压回栈顶）。STORE_SUBSCR实现的是“TOS1[TOS] = TOS2”（类似地，TOS2表示TOS1下面的元素，这时TOS、TOS1、TOS2分别是符号“0”,符号“a”，a[0]+1的值），就是把栈顶最上面的3个元素弹出来，然后调用PyObject_SetItem，把“a[0]”赋值为“a[0]+1”。有了对这三个新指令的描述，再用一个运行时栈的示意图来描述，就更清楚了：</p>
-
-            <pre>
-LOAD_DEREF 0  
-
-               |---|                    
-               | a |                                            
-               |---|                                           
-               | ? |                                              
-                                       
-LOAD_CONST 1  
-
-               |---|
-               | 0 |
-               |---|
-               | a |
-               |---|
- 
-BINARY_SUBSCR     
-
-                   |----|
-                   |a[0]|
-                   |----|
-                   | ?  |
- 
-LOAD_CONST 2     
-
-                  |----|
-                  | 1  |
-                  |----|
-                  |a[0]|
-                  |----|
- 
-BINARY_ADD      
-
-                 |------|
-                 |a[0]+1|
-                 |------|
-                 |   ?  |
- 
-LOAD_DEREF 0    
-
-                 |------|
-                 |   a  |
-                 |------|
-                 |a[0]+1|
-                 |------|
- 
-LOAD_CONST 1    
-
-                 |------|
-                 |   0  |
-                 |------|
-                 |   a  |
-                 |------|
-                 |a[0]+1|
-                 |------|
- 
-STORE_SUBSCR    
-
-                 |------|        ---&gt; PyObject_SetItem(a, 0, a[0] + 1)
-                 |   ?  |
-                 |------| 
-
-            </pre>
-            <p class="idt">执行完STORE_SUBSCR后，栈顶已经没有了“a”、“0”、“a[0]+1”这些东西了（注意，紧接着STORE_SUBSCR后它们还在原来的地方，只是Python源码用一个叫stack_pointer的东西表示栈顶，stack_pointer在STORE_SUBSCR后把指针移到“a[0]+1”下面，所以看起来它们不在栈里了，至于接下来它们被怎样覆盖，这是不管的，因为它们不再属于栈）原来的“a[0]”也被替换成“a[0] + 1”。下面的“print a[0]”，原理很简单，就不详细解释了。</p>
-            <p class="idt">讲到这里，感觉这种情况下，要用“a[0]”代替“a”，还是有点别扭的，毕竟我们会经常这样用。例如要设置一个计数器，统计闭包函数的调用次数，这时就要用“a[0]”了，而不能用“a”。而由于“a”也不是全局变量，又不能通过声明“global a”来做，很tricky。不过听说Python 3引入了一个新的关键字“nonlocal”，有了这个，就可以写下面的语句了：</p>
-            <p><pre class="brush: python;">
-                def f():
-                    a = 0
-                    def g():
-                        nonlocal a
-                        a = a + 1
-                        print a
-                    return g
-                 
-                func = f()
-                func()
-                func() 
-            </pre></p>
-
-            <p class="idt">程序会先后正确返回1和2。这样子的话，进行闭包的某些操作就比以前更方便和直观了。在这里，我们只介绍了名字引用的相关规则和实例，Python名字空间里还有一种叫做属性引用，比较简单，就是用“.”来对对象的属性进行访问，参照着“最内嵌套作用域规则”，是很好理解的，这也不作介绍了。</p>
-            <p class="idt"></p>
-        </section>
+        <p class="idt">程序会先后正确返回1和2。这样子的话，进行闭包的某些操作就比以前更方便和直观了。在这里，我们只介绍了名字引用的相关规则和实例，Python名字空间里还有一种叫做属性引用，比较简单，就是用“.”来对对象的属性进行访问，参照着“最内嵌套作用域规则”，是很好理解的，这也不作介绍了。</p>
+        <p class="idt"></p>
 
 <!-- code syntax highlighter -->
 <script type="text/javascript" src="javascripts/shCore.js"></script>

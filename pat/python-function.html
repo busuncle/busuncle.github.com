@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>Python函数机制</h1>
+    <link rel="stylesheet" type="text/css" href="stylesheets/shCoreRDark.css" media="screen" />
+{% endblock %}
+
+
+{% block content %}
+        <p class="idt">关于Python函数机制，我们引入一个重要的对象——PyFunctionObject，它在函数机制里充当的是一个邮递员的角色。在函数创建时（def语句），Python将函数需要的静态信息（如PyCodeObject指针）和运行时的信息（如global名字空间）打包成一个结构（就是PyFunctionObject），压入运行时栈，再通过STORE_NAME将其与函数名对应。到了函数调用时，通过LOAD_NAME将函数名对应的PyFunctionObject压入栈（有参数的还得先压参数）接着由CALL_FUNCTION接手，将PyFunctionObject里面有用的东西取出来，然后最终还是通过递归调用之前介绍过的虚拟机的实现——PyEval_EvalFrameEx来执行函数中的字节码。</p>
+        <p class="idt">短短几句，似乎就将Python函数的大概讲完，其实当然没那么简单，Python的各种函数参数形式、嵌套函数、闭包，还是蛮有研究价值的，让我们先从一个简单的例子开始：</p>
+        <p><pre>
+1 def f():
+2     pass
+3 
+4 def g(a, b):
+5     pass
+6 
+7 def h(*lst, **dct):
+8     pass
+
+  1           0 LOAD_CONST               0 (&lt;code object f at 0xb77205c0, file "function.py", line 1&gt;)
+              3 MAKE_FUNCTION            0
+              6 STORE_NAME               0 (f)
+
+  4           9 LOAD_CONST               1 (&lt;code object g at 0xb7720530, file "function.py", line 4&gt;)
+             12 MAKE_FUNCTION            0
+             15 STORE_NAME               1 (g)
+
+  7          18 LOAD_CONST               2 (&lt;code object h at 0xb7720698, file "function.py", line 7&gt;)
+             21 MAKE_FUNCTION            0
+             24 STORE_NAME               2 (h)
+        </pre></p>
+        <p class="idt">可以看出，无论是无参数、有参数，还是扩展位置、扩展键参数，它们创建函数的字节码竟然是惊人的相似，尤其是MAKE_FUNCTION，连字节码参数都是一样的“0”，难道是调用的时候会有不同？嗯，这是必须的，不过我们先按下不表，因为还漏了一种函数创建的形式，那就是带默认参数的：</p>
+        <p><pre>
+ 1 def f(a, b):
+2     pass
+3 
+4 def g(a=1, b=2):
+5     pass
+6 
+
+  1           0 LOAD_CONST               0 (&lt;code object f at 0xb77855c0, file "function2.py", line 1&gt;)
+              3 MAKE_FUNCTION            0
+              6 STORE_NAME               0 (f)
+
+  4           9 LOAD_CONST               1 (1)
+             12 LOAD_CONST               2 (2)
+             15 LOAD_CONST               3 (&lt;code object g at 0xb7785530, file "function2.py", line 4&gt;)
+             18 MAKE_FUNCTION            2
+             21 STORE_NAME               1 (g)
+        </pre></p>
+        <p class="idt">从“f”和“g”的对比发现，把符号“g”压入栈前，还要把两个默认参数“1”跟“2”压入栈，这是为了在MAKE_FUNCTION的时候，把这两个默认值添加到“g” 这个PyFunctionObject的func_defaults（是一个tuple指针，顾名思义，保存函数默认值）里面。</p>
+        <p class="idt">接下来要看一下函数调用的时候，Python是怎样处理参数的传递的，看下面这个简单的例子：</p>
+        <p><pre>
+6 def g(a, b):
+7     pass
+...
+12 g(1, 2)
+13 g(1, b=2)
+
+ 12          39 LOAD_NAME                2 (g)
+             42 LOAD_CONST               5 (1)
+             45 LOAD_CONST               6 (2)
+             48 CALL_FUNCTION            2
+             51 POP_TOP            
+
+ 13          52 LOAD_NAME                2 (g)
+             55 LOAD_CONST               5 (1)
+             58 LOAD_CONST               7 ('b')
+             61 LOAD_CONST               6 (2)
+             64 CALL_FUNCTION          257
+
+        </pre></p>
+        <p class="idt">可以看到，函数调用确实展现各种不同。第一次调用只有位置参数，那么就把“1”和“2”按顺序压入栈，而第二次调用，由于有键参数，所以要把键的对应关系“b”和“2”同时压进去。接下来CALL_FUNCTION的参数就显得尤为重要了，它是帮助Python正确处理函数参数信息和获得PyFunctionObject对象的关键。我们说过，Python字节码的参数是2个字节，而这个字节码的参数中，低字节是记录位置参数的个数，高字节是记录键参数的个数（由于这个规定，像g(a=1, 2)这样的，键参数位于位置参数之前的调用，是会报语法错误的）。对于第一次调用，有两个位置参数，所以是0x0002=2；对于第二次调用，有一个位置参数和一个键参数，所以是0x0101=257。获得参数的信息后，又如何获得PyFunctionObject对象呢？有一个公式（其实也差不多是其代码实现了）：</p>
+        <p><pre class="brush: c;">
+        n = na + 2 * nk;  // na为位置参数个数，nk为键参数个数
+        p_func = stack_pointer - n - 1;  // stack_pointer是当前运行时栈栈顶指针
+        </pre></p>
+        <p class="idt">得到的这个p_func就是指向该PyFunctionObject对象的，要说明一下的是nk还要乘以2，那是因为键参数要以“key/value”的形式压栈的，所以每个键参数传入占的空间为2。至于函数创建时有扩展位置参数或扩展键参数声明的，在函数调用时是什么情况？其实一样的，例如“def f(*lst, **dict)”这种形式的，我们调用时是“def f(1, 2, a=3, b=4)”，它对应字节码就是（这里省略了字节码参数）：</p>
+        <p><pre class="brush: c;">
+        LOAD_NAME (f) 
+        LOAD_CONST (1)
+        LOAD_CONST (2)
+        LOAD_CONST (a)
+        LOAD_CONST (3)
+        LOAD_CONST (b)
+        LOAD_CONST (4)
+        CALL_FUNCTION
+        </pre></p>
+        <p class="idt">接着，对于一般情况，都是进入fast_function，在里面创建一个新的PyFrameObject，向它传递一些信息（如PyCodeObject、globals、localsplus），并递归调用PyEval_EvalFrameEx（没默认参数的情况）。假如有默认参数，那么MAKE_FUNCTION的时候就会把默认参数绑定到PyFunctionObject.func_defaults这个值，在函数调用时会进入PyEval_EvalCodeEx，然而最终还是会调用PyEval_EvalFrameEx来执行函数实现的相关代码。</p>
+        <p class="idt">接下来，要讨论下函数参数到了函数内部是怎样访问。回想刚才我们的函数定义和函数调用，似乎没有涉及到形参名字与其实参的对应关系。这里，关键在于PyFrameObject中f_localsplus这个变量，这个变量指向的内存最前面部分放的就是实参的值（对于函数中的局部变量，它也是存放在这里，紧接着函数参数，所以我们有时候说函数参数实际上也是一种局部变量，就是这样来的）。调用函数时，我们把这些实参按顺序地放在f_localsplus的前面，到了函数内部，Python是通过一个偏移量i（字节码的一个参数，编译时决定，例如字节码“LOAD_FAST 1”中的“1”），然后调用GETLOCAL(i)和SETLOCAL(i)（字节码LOAD_FAST和STORE_FAST中对应的关键C宏）来操作这一片内存区域的函数实参，而不是通过一些名字的映射机制。下面一段代码和图示可以展现这段内存到底是怎样分布的：</p>
+        <p><pre class="brush: python;">
+        def f(value1, value2, *lst, **dct):
+            pass
+
+        f(1, 2, 3, 4, a=5, b=6)
+        </pre></p>
+        <p class="idt">它的PyFrameObject中f_localsplus的情形是：</p>
+        <p><pre>
+                         .---------.
+                         | 'a' | 5 |
+                         |-----|---|
+                         | 'b' | 6 |
+                         '---------'
+                           ↑
+ _____________________________________________
+|   |      |      |     |     |     |         |
+|...|value1|value2| lst | dct | ... | (stack) |
+|   | (1)  | (2)  |     |     |     |         |
+|___|______|______|_____|_____|_____|_________|
+                     ↓
+                  .-------.
+                  | 3 | 4 |
+                  '-------'
+        </pre></p>
+        <p class="idt">对于有默认参数值的函数，上面的图就要根据实参的情况来定了，这时Python要做的事情就是将函数声明时的na、nk（na、nk分别指位置参数和键参数的个数）和函数调用时的na、nk作各种比较，决定f_localsplus的值到底用默认值还是用实参替换，具体算法这里就不作展开了。</p>
+        <p class="idt">Python函数机制中还有一个重要的东西，就是嵌套函数，它是实现闭包的基础，而闭包又能衍生出decorator这么美好的东西，所以必须介绍一下。看下面这个例子：</p>
+        <p><pre class="brush: python;">
+        val = "global"
+
+        def outer_func(v):
+            val = v
+            def inner_func():
+                print "value :", val
+            return inner_func
+
+        f = outer_func("closure")
+        f()
+        </pre></p>
+        <p class="idt">相信很多人都知道显示的是“value : closure”，而不是“value : global”，那到底为什么呢？我们知道，编译时，对于每一个PyCodeObject，都有两个属性：co_cellvars和co_freevars。co_cellvars是一个tuple，保存被嵌套作用域使用的变量名集合；co_freevars也是一个tuple，保存使用了外层作用域中的变量名集合。它们对应的运行时的对象所处的位置如下图所示：</p>
+        <p><pre>
+ _______________________________________
+|   |        |        |        |        |
+|...|局部变量|cell对象|free对象|运行时栈|
+|   |        |        |        |        |
+|___|________|________|________|________|
+        </pre></p>
+        <p class="idt">这个地方怎么这么熟悉，没错了，就是刚刚提到的f_localsplus（“局部变量”到“运行时栈”这段，如果算上前面的省略号“...”，那叫PyFrameObject），cell和free对象正好就位于刚才我们介绍的函数参数所在的“局部变量”区域后面。在执行“f = outer_func(1)”的时候，Python首先会在如下图所示的位置创建一个PyCellObject对象cell（它的结构很简单，就一个头部和内容指针ob_ref）：</p>
+        <p><pre>
+ outer_func的PyFrameObject对象
+ _______________________________________
+|   |        |        |        |        |
+|...|局部变量|cell对象|free对象|运行时栈|
+|   |        |        |        |        |
+|___|________|________|________|________|
+                 ↓
+               .------. ob_ref
+               | cell |------→ NULL
+               '------'
+        </pre></p>
+        <p class="idt">接下来，进入outer_func的函数体，到“val = v”这里，把cell对象的ob_ref绑定为v（就是函数调用传进来的字符串“closure”）：</p>
+        <p><pre>
+ outer_func的PyFrameObject对象
+ _______________________________________
+|   |        |        |        |        |
+|...|局部变量|cell对象|free对象|运行时栈|
+|   |        |        |        |        |
+|___|________|________|________|________|
+                 ↓
+               .------. ob_ref .-----------.
+               | cell |------→| "closure" |
+               '------'        '-----------'
+        </pre></p>
+        <p class="idt">接着，执行“def inner_func():”。这里，先新建一个PyTupleObject对象tuple_obj，打包刚才新建的cell对象。然后新建一个PyFunction对象func_obj（要完成对相应PyCodeObject和global名字空间的绑定），随后通过MAKE_CLOSURE将func_obj的func_closure指针指向刚才新建的tuple_obj，再通过STORE_FAST又将func_obj放置到f_localsplus的局部变量区域中：</p>
+        <p><pre>
+ outer_func的PyFrameObject对象
+    _______________________________________
+   |   |        |        |        |        |
+   |...|局部变量|cell对象|free对象|运行时栈|
+   |   |        |        |        |        |
+   |___|________|________|________|________|
+          ↓           |
+      .--------.       |
+      |func_obj|       ↓
+      '--------'      .------. ob_ref .-----------.
+func_closure↓        | cell |------→| "closure" |
+     .---------.      '------'        '-----------'
+     |tuple_obj|---------↑
+     '---------'
+        </pre></p>
+        <p class="idt">至此，闭包的创建已经完成。最后，“return inner_func”将新建的func_obj压入栈，并将它返回给上一个栈帧（这里也就是最外层py文件的栈帧）。接下来调用闭包函数“f()”，进入call_function的时候，因为inner_func是嵌套函数，它会先把引用到的外层作用域中的变量放入自己的free对象空间里（也就是刚才被压进py文件栈帧的func_obj，实质上拿的是func_obj-&gt;tuple_obj-&gt;cell，有点复杂）：</p>
+        <p><pre>
+inner_func的PyFrameObject对象
+ _______________________________________
+|   |        |        |        |        |
+|...|局部变量|cell对象|free对象|运行时栈|
+|   |        |        |        |        |
+|___|________|________|________|________|
+                        ↓
+                     .------. ob_ref .-----------.
+                     | cell |------→| "closure" |
+                     '------'        '-----------' 
+        </pre></p>
+        <p class="idt">到了inner_func里面的“print "value :", val”时，Python就会去执行“LOAD_DEREF”（编译时Python就知道该往什么地方找了），也就是去上面这个f_localsplus中的free对象空间去找val，打印它的值。</p>
+        <p class="idt">至此，闭包的大致全过程已经展现出来了。而在闭包基础上实现的decorator实际上也不难理解，只要理解了闭包的原理，并且理解：</p>
+        <p><pre class="brush: python;">
+        @decorator_func
+        def real_func():
+            pass 
+        </pre></p>
+        <p class="idt">实际上和</p>
+        <p><pre class="brush: python;">
+        real_func = decorator_func(real_func)
+        </pre></p>
+        <p class="idt">几乎是同一回事，也就差不多了，所以这里将不再展开介绍decorator。</p>
+
+<!-- code syntax highlighter -->
+<script type="text/javascript" src="javascripts/shCore.js"></script>
+<script type="text/javascript" src="javascripts/shBrushPython.js"></script>
+<script type="text/javascript" src="javascripts/shBrushCpp.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+{% endblock %}
