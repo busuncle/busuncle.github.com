@@ -125,12 +125,12 @@
 
         <pre>
 a = a + 1:
-6          13 LOAD_FAST                0 (a)
+6        13 LOAD_FAST                0 (a)
          16 LOAD_CONST               1 (1)
          19 BINARY_ADD          
          20 STORE_FAST               0 (a)
 print a:
-7          23 LOAD_FAST                0 (a)
+7        23 LOAD_FAST                0 (a)
          26 PRINT_ITEM          
          27 PRINT_NEWLINE   
         </pre>
@@ -139,7 +139,7 @@ print a:
         <p class="idt">解决了这个问题，我们又看看为什么a[0]这种形式又可以呢。同样地，对[test1.py]进行反汇编操作： </p>
         <pre>
 a[0] = a[0] + 1
-6          13 LOAD_DEREF               0 (a)
+6        13 LOAD_DEREF               0 (a)
          16 LOAD_CONST               1 (0)
          19 BINARY_SUBSCR       
          20 LOAD_CONST               2 (1)
@@ -148,7 +148,7 @@ a[0] = a[0] + 1
          27 LOAD_CONST               1 (0)
          30 STORE_SUBSCR        
 print a[0]
-7          31 LOAD_DEREF               0 (a)
+7        31 LOAD_DEREF               0 (a)
          34 LOAD_CONST               1 (0)
          37 BINARY_SUBSCR       
          38 PRINT_ITEM          
