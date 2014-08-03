@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Busuncle Studio</title>
+<meta charset='utf-8'>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+<link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+</head>
+<body>
+
+<header>
+    <div class="container">
+        
+    <h1>Python模块动态加载机制</h1>
+    <link rel="stylesheet" type="text/css" href="stylesheets/shCoreRDark.css" media="screen" />
+
+    </div>
+</header>
+
+<div class="container">
+    <section id="main_content">
+        
+        <p class="idt">上一节讲Python运行环境初始化的时候，曾经提到一个阶段是加载sys module，其实不只sys，还有很多常用的内建module，例如os、exceptions等，都会被加载到内存。但当我们打开Python解释器，敲“sys”时，它会提示你“NameError: name 'sys' is not defined”，需要我们输入“import sys”后，sys才变得“可用”。 </p>
+        <p class="idt">其实在Python，有一个module pool的概念，顾名思义，是一个放置模块的池，池是什么概念？其实就是缓存。对于每一个被加载到内存的module，Python都将它放置在这个池里，以供程序的不同地方使用。而这个池，就是我们的sys.modules。Python启动时虽然加载了很多module到sys.modules，但大部分都没有将它们“映射”到local里，需要我们用的时候“手动指定”哪个“可用”。所以对于“import”这个词的理解，应该是这样的：当程序某个部分通过import希望加载某个module时，Python先在sys.modules里面寻找，如果找到了，就引入一个符号（这取决于你用怎样的import形式，有from？有as？）到该处的local名字空间，指向找到的这个module，否则就执行动态加载机制，加载相应模块，当然也需要在相应名字空间增加其关联的符号。</p>
+        <p class="idt">下面我们通过构造一个例子，逐步深入源代码来剖析其原理。假设我们有以下一个文件夹结构（Debian环境下）：</p>
+        <p><pre>
+user@debian:~$ls
+test
+user@debian:~$ls test
+__init__.py test2
+user@debian:~$ls test/test2
+__init__.py m2.py
+
+我们启动Python，并进行import动作：
+user@debian:~$python
+...
+&gt;&gt;&gt;import test.test2.m2
+&gt;&gt;&gt;dir()
+['__builtins__', '__doc__', '__name__', 'test', 'sys']
+&gt;&gt;&gt;sys.modules.keys() # 显示结果做了删减处理
+[..., 'test', 'test.test2', 'test.test2.m2', ...]
+        </pre></p>
+        <p class="idt">可以看到，直接通过“.”（dot）符号来加载“m2”，local里增加的是test这个顶层package符号，而sys.modules增加了3个module：“test”，“test.test2”，“test.test2.m2”。我们试试新开一个terminal，用“from”来import：</p>
+        <p><pre>
+...
+&gt;&gt;&gt;from test.test2 import m2
+&gt;&gt;&gt;dir()
+['__builtins__', '__doc__', '__name__', 'm2', 'sys']
+&gt;&gt;&gt;sys.modules.keys() # 显示结果做了删减处理
+[..., 'test', 'test.test2', 'test.test2.m2', ...]
+        </pre></p>
+        <p class="idt">跟上一个情况类似，增加了3个相同的module，而local里却没有了“test”，取而代之的是“m2”。如果是加as呢？看看：</p>
+        <p><pre>
+...
+&gt;&gt;&gt;from test.test2 import m2 as mm2
+&gt;&gt;&gt;dir()
+['__builtins__', '__doc__', '__name__', 'mm2', 'sys']
+&gt;&gt;&gt;sys.modules.keys() # 显示结果做了删减处理
+[..., 'test', 'test.test2', 'test.test2.m2', ...]
+        </pre></p>
+        <p class="idt">这次，local变成了“mm2”，其它均没改变。我们推测，不同的import形式只是在该程序段local引入符号时不同，而加载到module pool的是一样的。好，我们将3者的字节码列出来，进行比较：</p>
+        <p><pre>
+#############################################
+import test.test2.m2
+LOAD_CONST               1 (-1)
+LOAD_CONST               0 (None)
+IMPORT_NAME              0 (test.test2.m2)
+STORE_FAST               0 (test)
+#############################################
+from test.test2 import m2
+LOAD_CONST               1 (-1)
+LOAD_CONST               2 (('m2',))
+IMPORT_NAME              0 (test.test2)
+IMPORT_FROM              1 (m2)
+STORE_FAST               0 (m2)
+#############################################
+from test.test2 import m2 as mm2
+LOAD_CONST               1 (-1)
+LOAD_CONST               2 (('m2',))
+IMPORT_NAME              0 (test.test2)
+IMPORT_FROM              1 (m2)
+STORE_FAST               0 (mm2)
+############################################# 
+        </pre></p>
+        <p class="idt">从最后的STORE_FAST可以知道，我们的推测至少正确了一半（引入local的符号不同），现在关键在于IMPORT_NAME、IMPORT_FROM，它们是干什么的，还有前面的两个LOAD_CONST，不同的字节码参数代表着什么。 </p>
+        <p class="idt"> IMPORT_NAME是核心的字节码，它要做的是，把import动作需要的一些信息——当前PyFrameObject的global、local名字空间，IMPORT_NAME的参数，两个LOAD_CONST参数（对于其中那个“-1”，还要进行判断决定是否包含进去）打包成一个PyTupleObject对象，然后作为参数调用我们内建module里面的那个“__import__”，然后把返回值放到栈顶。这个返回值是IMPORT_NAME的参数对应的module对象，主要给IMPORT_FROM用的。而IMPORT_FROM要做的很简单，就是在该返回的module对象中搜索它的参数代表的符号（例如“from test.test2 import m2”，就是在“test.test2”这个module搜索“m2”），并压栈。为此我们需要深入“__import__”的实现（一些参数拆包，上锁的外层函数封装我们忽略了，直奔最核心的实现——import_module_level）：</p>
+        <p><pre class="brush: c;">
+static PyObject *
+import_module_level(char *name, PyObject *globals, PyObject *locals,
+                    PyObject *fromlist, int level)
+{
+    char buf[MAXPATHLEN+1];
+    int buflen = 0;
+    PyObject *parent, *head, *next, *tail;
+
+    //[1]: 获得import动作发生的package环境
+    parent = get_parent(globals, buf, &amp;buflen, level);
+
+    //[2]: 解析module的“路径”结构，依次加载每一个package/module
+    head = load_next(parent, Py_None, &amp;name, buf, &amp;buflen);
+    tail = head;
+    while (name) {
+        next = load_next(tail, tail, &amp;name, buf, &amp;buflen);
+        tail = next;
+    }
+
+    //[3]: 处理from *** import *** 语句
+    if (fromlist != NULL) { //fromlist就是上面每个字节码的第二个LOAD_CONST了，不是None就是tuple的那个
+        if (fromlist == Py_None || !PyObject_IsTrue(fromlist))
+            fromlist = NULL;
+    }
+
+    //import不是from *** import ***的形式，返回head
+    if (fromlist == NULL) {
+        return head;
+    }
+   
+    //是from *** import ***，返回tail
+    if (!ensure_fromlist(tail, fromlist, buf, buflen, 0)) {
+        return NULL;
+    }
+    return tail;
+}
+        </pre></p>
+        <p class="idt">以“import test.test2.m2”为例，先看[1]处，get_parent要做的是获得package环境。什么是package环境？就是一个module对象（package在Python眼中也是一种module），在这个交互式的例子里比较特别，是一个并不存在的“__main__ package”对应的module对象，它被定义为Py_None（或者举另外一个例子来说，假如我们有一个文件夹“~/my_package”，里面有__init__py、a.py和b.py3个文件，a.py里有“import b”，那做这个import动作时，package环境就是“my_package”对应的module对象了）。所有的import动作都限定在一个package环境的范围内（在对应module对象的“__path__”路径内），此时get_parent要在sys.modules查找“__main__ package”，当然找不到了，返回定义的Py_None。接下来[2]处的load_next函数和while组合，是一个“加载test－>加载test2－>加载m2”的过程，由于之前的package环境返回的是Py_None，所以Python没有在特定的package路径搜索，而是在默认路径搜索（就是sys.path，其中包括当前启动Python解释器的相对路径，你懂的）。首先找到“test”，然后是“test2”，最后是“m2”，逐一加载到sys.modules（从一开始的演示知道，加载的名字分别是“test”、“test.test2”、“test.test2.m2”，算法不展开了）。这里会用到module pool，就是之前加载过一次，再次import就不用加载了，另外假如在特定的package环境加载不成功，Python会尝试在默认路径搜索，例子就是A文件夹下的a.py尝试import sys，但sys.py显然不在文件夹A的package环境中。 </p>
+        <p class="idt">对于每个module/package，是如何加载的呢？我们知道，获得package环境，我们就获得各个要加载文件的路径了，所以接下来就是针对不同类型的文件进行加载动作，对于py文件，就是对其编译，得到PyCodeObject对象，执行其中的字节码（也就是会创建PyFrameObject对象了），将生成的module加入sys.modules，另外还生成一个其对应pyc文件（都编译了一次了，下次程序再运行当然不想再编译一次了）。对于pyc文件，动作其实跟处理py文件相似，只是少了编译的过程。而对于package，则会尝试寻找并加载__init__.py文件（缺少这个则会抛异常），并将自身加入到sys.modules。对于某些不常用的内建module和C扩张module，形式类似，我们不作展开了。 </p>
+
+<!-- code syntax highlighter -->
+<script type="text/javascript" src="javascripts/shCore.js"></script>
+<script type="text/javascript" src="javascripts/shBrushPython.js"></script>
+<script type="text/javascript" src="javascripts/shBrushCpp.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+
+    </section>
+</div>
+
+<footer><p>busuncle</p></footer>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-37200104-2', 'busuncle.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
