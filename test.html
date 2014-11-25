@@ -10,7 +10,7 @@
 <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <style>
 	.galleria {
-		width: 600px; height: 400px; background: #000;
+		width: 600px; height: 800px;
 	}
 </style>
 </head>
@@ -37,8 +37,9 @@
     </section>
 	-->
 	<div class="galleria">
+        <!--
 		<img src="images/story/1.jpg" />
-		<img src="images/story/2.jpg" />
+        -->
 	</div>
 </div>
 
@@ -58,8 +59,19 @@
 <script src="./javascripts/jquery.min.js"></script>
 <script src="./javascripts/galleria/galleria-1.4.2.min.js"></script>
 <script type="text/javascript">
-	Galleria.loadTheme("./javascripts/galleria/themems/classic/galleria.classic.min.js");
-	Galleria.run(".galleria");
+    $(document).ready(function(){
+        for(var i = 1; i <= 2; i++){
+            $(".galleria").append('<img src="images/busan/' + i + '.jpg" />');
+        }
+        Galleria.loadTheme("./javascripts/galleria/themes/classic/galleria.classic.min.js");
+        Galleria.run(".galleria");
+        /*
+        $(".galleria").galleria({
+            image_crop: true,
+            transition: "fade",
+        });
+        */
+    });
 </script>
 
 </body>

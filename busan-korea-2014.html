@@ -1,36 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>釜山-韩国（G-STAR 2014）</title>
+<title>釜山-韩国</title>
 <meta charset='utf8'>
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
 <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
 <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<style>
+	.galleria {width: 600px; height: 800px;}
+</style>
 </head>
 <body>
 
 <header>
     <div class="container">
-        <h1>釜山-韩国（G-STAR 2014）</h1>
+        <h1>釜山-韩国</h1>
     </div>
 </header>
 
 <div class="container">
-    <section id="main_content">
-    <p class="idt"></p>
-    <br />
-    <p class="text_center"><img src="images/busan/1.jpg" /></p>
-    <br />
-
-    <p class="text_center"></p>
-    <p class="text_center"></p>
-    <p class="text_center"></p>
-    <p class="text_center"></p>
-    <p class="idt"></p>
-    <p class="idt"></p>
-    </section>
+    <div class="galleria"></div>
 </div>
 
 <footer><p>busuncle</p></footer>
@@ -44,6 +35,17 @@
   ga('create', 'UA-37200104-2', 'busuncle.github.io');
   ga('send', 'pageview');
 
+</script>
+<script src="./javascripts/jquery.min.js"></script>
+<script src="./javascripts/galleria/galleria-1.4.2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        for(var i = 1; i <= 2; i++){
+            $(".galleria").append('<img src="images/busan/' + i + '.jpg" />');
+        }
+        Galleria.loadTheme("./javascripts/galleria/themes/classic/galleria.classic.min.js");
+        Galleria.run(".galleria");
+    });
 </script>
 
 </body>
