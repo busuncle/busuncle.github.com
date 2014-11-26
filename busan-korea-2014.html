@@ -26,11 +26,15 @@ body {
 	background-color: #000;
     -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;
     background-image: -moz-linear-gradient(center top, #000 0%, #222 50%, #111 51%, #000 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #000), color-stop(0.5, #222), color-stop(0.51, #111), color-stop(1, #000));
+    background-image: -ms-linear-gradient(center top, #000 0%, #222 50%, #111 51%, #000 100%);
+    background-image: -o-linear-gradient(center top, #000 0%, #222 50%, #111 51%, #000 100%);
+    background-image: linear-gradient(center top, #000 0%, #222 50%, #111 51%, #000 100%);
     border: solid 1px #111;
 }
 .music_box .music_control {
 	position: absolute;
-	left: 10px; top: 10px;
+	left: 16px; top: 10px;
 }
 .music_box .music_control:hover { cursor: pointer; }
 .music_control .music_play {
@@ -38,13 +42,13 @@ body {
     border-left: solid 14px #FFF;
     border-top: solid 10px transparent;
     border-bottom: solid 10px transparent;
-	width: 0; height: 0; left: 10px;
+	width: 0; height: 0; left: 10px; top: 1px;
 }
 .music_control .music_pause {
     position: absolute; 
     border-left: solid 6px #FFF;
     border-right: solid 6px #FFF;
-	width: 6px; height: 20px; left: 10px; 
+	width: 6px; height: 20px; left: 10px; top: 1px;
 }
 .music_box .music_name {
 	position: absolute;
@@ -92,7 +96,7 @@ body {
         Galleria.loadTheme("./javascripts/galleria/themes/classic/galleria.classic.min.js");
         Galleria.run(".galleria");
         var player = $("#player").get(0);
-        player.volume = 0.5;
+        player.volume = 0.8;
         player.src = "./music/" + music_name + ".mp3";
         //player.play();
         var is_begin = false;
@@ -117,7 +121,7 @@ body {
         player.addEventListener("canplaythrough", start);
 
 		function music_name_move(val){
-            $(".music_name").animate({right: "+=" + val + "px"}, 4000, function(){
+            $(".music_name").animate({right: "+=" + val + "px"}, 5000, function(){
                 music_name_move(-val);
             });
 		}
