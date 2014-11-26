@@ -19,6 +19,35 @@ body {
     height: 100%;
 }
 .galleria {width: 600px; height: 800px; margin-top: 5px;}
+.music_box {
+	margin: auto; width: 600px; height: 40px;
+	background-color: #000;
+    -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;
+}
+.music_box .music_control {
+	position: absolute;
+	left: 10px; top: 10px;
+}
+.music_box .music_control:hover { cursor: pointer; }
+.music_control .music_play {
+	position: absolute;
+    border-left: solid 14px #FFF;
+    border-top: solid 10px transparent;
+    border-bottom: solid 10px transparent;
+	width: 0; height: 0; left: 10px;
+}
+.music_control .music_pause {
+    position: absolute; 
+    border-left: solid 6px #FFF;
+    border-right: solid 6px #FFF;
+	width: 6px; height: 20px; left: 10px; 
+}
+.music_box .music_name {
+	position: absolute;
+	text-align: center; vertical-align: middle;
+	right: 5px; top: 11px;
+	width: 30%; height: 80%;
+}
 </style>
 </head>
 <body>
@@ -30,10 +59,19 @@ body {
 </header>
 
 <div class="container">
-        <audio controls="controls" id="player" autoplay="autoplay" loop="loop" type="audio/mpeg"></audio>
-        <div style="position: absolute; right: 30px; top: 2px;">
-            Janice - Please &#9835;
-        </div>
+        <!--<audio controls="controls" id="player" autoplay="autoplay" loop="loop" type="audio/mpeg"></audio>-->
+        <audio id="player" loop="loop" type="audio/mpeg"></audio>
+		<div class="music_box">
+			<div class="music_control">
+				<div class="music_play"></div>	
+				<!--
+				<div class="music_pause"></div>
+				-->
+			</div>
+			<div class="music_name">
+				Janice - Please &#9835;
+			</div>
+		</div>
         <div class="galleria"></div>
 </div>
 
@@ -44,7 +82,7 @@ body {
 <script type="text/javascript">
     $(document).ready(function(){
         var music_name = "Janice - Please";
-        for(var i = 1; i <= 73; i++){
+        for(var i = 1; i <= 1; i++){
             $(".galleria").append('<img src="images/busan/' + i + '.jpg" />');
         }
         Galleria.loadTheme("./javascripts/galleria/themes/classic/galleria.classic.min.js");
@@ -52,7 +90,23 @@ body {
         var player = $("#player").get(0);
         player.volume = 0.5;
         player.src = "./music/" + music_name + ".mp3";
-        player.play();
+        //player.play();
+		$(".music_control").click(function(){
+			if (player.paused){
+				$(this).find("div").removeClass("music_play").addClass("music_pause");
+				player.play();
+			} else {
+				$(this).find("div").removeClass("music_pause").addClass("music_play");
+				player.pause();
+			}
+		});
+		function start(){
+			if (!player.paused){
+				$(".music_control").find("div").removeClass("music_play").addClass("music_pause");
+			}	
+		}
+        player.addEventListener("canplay", start);
+        player.addEventListener("canplaythrough", start);
     });
 </script>
 
