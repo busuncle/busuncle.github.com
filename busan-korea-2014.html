@@ -107,6 +107,19 @@ body {
 		}
         player.addEventListener("canplay", start);
         player.addEventListener("canplaythrough", start);
+		var direct = "+";
+		function music_name_move(){
+			var obj = $(".music_name");			
+			if (obj.css("right") < 5)
+			{
+				direct = "+";
+			}
+			if (obj.css("right") > 100)
+			{
+				direct = "-";
+			}
+			obj.animate({"left": direct + "=20px"}, 1000, music_name_move)
+		}
     });
 </script>
 
