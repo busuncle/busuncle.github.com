@@ -18,11 +18,15 @@ body {
     margin: auto; 
     height: 100%;
 }
-.galleria {width: 600px; height: 800px; margin-top: 5px;}
+.galleria {
+    width: 600px; height: 800px; margin-top: 5px;
+}
 .music_box {
 	margin: auto; width: 600px; height: 40px;
 	background-color: #000;
     -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;
+    background-image: -moz-linear-gradient(center top, #000 0%, #222 50%, #111 51%, #000 100%);
+    border: solid 1px #111;
 }
 .music_box .music_control {
 	position: absolute;
@@ -45,7 +49,7 @@ body {
 .music_box .music_name {
 	position: absolute;
 	text-align: center; vertical-align: middle;
-	right: 5px; top: 11px;
+	right: 5px; top: 10px;
 	width: 30%; height: 80%;
 }
 </style>
@@ -82,7 +86,7 @@ body {
 <script type="text/javascript">
     $(document).ready(function(){
         var music_name = "Janice - Please";
-        for(var i = 1; i <= 1; i++){
+        for(var i = 1; i <= 73; i++){
             $(".galleria").append('<img src="images/busan/' + i + '.jpg" />');
         }
         Galleria.loadTheme("./javascripts/galleria/themes/classic/galleria.classic.min.js");
@@ -91,35 +95,39 @@ body {
         player.volume = 0.5;
         player.src = "./music/" + music_name + ".mp3";
         //player.play();
+        var is_begin = false;
 		$(".music_control").click(function(){
 			if (player.paused){
 				$(this).find("div").removeClass("music_play").addClass("music_pause");
+                music_name_move(120);
 				player.play();
 			} else {
 				$(this).find("div").removeClass("music_pause").addClass("music_play");
+                music_name_stop();
 				player.pause();
 			}
 		});
 		function start(){
 			if (!player.paused){
 				$(".music_control").find("div").removeClass("music_play").addClass("music_pause");
+                //music_name_move(120);
 			}	
 		}
         player.addEventListener("canplay", start);
         player.addEventListener("canplaythrough", start);
-		var direct = "+";
-		function music_name_move(){
-			var obj = $(".music_name");			
-			if (obj.css("right") < 5)
-			{
-				direct = "+";
-			}
-			if (obj.css("right") > 100)
-			{
-				direct = "-";
-			}
-			obj.animate({"left": direct + "=20px"}, 1000, music_name_move)
+
+		function music_name_move(val){
+            $(".music_name").animate({right: "+=" + val + "px"}, 4000, function(){
+                music_name_move(-val);
+            });
 		}
+
+        function music_name_stop(){
+            $(".music_name").stop();
+            $(".music_name").css("right", "5px");
+        }
+
+        //music_name_move(120);
     });
 </script>
 
