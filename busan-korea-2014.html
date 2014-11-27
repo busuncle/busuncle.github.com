@@ -22,8 +22,8 @@ body {
     width: 600px; height: 800px; margin-top: 5px;
 }
 .music_box {
-	margin: auto; width: 600px; height: 40px;
-	background-color: #000;
+    margin: auto; width: 600px; height: 40px;
+    background-color: #000;
     -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;
     background-image: -moz-linear-gradient(center top, #000 0%, #222 50%, #111 51%, #000 100%);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #000), color-stop(0.5, #222), color-stop(0.51, #111), color-stop(1, #000));
@@ -33,28 +33,28 @@ body {
     border: solid 1px #111;
 }
 .music_box .music_control {
-	position: absolute;
-	left: 16px; top: 10px;
+    position: absolute;
+    left: 16px; top: 10px;
 }
 .music_box .music_control:hover { cursor: pointer; }
 .music_control .music_play {
-	position: absolute;
+    position: absolute;
     border-left: solid 14px #FFF;
     border-top: solid 10px transparent;
     border-bottom: solid 10px transparent;
-	width: 0; height: 0; left: 10px; top: 1px;
+    width: 0; height: 0; left: 10px; top: 1px;
 }
 .music_control .music_pause {
     position: absolute; 
     border-left: solid 6px #FFF;
     border-right: solid 6px #FFF;
-	width: 6px; height: 20px; left: 10px; top: 1px;
+    width: 6px; height: 20px; left: 10px; top: 1px;
 }
 .music_box .music_name {
-	position: absolute;
-	text-align: center; vertical-align: middle;
-	right: 5px; top: 10px;
-	width: 30%; height: 80%;
+    position: absolute;
+    text-align: center; vertical-align: middle;
+    right: 5px; top: 10px;
+    width: 30%; height: 80%;
 }
 </style>
 </head>
@@ -69,17 +69,17 @@ body {
 <div class="container">
         <!--<audio controls="controls" id="player" autoplay="autoplay" loop="loop" type="audio/mpeg"></audio>-->
         <audio id="player" loop="loop" type="audio/mpeg"></audio>
-		<div class="music_box">
-			<div class="music_control">
-				<div class="music_play"></div>	
-				<!--
-				<div class="music_pause"></div>
-				-->
-			</div>
-			<div class="music_name">
-				Janice - Please &#9835;
-			</div>
-		</div>
+        <div class="music_box">
+            <div class="music_control">
+                <div class="music_play"></div>    
+                <!--
+                <div class="music_pause"></div>
+                -->
+            </div>
+            <div class="music_name">
+                Janice - Please &#9835;
+            </div>
+        </div>
         <div class="galleria"></div>
 </div>
 
@@ -100,31 +100,31 @@ body {
         player.src = "./music/" + music_name + ".mp3";
         //player.play();
         var is_begin = false;
-		$(".music_control").click(function(){
-			if (player.paused){
-				$(this).find("div").removeClass("music_play").addClass("music_pause");
+        $(".music_control").click(function(){
+            if (player.paused){
+                $(this).find("div").removeClass("music_play").addClass("music_pause");
                 music_name_move(120);
-				player.play();
-			} else {
-				$(this).find("div").removeClass("music_pause").addClass("music_play");
+                player.play();
+            } else {
+                $(this).find("div").removeClass("music_pause").addClass("music_play");
                 music_name_stop();
-				player.pause();
-			}
-		});
-		function start(){
-			if (!player.paused){
-				$(".music_control").find("div").removeClass("music_play").addClass("music_pause");
+                player.pause();
+            }
+        });
+        function start(){
+            if (!player.paused){
+                $(".music_control").find("div").removeClass("music_play").addClass("music_pause");
                 //music_name_move(120);
-			}	
-		}
+            }    
+        }
         player.addEventListener("canplay", start);
         player.addEventListener("canplaythrough", start);
 
-		function music_name_move(val){
+        function music_name_move(val){
             $(".music_name").animate({right: "+=" + val + "px"}, 5000, function(){
                 music_name_move(-val);
             });
-		}
+        }
 
         function music_name_stop(){
             $(".music_name").stop();
