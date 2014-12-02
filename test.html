@@ -35,8 +35,9 @@
         </section>
 
     </section>
-	-->
     <embed src="http://player.youku.com/player.php/Type/Folder/Fid/17145321/Ob/1/sid/XMzM0MzgxNjgw/v.swf" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>
+	-->
+    <audio src="./music/Janice - Please.mp3" preload="auto" />
 </div>
 
 <footer><p>busuncle</p></footer>
@@ -54,6 +55,7 @@
 </script>
 <script src="./javascripts/jquery.min.js"></script>
 <script src="./javascripts/galleria/galleria-1.4.2.min.js"></script>
+<script src="./javascripts/audiojs/audio.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
         /*
@@ -62,6 +64,11 @@
             transition: "fade",
         });
         */
+        audiojs.events.ready(function() {
+            var as = audiojs.createAll();
+            as[0].setVolume(0.2);
+        });
+
     });
 </script>
 
