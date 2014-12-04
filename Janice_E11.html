@@ -18,12 +18,13 @@ body {
     margin: auto; 
     height: 100%;
 }
-.pic_list {
+.music_list {
     width: 600px; height: 620px; margin-top: 10px;
 }
 .music_pic {
     width: 294px;
     margin: 1px;
+    cursor: pointer;
 }
 .music_box {
     margin: auto; width: 600px; height: 40px;
@@ -56,9 +57,9 @@ body {
 }
 .music_box .music_name {
     position: absolute;
-    text-align: center; vertical-align: middle;
-    right: 5px; top: 10px;
-    width: 30%; height: 80%;
+    text-align: right; vertical-align: middle;
+    right: 16px; top: 10px;
+    width: 80%; height: 80%;
 }
 </style>
 </head>
@@ -85,11 +86,13 @@ body {
                 Janice - E11 &#9835;
             </div>
         </div>
-        <div class="pic_list">
+        <div class="music_list">
+            <!--
             <img src="./images/E11/1.jpg" class="music_pic" />
             <img src="./images/E11/2.jpg" class="music_pic" />
             <img src="./images/E11/3.jpg" class="music_pic" />
             <img src="./images/E11/4.jpg" class="music_pic" />
+            -->
         </div>
 </div>
 
@@ -98,10 +101,31 @@ body {
 <script src="./javascripts/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        var music_name = "Janice - Please";
         var player = $("#player").get(0);
+        var play_list = [
+            "卫兰 - You're Always Everything To Me", 
+            "卫兰 - 错过你",
+            "卫兰 - 八九十",
+            "卫兰 - 自首",
+        ];
+        for(var i = 0; i < play_list.length; i++){
+            var img = $("<img>");
+            img.attr("src", "./images/E11/" + (i + 1) + ".jpg");
+            img.attr("class", "music_pic");
+            $(".music_list").append(img);
+        }
+        $(".music_list img").click(function(){
+            //alert($(".music_list img").index($(this)));
+            var i = $(".music_list img").index($(this));
+            player.src = "./music/E11/" + play_list[i] + ".mp3";
+            player.play();
+            music_name_stop();
+            music_name_move(120);
+            $(".music_name").html(play_list[i] + "&#9835");
+        });
+
         player.volume = 0.8;
-        player.src = "./music/" + music_name + ".mp3";
+        //player.src = "./music/" + music_name + ".mp3";
         //player.play();
         var is_begin = false;
         $(".music_control").click(function(){
@@ -115,6 +139,7 @@ body {
                 player.pause();
             }
         });
+
         function start(){
             if (!player.paused){
                 $(".music_control").find("div").removeClass("music_play").addClass("music_pause");
