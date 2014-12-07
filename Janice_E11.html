@@ -19,12 +19,21 @@ body {
     height: 100%;
 }
 .music_list {
-    width: 600px; height: 620px; margin-top: 10px;
+    width: 600px; height: 620px; margin-top: 12px;
 }
 .music_pic {
-    width: 294px;
-    margin: 1px;
+    width: 284px;
+    margin: 3px 6px;
     cursor: pointer;
+    border: solid 2px #000;
+}
+.music_pic_shadow {
+    -webkit-box-shadow: 0px 0px 18px #FFF;
+    -moz-box-shadow: 0px 0px 18px #FFF;
+    box-shadow: 0px 0px 18px #FFF;
+}
+.music_playing_shadow {
+    box-shadow: 0px 0px 18px #FFF;
 }
 .music_box {
     margin: auto; width: 600px; height: 40px;
@@ -59,7 +68,7 @@ body {
     position: absolute;
     text-align: right; vertical-align: middle;
     right: 16px; top: 10px;
-    width: 80%; height: 80%;
+    width: 320px; height: 24px;
 }
 </style>
 </head>
@@ -101,6 +110,8 @@ body {
 <script src="./javascripts/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
+        var current_music_idx = null;
+        var music_name_move_px = 80;
         var player = $("#player").get(0);
         var play_list = [
             "卫兰 - You're Always Everything To Me", 
@@ -117,13 +128,16 @@ body {
         $(".music_list img").click(function(){
             //alert($(".music_list img").index($(this)));
             var i = $(".music_list img").index($(this));
+            current_music_idx = i;
             player.src = "./music/E11/" + play_list[i] + ".mp3";
             player.play();
             music_name_stop();
-            music_name_move(120);
+            music_name_move(music_name_move_px);
             $(".music_name").html(play_list[i] + "&#9835");
-        });
-        $(".music_list img").mouseover(function(){
+        }).mouseover(function(){
+            $(this).addClass("music_pic_shadow");
+        }).mouseout(function(){
+            $(this).removeClass("music_pic_shadow");
         });
 
         player.volume = 0.8;
@@ -131,14 +145,19 @@ body {
         //player.play();
         var is_begin = false;
         $(".music_control").click(function(){
-            if (player.paused){
-                $(this).find("div").removeClass("music_play").addClass("music_pause");
-                music_name_move(120);
-                player.play();
-            } else {
-                $(this).find("div").removeClass("music_pause").addClass("music_play");
-                music_name_stop();
-                player.pause();
+            if (current_music_idx == null){
+                $(".music_list img").eq(0).click();
+            }
+            else{
+                if (player.paused){
+                    $(this).find("div").removeClass("music_play").addClass("music_pause");
+                    music_name_move(music_name_move_px);
+                    player.play();
+                } else {
+                    $(this).find("div").removeClass("music_pause").addClass("music_play");
+                    music_name_stop();
+                    player.pause();
+                }
             }
         });
 
