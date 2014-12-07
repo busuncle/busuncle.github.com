@@ -119,20 +119,26 @@ body {
             "卫兰 - 八九十",
             "卫兰 - 自首",
         ];
+
         for(var i = 0; i < play_list.length; i++){
             var img = $("<img>");
             img.attr("src", "./images/E11/" + (i + 1) + ".jpg");
             img.attr("class", "music_pic");
             $(".music_list").append(img);
         }
+
+        function control_do_play(){
+            $(".music_control").find("div").removeClass("music_play").addClass("music_pause");
+            music_name_stop();
+            music_name_move(music_name_move_px);
+            player.play();
+        }
         $(".music_list img").click(function(){
             //alert($(".music_list img").index($(this)));
             var i = $(".music_list img").index($(this));
             current_music_idx = i;
             player.src = "./music/E11/" + play_list[i] + ".mp3";
-            player.play();
-            music_name_stop();
-            music_name_move(music_name_move_px);
+            control_do_play();
             $(".music_name").html(play_list[i] + "&#9835");
         }).mouseover(function(){
             $(this).addClass("music_pic_shadow");
@@ -150,9 +156,7 @@ body {
             }
             else{
                 if (player.paused){
-                    $(this).find("div").removeClass("music_play").addClass("music_pause");
-                    music_name_move(music_name_move_px);
-                    player.play();
+                    control_do_play();
                 } else {
                     $(this).find("div").removeClass("music_pause").addClass("music_play");
                     music_name_stop();
