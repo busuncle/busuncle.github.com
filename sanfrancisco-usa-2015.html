@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>三藩市-美国-2015</title>
+<meta charset='utf8'>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+<link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<style>
+* {
+    margin: 0; padding: 0;
+    font: 16px "Microsoft YaHei", Arial, Sans-Serif;
+}
+html {height: 100%;}
+body {
+    margin: auto; 
+    height: 100%;
+}
+.galleria {
+    width: 600px; height: 800px; margin-top: 5px;
+}
+.image_layer {
+    background: #000000;
+    opacity: 0.7;
+    padding: 5px;
+    text-align: center;
+}
+.music_box {
+    margin: auto; width: 600px; height: 40px;
+    background-color: #000;
+    -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;
+    background-image: -moz-linear-gradient(center top, #000 0%, #222 50%, #111 51%, #000 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #000), color-stop(0.5, #222), color-stop(0.51, #111), color-stop(1, #000));
+    background-image: -ms-linear-gradient(center top, #000 0%, #222 50%, #111 51%, #000 100%);
+    background-image: -o-linear-gradient(center top, #000 0%, #222 50%, #111 51%, #000 100%);
+    background-image: linear-gradient(center top, #000 0%, #222 50%, #111 51%, #000 100%);
+    border: solid 1px #111;
+}
+.music_box .music_control {
+    position: absolute;
+    left: 16px; top: 10px;
+}
+.music_box .music_control:hover { cursor: pointer; }
+.music_control .music_play {
+    position: absolute;
+    border-left: solid 14px #FFF;
+    border-top: solid 10px transparent;
+    border-bottom: solid 10px transparent;
+    width: 0; height: 0; left: 10px; top: 1px;
+}
+.music_control .music_pause {
+    position: absolute; 
+    border-left: solid 6px #FFF;
+    border-right: solid 6px #FFF;
+    width: 6px; height: 20px; left: 10px; top: 1px;
+}
+.music_box .music_name {
+    position: absolute;
+    text-align: right; vertical-align: middle;
+    right: 5px; top: 10px;
+    width: 250px; height: 80%;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>三藩市-美国-2015
+        <img src="./images/sanfrancisco/golden_gate_bridge.jpg" style="width: 80px; height: 80px; position: absolute; top: -10px; right: 10px;" />
+        </h1>
+    </div>
+</header>
+
+<div class="container">
+        <!--<audio controls="controls" id="player" autoplay="autoplay" loop="loop" type="audio/mpeg"></audio>-->
+        <audio id="player" preload="auto" type="audio/mpeg"></audio>
+        <div class="music_box">
+            <div class="music_control">
+                <div class="music_play"></div>    
+                <!--
+                <div class="music_pause"></div>
+                -->
+            </div>
+            <div class="music_name">
+                <!--Janice - Please &#9835;-->
+            </div>
+        </div>
+        <div class="galleria">
+        </div>
+</div>
+
+<footer><p>busuncle</p></footer>
+
+<script src="./javascripts/jquery.min.js"></script>
+<script src="./javascripts/galleria/galleria-1.4.2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        (function(){
+            function gen_image_layer(desc){
+                var p = '<p class="image_layer">' + desc + '</p>';
+                return p;
+            }
+
+            var image_list = [
+                [0, "准备出发"],
+                [1, "经过十几个小时的飞行，终于到了，这是三藩市的海岸线"],
+                [2, "来到酒店，在阳台拍下市区"],
+                [3, "出街逛了，市区的街道"],
+                [4, "街道"],
+                [5, "很漂亮的电缆车，可惜没去坐一下"],
+                [6, "排队搭cable car，也就是三藩市最出名的观光电缆车"],
+                [7, "上车"],
+                [8, "沿途会经过联合广场，还有唐人街"],
+                [9, "最终到达码头"],
+                [10, "看到美丽的HYDE ST.PIER码头"],
+                [11, "这边经常会见到行为艺术家"],
+                [12, "著名地标——渔人码头"],
+                [13, "这次是要在这个43 1/2码头，搭乘游轮去看金门大桥"],
+                [14, "开船噜，漂亮的海鸥^_^"],
+                [15, "我是坐在船尾"],
+                [16, "照着阳光很舒服，远处的就是金门大桥了"],
+                [17, "海与海鸥"],
+                [18, "不知道为什么，好喜欢拍这种逆光的照片"],
+                [19, "看到有人玩这种滑浪运动"],
+                [20, "来到金门大桥的桥底了，这个角度还可以"],
+                [21, "在桥底转了一圈，船上很冷，风很大，不过逆光的感觉好舒服"],
+                [22, "还经过恶魔岛，据说曾经是联邦监狱"],
+                [23, "这是另外一座有名的大桥——港湾大桥"],
+                [24, "玩累了，在码头找了间餐厅吃，这个算比较好吃的，叫酸面包奶油汤"],
+                [25, "这些很难吃，seafood spaghetti和lobster"],
+                [26, "第二天休整好，前往GDC会场报到"],
+                [27, "就是这里"],
+                [28, "拿个通行证"],
+                [29, "拍张照片"],
+                [30, "然后来上课，第一堂就听的Google的"],
+                [31, "会场外有一些人力三轮车，看着就很行为艺术的样子"],
+                [32, "下午去了唐人街那边逛逛"],
+                [33, "这边的人其实都是说粤语的，招牌多是繁体字，可能是香港移民比较多"],
+                [34, "china town的涂鸦"],
+                [35, "这间中餐馆很出名，最后一天会吃它"],
+                [36, "附近有很多参茸药行，买花旗参做手信挺合适的"],
+                [37, "很多中国的商铺"],
+                [38, "还看到天下为公的牌坊"],
+                [39, "美国的消防车长这样"],
+                [40, "接着去了另外一个景点——九曲花街"],
+                [41, "这里一个镜头pan下去，很有一种居高临下的畅快感"],
+                [42, "这是从下面pan上去拍的"],
+                [43, "准备找吃的时候，路过一个教堂"],
+                [44, "第三天，也是在某个广场拍的，忘了叫什么名字"],
+                [45, "忘了名字的广场"],
+                [46, "很喜欢拍这种无限延伸的场景"],
+                [47, "接下来要去一个新的地方，比较远，搭caltrain去"],
+                [48, "目的地等下揭晓"],
+                [49, "拿好车牌"],
+                [50, "出发"],
+                [51, "坐了大概一个小时吧，终于到了"],
+                [52, "慢慢走进去"],
+                [53, "发现一个钟塔"],
+                [54, "发现另外一个建筑"],
+                [55, "来到神秘的钟塔前，决定花3刀上去看看"],
+                [56, "噢，原来是斯坦福大学"],
+                [57, "从塔顶拍下来的校园风景真漂亮"],
+                [58, "俯瞰校园"],
+                [59, "俯瞰校园2"],
+                [60, "图书馆外侧"],
+                [61, "这应该是历史系的大楼"],
+                [62, "美丽的长廊"],
+                [63, "斯坦福到处都是这种四合院似的建筑风格，他们管这些叫court"],
+                [64, "好喜欢这里的长廊"],
+                [65, "校园内还有一间小教堂，长得很别致"],
+                [66, "又来一张一望无垠的照片"],
+                [67, "临走前，再拍一次钟楼"],
+                [68, "哈哈，突然买了个萌，识货的同学应该知道是哪里了吧"],
+                [69, "没错，就是著名的Google公司了，假装员工家属混进来参观一下"],
+                [70, "看到传说中的按摩椅"],
+                [71, "还有充满涂鸦的Android机器人"],
+                [72, "国人劣根啊，总喜欢刻个到此一游"],
+                [73, "来了个很chok的pose"],
+                [74, "Google"],
+                [75, "Mountain View夜幕来临的景色"],
+                [76, "Google大楼主体"],
+                [77, "这里应该是他们的室外餐厅"],
+                [78, "临走前看到他们的员工在打排球"],
+                [79, "第四天，Carmack的演讲，1.5小时，不停不喝水不看ppt，大神就是大神"],
+                [80, "接着来参观电视游戏机历史博物馆"],
+                [81, "好多古董"],
+                [82, "这些估计比我还年长"],
+                [83, "它们还能跑起来我都觉得有点厉害"],
+                [84, "不知道是什么年代的游戏卡带，我小时候玩的是黄色的"],
+                [85, "这个厂商，没啥印象"],
+                [86, "拐到某个角落，偶遇我们的摊位"],
+                [87, "中午在cheesefactory吃了一个steak，中规中矩吧，后来还要了个dessert，太甜太腻了"],
+                [88, "这个zippo漂亮吧"],
+                [89, "晚上来参加IGF&Choice Awards"],
+                [90, "游戏业界的盛会，堪称游戏奥斯卡"],
+                [91, "终身成就奖，坂口博信，著名的最终幻想系列游戏制作人"],
+                [92, "年度最佳游戏，不认识，其实很多获奖游戏我都不认识"],
+                [93, "第五天，早上继续上课，美国的街头到处可以看到这种很帅的truck，每一辆都跟变形金刚一样"],
+                [94, "上完课，出来看一些黑科技，这应该是展现VR（Virtual Reality）技术的射击游戏"],
+                [95, "动作捕捉，这不算很新的了"],
+                [96, "中午在m.y.china这家中餐馆吃了个港式xo酱煎面，其实来美国这么多天，吃的还是中餐比较多，而且中餐都比较贵"],
+                [97, "下午逛教堂去了，这是ST.MARKS教堂，不算很出名"],
+                [98, "这是另外一间，比较出名的，叫圣玛丽大教堂，决定进去看一下"],
+                [99, "donate了5刀，拿了个tour guide，看起来还挺漂亮的"],
+                [100, "耶稣被钉十字架"],
+                [101, "教堂内的建筑风格十分宏伟"],
+                [102, "现场有人弹奏乐曲，旋律让人安宁平静"],
+                [103, "坐在座位上往教堂顶部拍"],
+                [104, "另一个角度"],
+                [105, "离开教堂，我们来到三藩市的city hall，政府大楼。"],
+            ];
+
+            var image_data = [
+                //{image: "images/sanfrancisco/1.jpg", title: "11111", description: "111122222", layer: "fuck"},
+                //{image: "images/sanfrancisco/1.jpg", layer: gen_image_layer("desc")},
+            ];
+            for(var i = 0; i < image_list.length; i++){
+                var tmp = image_list[i];
+                image_data.push({
+                    image: "images/sanfrancisco/" + tmp[0] + ".jpg", 
+                    layer: gen_image_layer(tmp[1])
+                });
+            }
+            Galleria.loadTheme("./javascripts/galleria/themes/classic/galleria.classic.min.js");
+            Galleria.run(".galleria", {
+                dataSource: image_data,
+            });
+            //Galleria.configure('imageCrop', true);
+        })();
+
+        (function(){
+            var play_list = [
+                "郑秀文 - 默契",
+                "卫兰 - 街灯晚餐",
+                "卫兰 - 我怀念的你",
+                "郑秀文 - 最后一次",
+            ];
+
+            var player = $("#player").get(0);
+            var curr_music_idx = -1;
+            var music_name_move_delta = 120;
+            var music_name_move_speed = 5000;
+
+            // init
+            player.volume = 0.6;
+            $(".music_name").html(play_list[0] + " &#9835");
+
+            function play_music(idx){
+                var music_name = play_list[idx];
+                $(".music_name").html(music_name + " &#9835");
+                player.src = "./music/315/" + music_name + ".mp3";
+                player.play();
+            }
+
+            $(".music_control").click(function(){
+                if (curr_music_idx == -1)
+                {
+                    curr_music_idx = 0;
+                    play_music(curr_music_idx);
+                    music_name_move(music_name_move_delta);
+                }
+                else
+                {
+                    if (player.paused){
+                        $(this).find("div").removeClass("music_play").addClass("music_pause");
+                        music_name_move(music_name_move_delta);
+                        player.play();
+                    } else {
+                        $(this).find("div").removeClass("music_pause").addClass("music_play");
+                        music_name_stop();
+                        player.pause();
+                    }
+                }
+            });
+
+            function start(){
+                if (!player.paused){
+                    $(".music_control").find("div").removeClass("music_play").addClass("music_pause");
+                    //music_name_move(120);
+                }    
+            }
+            player.addEventListener("canplay", start);
+            player.addEventListener("canplaythrough", start);
+            player.addEventListener("ended", function(){
+                var len = play_list.length;
+                curr_music_idx++;
+                if (curr_music_idx >= len) curr_music_idx = 0;
+                play_music(curr_music_idx);
+            });
+
+            function music_name_move(val){
+                $(".music_name").animate({right: "+=" + val + "px"}, music_name_move_speed, function(){
+                    music_name_move(-val);
+                });
+            }
+
+            function music_name_stop(){
+                $(".music_name").stop();
+                $(".music_name").css("right", "5px");
+            }
+
+            //play_music(curr_music_idx);
+            //music_name_move(music_name_move_delta);
+        })();
+    });
+</script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-37200104-2', 'busuncle.github.io');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+
+
