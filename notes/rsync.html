@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Busuncle Studio</title>
+<meta charset='utf-8'>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+<link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen" />
+<link href="../images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+</head>
+<body>
+
+<header>
+    <div class="container">
+        
+    <h1>rsync</h1>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/shCoreRDark.css" media="screen" />
+
+    </div>
+</header>
+
+<div class="container">
+    <section id="main_content">
+        
+        <section class="para">
+			<p class="key">使用rsync作为服务端</p>
+			<p>（1）装好rsync，确保/etc/init.d/rsync可用</p>
+			<p>（2）编辑/etc/default/rsync，把RSYNC_ENABLE设为true：</p>
+			<pre>
+RSYNC_ENABLE=true</pre>
+			<p>（3）编辑配置文件，下面是一个样例：</p>
+			<pre>
+log file=/var/log/rsyncd.log    
+port=8873   
+
+[tmp]
+comment = write down your description about this rsync folder
+path = /home/busuncle/tmp/  
+hosts allow = 127.0.0.1 127.0.0.2   
+uid = nobody    
+gid = nogroup   
+read only = true    
+</pre>
+			<p>（4）重启rsync</p>
+		</section>
+
+        <section class="para">
+			<p class="key">使用rsync作为客户端</p>
+			<p>把a文件夹及里面所有文件传到远程机器的tmp目录下：</p>
+			<p><pre class="brush: bash;">
+			rsync --port 8873 -av /home/busuncle/a 192.168.1.1::tmp/</pre></p>
+			<p>反过来把远程机器的tmp目录整个拷到自己的a目录下（注意a后面的“/”，有“/”表示拷到a/tmp，没有表示直接覆盖在a上）：</p>
+			<p><pre class="brush: bash;">
+			rsync --port 8873 -av 192.168.1.1::tmp/ /home/busuncle/a/</pre></p>
+			<p>使用账号及密码文件：</p>
+			<p><pre class="brush: bash;">
+			touch pw.txt
+			echo "yourpassword" &gt; pw.txt
+			chmod 600 pw.txt
+			rsync -av --port=8730 --password-file='pw.txt' a.txt busuncle@192.168.1.1::tmp/</pre></p>
+			<p>使用环境变量作为密码：</p>
+			<p><pre class="brush: bash;">
+			export RSYNC_PASSWORD=your_password_here
+			rsync --port 8730 --list-only busuncle@192.168.1.1::tmp/</pre></p>
+		</section>
+<!-- code syntax highlighter -->
+<script type="text/javascript" src="../javascripts/shCore.js"></script>
+<script type="text/javascript" src="../javascripts/shBrushBash.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+
+    </section>
+</div>
+
+<footer><p>busuncle</p></footer>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-37200104-2', 'busuncle.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
+
+
