@@ -14,7 +14,7 @@
 <header>
     <div class="container">
         
-    <h1>grep</h1>
+    <h1>awk</h1>
     <link rel="stylesheet" type="text/css" href="../stylesheets/shCoreRDark.css" media="screen" />
 
     </div>
@@ -24,16 +24,40 @@
     <section id="main_content">
         
         <section class="para">
-			<p class="key">使用egrep匹配多个关键字</p>
-			<p>有个文件file.txt，内容如下：</p>
-			<pre>
-name=paul,age=20
-name=kevin,age=21
-name=james,age=22
-name=wade,age=24</pre>
-			<p>想找出kevin和wade的行，可以用egrep（或者grep -E）：</p>
+			<p class="key">所有awk里的action都是用单引号</p>
+			<p>比如是：</p>
 			<p><pre class="brush: bash;">
-			egrep "name=(kevin|wade)" file.txt</pre></p>
+			awk '{print $1}' file.txt</pre></p>
+			<p>而<strong>不</strong>是：</p>
+			<p><pre class="brush: bash;">
+			awk "{print $1}" file.txt</pre></p>
+		</section>
+
+        <section class="para">
+			<p class="key">使用-F指定列分割符</p>
+			<p>比如使用tab（\t）作为分隔符：</p>
+			<p><pre class="brush: bash;">
+			awk -F"\t" '{if ($1 == 0) print $2;}' file.txt</pre></p>
+		</section>
+
+        <section class="para">
+			<p class="key">awk里使用字典</p>
+			<p>有个文件file.txt内容如下：</p>
+			<pre>
+a 1
+b 2
+a 3
+b 3</pre>
+			<p>分别统计a、b的和（稍微改改就可以变成统计出现次数了）：</p>
+			<p><pre class="brush: bash;">
+			awk '{a[$1]+=$2}END{for(i in a) print i,a[i]}' file.txt</pre></p>
+		</section>
+
+        <section class="para">
+			<p class="key">awk中使用环境变量</p>
+			<p>打印file.txt每一行，在前面加上环境变量SHELL的值，并用tab分割：</p>
+			<p><pre class="brush: bash;">
+			awk '{OFS="\t";print ENVIRON["SHELL"], $0;}' file.txt</pre></p>
 		</section>
 
 <!-- code syntax highlighter -->
@@ -59,4 +83,5 @@ name=wade,age=24</pre>
 
 </body>
 </html>
+
 

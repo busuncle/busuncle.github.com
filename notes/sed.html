@@ -14,7 +14,7 @@
 <header>
     <div class="container">
         
-    <h1>grep</h1>
+    <h1>sed</h1>
     <link rel="stylesheet" type="text/css" href="../stylesheets/shCoreRDark.css" media="screen" />
 
     </div>
@@ -24,16 +24,18 @@
     <section id="main_content">
         
         <section class="para">
-			<p class="key">使用egrep匹配多个关键字</p>
+			<p class="key">使用正则获取相应内容：</p>
 			<p>有个文件file.txt，内容如下：</p>
 			<pre>
-name=paul,age=20
-name=kevin,age=21
-name=james,age=22
-name=wade,age=24</pre>
-			<p>想找出kevin和wade的行，可以用egrep（或者grep -E）：</p>
+[2014-04-27 00:00:00]id=1987042701, name=busuncle1
+[2014-04-27 00:00:01]id=1987042702, name=busuncle2</pre>
+			<p>使用下面sed语句：</p>
 			<p><pre class="brush: bash;">
-			egrep "name=(kevin|wade)" file.txt</pre></p>
+			sed -E "s/\[([^]]+)\]id=([0-9]+), name=([a-z]+)/\1,\2,\3/g" file.txt</pre></p>
+			<p>得到如下输出：</p>
+			<pre>
+2014-04-27 00:00:00,1987042701,busuncle1
+2014-04-27 00:00:01,1987042702,busuncle2</pre>
 		</section>
 
 <!-- code syntax highlighter -->
@@ -59,4 +61,5 @@ name=wade,age=24</pre>
 
 </body>
 </html>
+
 
