@@ -60,11 +60,11 @@ read only = true
 			touch pw.txt
 			echo "yourpassword" &gt; pw.txt
 			chmod 600 pw.txt
-			rsync -av --port=8730 --password-file='pw.txt' a.txt busuncle@192.168.1.1::tmp/</pre></p>
+			rsync -av --port=8873 --password-file='pw.txt' a.txt busuncle@192.168.1.1::tmp/</pre></p>
 			<p>使用环境变量作为密码：</p>
 			<p><pre class="brush: bash;">
 			export RSYNC_PASSWORD=your_password_here
-			rsync --port 8730 --list-only busuncle@192.168.1.1::tmp/</pre></p>
+			rsync --port 8873 --list-only busuncle@192.168.1.1::tmp/</pre></p>
 		</section>
 <!-- code syntax highlighter -->
 <script type="text/javascript" src="../javascripts/shCore.js"></script>
