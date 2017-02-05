@@ -256,6 +256,7 @@ body {
             ];
             for(var i = 0; i < image_list.length; i++){
                 var tmp = image_list[i];
+                /*
                 if (tmp[1].length > 0){
                     image_data.push({
                         image: "images/sanfrancisco/" + tmp[0] + ".jpg", 
@@ -267,6 +268,11 @@ body {
                         image: "images/sanfrancisco/" + tmp[0] + ".jpg"
                     });
                 }
+                */
+                image_data.push({
+                    image: "images/sanfrancisco/" + tmp[0] + ".jpg",
+                    thumb: "images/sanfrancisco/thumbnail/" + tmp[0] + ".jpg"
+                });
             }
             Galleria.loadTheme("./javascripts/galleria/themes/classic/galleria.classic.min.js");
             Galleria.run(".galleria", {
