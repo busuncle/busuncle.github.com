@@ -14,7 +14,7 @@
 <header>
     <div class="container">
         
-    <h1>strace</h1>
+    <h1>iptables</h1>
     <link rel="stylesheet" type="text/css" href="../stylesheets/shCoreRDark.css" media="screen" />
 
     </div>
@@ -24,9 +24,11 @@
     <section id="main_content">
         
         <section class="para">
-			<p class="key">看系统调用次数统计</p>
+			<p class="key">切断到192.168.1.233:25000的访问</p>
 			<p><pre class="brush: bash;">
-            strace -p 5127 -c
+            iptables -I OUTPUT -p tcp -d 192.168.1.233 --dport 25000 -j DROP
+            # 恢复
+            iptables -D OUTPUT 1
             </pre></p>
 		</section>
 
