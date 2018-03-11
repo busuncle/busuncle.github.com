@@ -160,6 +160,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #main_content p.text_right {
+    line-height: 1.0;
     text-align: right;
 }
 
