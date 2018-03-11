@@ -89,6 +89,18 @@ body {
 <script src="./javascripts/galleria/galleria-1.4.2.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
+        var image_data = [];
+        for(var i = 1; i <= 73; i++){
+                image_data.push({
+                    image: "images/busan/" + i + ".jpg",
+                    thumb: "images/busan/thumbnail/" + i + ".jpg"
+                });
+        }
+        Galleria.loadTheme("./javascripts/galleria/themes/classic/galleria.classic.min.js");
+        Galleria.run(".galleria", {
+            dataSource: image_data,    
+        });
+
         var play_list = [
             "金泰妍 - 如果",
             "金泰妍 - 爱那一句话",
@@ -98,12 +110,6 @@ body {
             "金泰妍 - 听得见吗",
             "金泰妍 - Bye",
         ];
-        for(var i = 1; i <= 73; i++){
-            $(".galleria").append('<img src="images/busan/' + i + '.jpg" />');
-        }
-        Galleria.loadTheme("./javascripts/galleria/themes/classic/galleria.classic.min.js");
-        Galleria.run(".galleria");
-
         var player = $("#player").get(0);
         var curr_music_idx = -1;
         var music_name_move_delta = 120;
