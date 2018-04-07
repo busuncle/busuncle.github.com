@@ -74,6 +74,12 @@ db.user_backup.find({"_id": "10001-1"}).forEach(
             </pre></p>
 		</section>
 
+# 列表
+db.test1.update({"_id": 1}, {$push: {"scores": 1}}, upsert=true)
+
+# 集合
+db.test2.update({"_id": 1}, {$addToSet: {"scores": 1}}, upsert=true)
+
 <!-- code syntax highlighter -->
 <script type="text/javascript" src="../javascripts/shCore.js"></script>
 <script type="text/javascript" src="../javascripts/shBrushBash.js"></script>
