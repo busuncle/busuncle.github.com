@@ -71,15 +71,14 @@ db.user.find({
 db.user_backup1.find().forEach(function(doc){db.user_backup2.insert(doc);})
 db.user_backup.find({"_id": "10001-1"}).forEach(
     function(doc){db.user.remove({"_id": doc["_id"]}); db.user.insert(doc);})
-            </pre></p>
-		</section>
 
 # 列表
 db.test1.update({"_id": 1}, {$push: {"scores": 1}}, upsert=true)
 
 # 集合
 db.test2.update({"_id": 1}, {$addToSet: {"scores": 1}}, upsert=true)
-
+            </pre></p>
+		</section>
 <!-- code syntax highlighter -->
 <script type="text/javascript" src="../javascripts/shCore.js"></script>
 <script type="text/javascript" src="../javascripts/shBrushBash.js"></script>
