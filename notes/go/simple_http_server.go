@@ -16,13 +16,12 @@ func helloHandler(w http.ResponseWriter, req *http.Request) {
 
 func testGetParamHandler(w http.ResponseWriter, req * http.Request) {
         // curl "http://127.0.0.1:12345/get_param?a=3&b=4"
-        req.ParseForm()
-        a, err := strconv.Atoi(string(req.Form.Get("a")[0]))
+        a, err := strconv.Atoi(string(req.FormValue("a")))
         if  err != nil {
                 io.WriteString(w, "invalid a\n")
                 return
         }
-        b, err := strconv.Atoi(string(req.Form.Get("b")[0]))
+        b, err := strconv.Atoi(string(req.FormValue("b")))
         if  err != nil {
                 io.WriteString(w, "invalid b\n")
                 return
