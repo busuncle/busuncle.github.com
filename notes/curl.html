@@ -24,15 +24,25 @@
     <section id="main_content">
         
         <section class="para">
-			<p class="key">发post请求</p>
+			<p class="key">常用指令</p>
 			<p><pre class="brush: bash;">
+            # 发post请求
             curl -X POST --data '{"uid":123,"val":100}' http://127.0.0.1:9999/add_money
-            </pre></p>
-		</section>
-        <section class="para">
-			<p class="key">显示http response头部</p>
-			<p><pre class="brush: bash;">
-            curl -i www.google.com
+
+            # 显示http response头部
+            curl -i http://127.0.0.1
+
+            # 显示http请求详细过程，调试网络问题非常有用
+            curl -v http://127.0.0.1
+
+            # 带header
+            curl -H 'X-Token:eabcb4140cea017424bd6e34b391f520' http://127.0.0.1
+
+            # 不使用证书连接到https地址
+            curl -k https://127.0.0.1:9999/hello
+
+            # 输出到文件
+            curl http://127.0.0.1 -o output.txt
             </pre></p>
 		</section>
 

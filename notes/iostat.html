@@ -26,18 +26,11 @@
         <section class="para">
 			<p class="key">常用指令</p>
 			<p><pre class="brush: bash;">
-# 授权
-grant select,insert,update,delete on db_name.* to db_user@'127.0.0.1' identified by 'your_password';
-grant all privileges on db_name.* to db_user@'localhost' identified by 'your_password';
-flush privileges;
+            # 查看TPS和吞吐量信息
+            iostat -d -k 1
 
-# dump and load .sql file
-mysqldump [--no-data] -u root -p db_name [table_name, table_name2, ...] > your_dump_file.sql
-mysql>source your_dump_file_path;
-
-# 看数据库里，行数最多的表
-use information_schema;
-select TABLE_NAME, TABLE_ROWS from TABLES order by TABLE_ROWS desc limit 20;
+            # 查看设备使用率（%util）、响应时间（await）
+            iostat -d -x -k 1
             </pre></p>
 		</section>
 
