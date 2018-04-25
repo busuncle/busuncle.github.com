@@ -24,9 +24,16 @@
     <section id="main_content">
         
         <section class="para">
-			<p class="key">看系统调用次数统计</p>
+			<p class="key">常用指令</p>
 			<p><pre class="brush: bash;">
+            # 看系统调用次数统计
             strace -p 5127 -c
+
+            # 看系统调用次数统计（同时跟踪fork和vfork出来的进程）
+            strace -p 5127 -c -fF
+
+            # 结果输出到文件
+            strace -p 5127 -o "strace.out"
             </pre></p>
 		</section>
 
