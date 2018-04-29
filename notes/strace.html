@@ -34,6 +34,9 @@
 
             # 结果输出到文件
             strace -p 5127 -o "strace.out"
+
+            # 单独跟踪某个系统调用
+            strace -T -e clone -p
             </pre></p>
 		</section>
 
