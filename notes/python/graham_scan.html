@@ -1,3 +1,5 @@
+<pre>
+
 # -*- coding: utf-8 -*-
 
 
@@ -42,7 +44,7 @@ def graham_scan(point_list):
     def cmp(p1, p2):
         v1, v2 = Vec2(p0, p1), Vec2(p0, p2)
         if cross(v1, v2) > 0:
-            # v1在v2右边
+            # v1 is on v2 right
             return -1
         else:
             return 1
@@ -73,3 +75,5 @@ if Point(0.5, 0.5) in ch:
     print "yes"
 else:
     print "no"
+
+</pre>

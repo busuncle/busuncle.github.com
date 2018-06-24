@@ -1,3 +1,4 @@
+<pre>
 local cjson = require "cjson"
 local mysql = require "resty.mysql"
 
@@ -23,3 +24,5 @@ end
 
 local res, err, errno, sqlstate = db:query("select * from user")
 ngx.say("result: ", cjson.encode(res))
+
+</pre>

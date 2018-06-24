@@ -1,3 +1,4 @@
+<pre>
 s = "hello world"
 i, j = string.find(s, "hello")
 print(i, j) --> 1   5
@@ -29,3 +30,4 @@ print(string.gsub("\\cmd{some text}", "\\(%a+){(.-)}", "<%1>%2</%1>"))  --> <cmd
 print((string.gsub("   abc def   ", "^%s*(.-)%s*$", "%1")))   --> abc def
 
 print((string.gsub("$a is $b", "$(%w+)", {a='x', b='y'})))  --> x is y
+</pre>
