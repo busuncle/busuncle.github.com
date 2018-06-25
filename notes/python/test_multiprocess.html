@@ -15,7 +15,7 @@ def job_process(proc_idx):
 
 
 def try_job_process(proc_idx):
-        # 多进程的异常要包一层来显示
+        # need a try...except to print traceback
         try:
                 job_process(proc_idx)
         except Exception, e:
