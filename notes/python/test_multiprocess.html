@@ -1,0 +1,36 @@
+<pre>
+# -*- coding: utf-8 -*-
+
+import time
+import random
+import multiprocessing
+import traceback
+
+PROC_NUM = 4
+
+def job_process(proc_idx):
+        t = time.time()
+        time.sleep(random.random() * 10)
+        print "job_process proc_idx %d time %0.2f" % (proc_idx, time.time() - t)
+
+
+def try_job_process(proc_idx):
+        # 多进程的异常要包一层来显示
+        try:
+                job_process(proc_idx)
+        except Exception, e:
+                print "try_job_process exception proc_idx %d error: %s" % (proc_idx, e)
+                traceback.print_exc()
+
+
+def run():
+        p = multiprocessing.Pool(PROC_NUM)
+        for i in xrange(PROC_NUM):
+                p.apply_async(try_job_process, args=(i,))
+        p.close()
+        p.join()
+
+
+if __name__ == "__main__":
+        run()
+</pre>
