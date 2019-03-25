@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>web开发的3年</title>
+<title>Web开发的3年</title>
 <meta charset='utf8'>
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
@@ -14,7 +14,7 @@
 
 <header>
     <div class="container">
-        <h1>web开发的3年</h1>
+        <h1>Web开发的3年</h1>
     </div>
 </header>
 
@@ -24,7 +24,7 @@
     我喜欢为自己写些东西，让自己的思考得到沉淀。</p>
     <p class="idt">我做的第一个项目叫网易游戏推广员系统（<a href="http://gs.163.com" target="_blank" >http://gs.163.com</a>，下面简称GS），也是一个历史比较长的项目，它主要负责给公司游戏产品做人对人的推广。
     也是多亏产品的给力，项目到今天还是运营的不错。
-    这个项目对于我的意义，在于培养我的基础，让我熟悉web开发的各种工具，训练解决问题的思路，实际上我并不喜欢搞这个业务。</p>
+    这个项目对于我的意义，在于培养我的基础，让我熟悉Web开发的各种工具，训练解决问题的思路，实际上我并不喜欢搞这个业务。</p>
     <p class="idt">大概2011年底，我们的需求方想做一个叫网站联盟的项目（<a href="http://union.163.com" target="_blank" >http://union.163.com</a>，下面简称网盟），我从GS调了出来，独立负责这个项目。
     一开始只是个尝试性的项目，也没有什么目标，只是摸着石头过河。不知道什么原因，老板突然关注到这个项目，而且也让营销boss监督项目进度。
     那时候开始感觉到压力，我记得有一次老板上了网盟，挑了几个毛病，然后我那天就加班到1点多了。
@@ -40,7 +40,7 @@
     <p class="idt">网盟一开始其实是做在GS项目下的，作为一个子模块，后来才把它整个独立出来。最初项目沿用的是GS的架构，非常简单，如下图：</p>
     <p><img src="images/3_years_in_web/apache_modwsgi.jpg" /></p>
     <p class="idt">一开始没什么问题，因为流量很小，并发不高。但后来，渠道越来越多的时候，流量呈爆炸性增长（因为我们的pv实际上是每个渠道的pv乘以活跃渠道的数量），这个架构的性能问题一下子就暴露出来了。</p>
-    <p class="idt">首先是web服务器，apache的IO模型是多进程多线程，分两种模式，prefork和worker。
+    <p class="idt">首先是Web服务器，apache的IO模型是多进程多线程，分两种模式，prefork和worker。
     prefork是起了master进程后再fork若干个子进程处理请求，而worker则是在prefork的基础上，在每个子进程里面起若干个线程处理请求，每个进程或线程处理请求的时候是阻塞的。
     所以如果我们要处理高并发的应用场景，必须起非常多的进程或线程去处理。
     Linux下，一个线程，不管是否在使用，最小都要占用几兆内存，所以内存首先到瓶颈。就算我们把内存加到足够大，可以开足够多的线程（比如1000个），这时候线程间的调度又会成为新的瓶颈，CPU光做调度，都被耗完了。
@@ -152,16 +152,16 @@
     这里涉及到IPC的消耗，如果nginx和uwsgi是部署在同一台物理机器，那么就是利用unix socket，由内核做两次数据的拷贝；
     如果是不同的物理机，还多走了趟tcp协议栈，外加网络传输的开销。另外，nginx和uwsgi之间比较奇葩的事情是不支持长连接（keepalive），所以每次请求都会连接和断开，开销非常大。
     nginx+lua则不一样，它不是两个进程的概念，而是直接让lua虚拟机跑在nginx内部，省去了IPC的开销。
-    nginx内部通过一些用C实现的高效模块，直接把接口暴露给lua进行调用，使得lua可以轻松处理一些web相关的逻辑。</p>
+    nginx内部通过一些用C实现的高效模块，直接把接口暴露给lua进行调用，使得lua可以轻松处理一些Web相关的逻辑。</p>
     <p class="idt">第二，nginx使用epoll，内存占用极低，请求转发能力极强，可以说并发模型已经达到最优。后端uwsgi主要是CPU密集型的计算，虽然也有写log的IO开销，但经过观察瓶颈没在这块。所以这时候的瓶颈实际上是uwsgi的CPU处理速度。
-    uwsgi进程处理业务是用python，我们知道，python是非常大，非常慢的。而且我们用了一个web框架，去方便实现逻辑。
+    uwsgi进程处理业务是用python，我们知道，python是非常大，非常慢的。而且我们用了一个Web框架，去方便实现逻辑。
     这个框架本身用python写，函数调用一层套一层，这使得整个进程运作起来更加慢。lua则没有这个问题，它本身很快，上了luajit之后更加快得飞起。
-    lua内核非常小，只有100k左右。我们也没有用任何lua的web框架，而是直接让lua调用nginx的接口，这些接口都是用纯C实现的，效率非常高。</p>
+    lua内核非常小，只有100k左右。我们也没有用任何lua的Web框架，而是直接让lua调用nginx的接口，这些接口都是用纯C实现的，效率非常高。</p>
     <p class="idt">nginx+lua还有一个好处，就是可以利用lua的coroutine，以同步的方式写异步的逻辑，比如并发获取n个后端（redis、mysql等）的数据结果。coroutine不进内核空间，消耗更小，加上同步方式的代码写起来更简单。
     当然这点我们没有用到，只是提一下。</p>
     <p class="idt">到后面，为了更好适应现在的渠道推广业务，我们重写了网盟。
     虽然新系统在业务设计上做了很多改进，但并没有脱离它的定位，技术实现上也只是重复劳动而已。</p>
-    <p class="idt">总的来说，这3年在web这个领域，我学到很多，技术进步很快，能力也得到了很大的提升。
+    <p class="idt">总的来说，这3年在Web这个领域，我学到很多，技术进步很快，能力也得到了很大的提升。
     这些经历，对我以后做任何事情都是有很大帮助的。
     比较遗憾的是，从产品这个角度，我没有做出什么成绩。也许是我不够努力，也许是我能力还不够，也许是我没做对方向。不管怎样，我对未来还是充满希望。
     期待在新的领域里，能够做出点东西来。
@@ -182,14 +182,6 @@
 
 
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-37200104-2', 'busuncle.github.io');
-  ga('send', 'pageview');
-
 </script>
 
 </body>
