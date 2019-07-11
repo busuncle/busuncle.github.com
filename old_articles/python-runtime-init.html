@@ -5,9 +5,9 @@
 <meta charset='utf-8'>
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-<link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen" />
+<link href="../images/favicon.ico" rel="shortcut icon" type="image/x-icon">
 </head>
 <body>
 
@@ -15,7 +15,7 @@
     <div class="container">
         
     <h1>Python运行环境初始化</h1>
-    <link rel="stylesheet" type="text/css" href="stylesheets/shCoreRDark.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/shCoreRDark.css" media="screen" />
 
     </div>
 </header>
@@ -73,10 +73,10 @@ int Py_Main(intargc, char **argv)
         <p class="idt">最后说一下的是，Python所有线程都会共享相同的builtin名字空间。它的表现在于，在PyFrame_New设置builtin名字空间时，会根据PyFrameObject的back指针（指向调用者的PyFrameObject）是否为NULL，来指向__main__的global名字空间的builtin_object（也就是我们刚才介绍的“__builtins__”字符串对象），或是指向调用者的builtin_object。</p>
 
 <!-- code syntax highlighter -->
-<script type="text/javascript" src="javascripts/shCore.js"></script>
-<script type="text/javascript" src="javascripts/shBrushPython.js"></script>
-<script type="text/javascript" src="javascripts/shBrushCpp.js"></script>
-<script type="text/javascript" src="javascripts/shBrushBash.js"></script>
+<script type="text/javascript" src="../javascripts/shCore.js"></script>
+<script type="text/javascript" src="../javascripts/shBrushPython.js"></script>
+<script type="text/javascript" src="../javascripts/shBrushCpp.js"></script>
+<script type="text/javascript" src="../javascripts/shBrushBash.js"></script>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
 
     </section>

@@ -5,9 +5,9 @@
 <meta charset='utf-8'>
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-<link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen" />
+<link href="../images/favicon.ico" rel="shortcut icon" type="image/x-icon">
 </head>
 <body>
 
@@ -15,7 +15,7 @@
     <div class="container">
         
     <h1>Python模块动态加载机制</h1>
-    <link rel="stylesheet" type="text/css" href="stylesheets/shCoreRDark.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/shCoreRDark.css" media="screen" />
 
     </div>
 </header>
@@ -129,10 +129,10 @@ import_module_level(char *name, PyObject *globals, PyObject *locals,
         <p class="idt">对于每个module/package，是如何加载的呢？我们知道，获得package环境，我们就获得各个要加载文件的路径了，所以接下来就是针对不同类型的文件进行加载动作，对于py文件，就是对其编译，得到PyCodeObject对象，执行其中的字节码（也就是会创建PyFrameObject对象了），将生成的module加入sys.modules，另外还生成一个其对应pyc文件（都编译了一次了，下次程序再运行当然不想再编译一次了）。对于pyc文件，动作其实跟处理py文件相似，只是少了编译的过程。而对于package，则会尝试寻找并加载__init__.py文件（缺少这个则会抛异常），并将自身加入到sys.modules。对于某些不常用的内建module和C扩张module，形式类似，我们不作展开了。 </p>
 
 <!-- code syntax highlighter -->
-<script type="text/javascript" src="javascripts/shCore.js"></script>
-<script type="text/javascript" src="javascripts/shBrushPython.js"></script>
-<script type="text/javascript" src="javascripts/shBrushCpp.js"></script>
-<script type="text/javascript" src="javascripts/shBrushBash.js"></script>
+<script type="text/javascript" src="../javascripts/shCore.js"></script>
+<script type="text/javascript" src="../javascripts/shBrushPython.js"></script>
+<script type="text/javascript" src="../javascripts/shBrushCpp.js"></script>
+<script type="text/javascript" src="../javascripts/shBrushBash.js"></script>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
 
     </section>
