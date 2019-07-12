@@ -94,7 +94,7 @@
         </pre></p>
 
         <p class="idt">说到这里，关系有点复杂了，先用一个图总结一下字节码序列（byte code sequence）、PyCodeObject、PyFrameObject三者之间的关系吧：</p>
-        <p class="text_center"><img src="images/python/pyframeobject.jpg" /></p>
+        <p class="text_center"><img src="../images/python/pyframeobject.jpg" /></p>
 
         <p class="idt">讲完执行环境，应该要描述一下Python虚拟机的运行框架了。在Python启动后，首先会进行运行时环境的初始化（运行时环境是全局的概念，如进程、线程，它不同于执行环境，而执行环境针对的是某个CodeBlock的栈帧的描述），然后进入一个叫PyEval_EvalFramEx的函数，它其实就是Python虚拟机的具体实现：</p>
 
