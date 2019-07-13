@@ -1,0 +1,479 @@
+<pre>
+package main
+
+import (
+        "fmt"
+        "os"
+        "strconv"
+        "reflect"
+        "encoding/json"
+        "time"
+        "sync"
+        "github.com/globalsign/mgo/bson"
+        "encoding/binary"
+        "github.com/globalsign/mgo"
+        "github.com/garyburd/redigo/redis"
+        "sort"
+        //"net/http"
+        //"bytes"
+        "os/exec"
+        //"net/smtp"
+        //"strings"
+)
+
+const (
+        D_LOW = int64(10000000)
+        D_MID = int64(1000)
+)
+
+type defConf struct {
+        ServicePort int
+        ServiceID string
+}
+
+var gConf defConf
+var gRedis *redis.Pool
+var gMongo *mgo.Session
+
+func ParseConf(conf interface{}) {
+        /*
+        ~$cat conf.json
+        {
+                "ServicePort": 1,
+                "ServiceID": "service_id"
+        }
+
+        */
+        file, _ := os.Open("conf.json")
+        defer file.Close()
+        decoder := json.NewDecoder(file)
+        decoder.Decode(&conf)
+}
+
+func init() {
+        fmt.Println("main init")
+}
+
+
+type base struct {
+        b int
+        s string
+}
+
+type cls1 struct {
+        c base
+        n int
+}
+
+type cls2 struct {
+        c base
+        m string
+}
+
+type person struct {
+        Name string `json:"json_name" bson:"bson_name"`
+        Age int `json:"json_age" bson:"bson_age"`
+        Tag int `json:"tag"`
+}
+
+type student struct {
+        person
+        Title string
+        Tag string
+}
+
+func testStudent() {
+        stu := student{}
+        stu.Name = "zzz"
+        stu.Age = 30
+        stu.Title = "programmer"
+        stu.Tag = "is tag"
+        fmt.Println(stu.Name, stu.Age, stu.Title, stu.Tag)
+}
+
+func printStructTags() {
+        var p person
+        tp := reflect.TypeOf(p)
+        for i := 0; i < tp.NumField(); i++ {
+                sf := tp.Field(i)
+                fmt.Println(sf.Tag.Get("bson"))
+        }
+}
+
+func getBsonM(v interface{}) map[string]int {
+        keys := GetStructTagKeys(v, "bson")
+        res := make(map[string]int)
+        for _, k := range keys {
+                res[k] = 1
+        }
+        return res
+}
+
+func GetStructTagKeys(v interface{}, tag_name string) []string {
+        t := reflect.TypeOf(v)
+        n := t.NumField()
+        res := make([]string, n)
+        for i := 0; i < n; i++ {
+                f := t.Field(i)
+                res[i] = f.Tag.Get(tag_name)
+        }
+        return res
+}
+
+func testBsonM() {
+        a := bson.M{
+                "aa": 1,
+                "bb": "sb",
+        }
+        fmt.Println(a)
+}
+
+func testMaxVarintLen64() {
+        fmt.Println("testMaxVarintLen64", binary.MaxVarintLen64)
+}
+
+func testdatetime() {
+        ts := time.Now().Unix()
+        tm := time.Unix(ts, 0)
+        fmt.Println(fmt.Sprintf(`date is %s`, tm.Format("2006-01-02")))
+}
+
+func testmultimap() {
+        m := map[string][]string{}
+        m["a"] = []string{}
+        m["a"] = append(m["a"], "111")
+        m["a"] = append(m["a"], "222")
+        m["b"] = []string{}
+        m["b"] = append(m["b"], "333")
+        m["b"] = append(m["b"], "444")
+        fmt.Println(m)
+}
+
+func testtimezone() {
+        now := time.Now()
+        loc, _ := time.LoadLocation("PRC")
+        fmt.Println(now.In(loc).Format("[2006-01-02 15:04:05 -0700]"))
+}
+
+func test222() {
+        ParseConf(&gConf)
+        fmt.Println("ServicePort", gConf.ServicePort, "ServiceID", gConf.ServiceID)
+        var gid int64 = 341234823412
+        //fmt.Println(strconv.Itoa(gid))
+        str_gid := fmt.Sprintf("%d", gid)
+        fmt.Println("gid:", str_gid, "kind:", reflect.ValueOf(str_gid).Kind())
+        m := make(map[int64]map[string]interface{})
+        m[10058] = map[string]interface{}{"nickname": "a119", "score": 999}
+        m[10059] = map[string]interface{}{"nickname": "a120", "score": 1000}
+        fmt.Println(m)
+}
+
+func teststring() {
+        var a string = "123456"
+        b, _ := strconv.Atoi(a)
+        fmt.Println("this is int", b)
+}
+
+func testwg1(wg *sync.WaitGroup, a int) {
+        if wg != nil {
+                defer wg.Done()
+        }
+        fmt.Println("testwg1", a)
+}
+
+func testwg2(wg *sync.WaitGroup, a int) {
+        defer wg.Done()
+        fmt.Println("testwg2", a)
+}
+
+func test2(teamID int) {
+        if teamID == 0 {
+                teamID = 2 * 7
+        }
+        fmt.Println(teamID)
+        var wg sync.WaitGroup
+        wg.Add(1)
+        testwg1(nil, 333)
+        go testwg2(&wg, 999)
+        wg.Wait()
+}
+
+func testappend() {
+        matchIDList := []string{}
+        for i := 0; i < 100; i++ {
+                matchIDList = append(matchIDList, strconv.Itoa(i))
+        }
+        //fmt.Println(fmt.Sprintf("len: %d", len(matchIDList)))
+}
+
+func testmake() {
+        matchIDList := make([]string, 100)
+        for i := 0; i < 100; i++ {
+                matchIDList[i] = strconv.Itoa(i)
+        }
+        //fmt.Println(fmt.Sprintf("len: %d", len(matchIDList)))
+}
+
+func testslice() {
+        matchIDList := []string{"aaa", "bbb", "cccc", "ddd"}
+        n := 50
+        if n > len(matchIDList) {n = len(matchIDList)}
+        fmt.Println(matchIDList[:n])
+        m := map[int]int{}
+        for i := 1; i <= 5; i++ {
+                m[1] += i
+        }
+        fmt.Println(m)
+}
+
+func getMongoConn() *mgo.Session {
+        return gMongo.Copy()
+}
+
+func testmongo() {
+        client := getMongoConn()
+        collection := client.DB("h45na").C("test")
+        //cnt, err := collection.Find(bson.M{}).Limit(2).Count()
+        //fmt.Println(cnt)
+        changeInfo, err := collection.UpdateAll(bson.M{"i": 1}, bson.M{"$set": bson.M{"c": 3}})
+        if err != nil {
+                fmt.Println(err)
+        }
+        fmt.Println(fmt.Sprintf("updated %d removed %d", changeInfo.Updated, changeInfo.Removed))
+}
+
+func testmongobulk() {
+        client := getMongoConn()
+        collection := client.DB("h45na").C("testbulk")
+        bk := collection.Bulk()
+        matchID := 99999
+        teamSize := 2
+        for i:=0;i<10000;i++ {
+                bk.Upsert(bson.M{"leaderGid": 10000000 + i, "matchID": matchID, "teamSize": teamSize}, bson.M{"$set": bson.M{"status": 1}})
+        }
+        bk.Run()
+}
+
+func testredis() {
+        /*
+        r := gRedis.Get()
+        defer r.Close()
+        _, err := r.Do("SET", "hello", 1)
+        if err != nil {
+                fmt.Println(err)
+        }
+        */
+        r := gRedis.Get()
+        defer r.Close()
+        //v, err := redis.String(r.Do("GET", "caocaocao11111"))
+        _, err := r.Do("SET", "hello", "123")
+        v, err := r.Do("GET", "hello22")
+        if err != nil {
+                fmt.Println(err)
+        }
+        if v == nil {
+                fmt.Println("value is nil")
+        } else {
+                fmt.Println(string(v.([]byte)))
+        }
+}
+
+func testredislock() {
+        r := gRedis.Get()
+        defer r.Close()
+        ret, err := r.Do("SET", "testredislock111", 1 , "NX", "PX", 30000)
+        if err != nil {
+                fmt.Println(fmt.Sprintf("testredislock err %s", err))
+                return
+        }
+        if ret == "OK" {
+                fmt.Println("testredislock success ret: ", ret)
+        } else {
+                fmt.Println("testredislock fail ret: ", ret)
+        }
+}
+
+func testinterface() {
+        data := map[string]interface{}{}
+        //data["GIDs"] = []string{1234, 5678}
+        data["Rank"] = 1
+        data["TeamSize"] = 2
+        data["Name"] = "hahaha"
+        data["GIDs"] = []int64{1234, 5678}
+        gids, ok := data["GIDs"].([]int64)
+        if ok {
+                for _, v := range gids {
+                        fmt.Println(v)
+                }
+        }
+}
+
+type DtsAppearanceItemData struct {
+        ItemID int `itemID:"json"`
+        Q int `q:"json"`        // 品质quality
+}
+
+func testsort() {
+        a := []int{3, 1, 4, 2}
+        sort.Ints(a)
+        a = a[len(a) - 2:]
+        fmt.Println("sorted top 2", a)
+
+        i64s := []int64{9938284324234, 1234567893242, 3423482942349}
+        sort.Slice(i64s, func(i, j int) bool {
+                return i64s[i] > i64s[j]
+        })
+        fmt.Println("sorted in64 array", i64s)
+        itemList := []DtsAppearanceItemData{}
+        itemList = append(itemList, DtsAppearanceItemData{1000, 1})
+        itemList = append(itemList, DtsAppearanceItemData{1001, 3})
+        itemList = append(itemList, DtsAppearanceItemData{1002, 1})
+        itemList = append(itemList, DtsAppearanceItemData{1003, 2})
+        sort.Slice(itemList, func(i, j int) bool {
+                return itemList[i].Q > itemList[j].Q
+        })
+        itemList = itemList[:2]
+        fmt.Println("sorted itemList", itemList)
+}
+
+func testsscanf() {
+        key := "10001_2_10059"
+        var matchID, teamSize int
+        var leaderGID int64
+        fmt.Sscanf(key, "%d_%d_%d", &matchID, &teamSize, &leaderGID)
+        fmt.Println(matchID, teamSize, leaderGID)
+}
+
+func testmakerankvalue(score int, kill int, damage int) int64 {
+        var v int64
+        // 2**60 = 1152921504606846976
+        // 11529|2150|4606846976
+        v = int64(score) * D_MID * D_LOW + int64(kill) * D_LOW + int64(damage)
+        return v
+}
+
+func testgetrankdatafromvalue(value int64) (int, int, int) {
+        return int(value/D_MID/D_LOW), int(value/D_LOW % D_MID), int(value % D_LOW)
+}
+
+func test() {
+        a := "1234566aa"
+        b, _ := strconv.ParseInt(a, 10, 64)
+        fmt.Println(b)
+}
+
+func testcomplicatedstruct() {
+        s := `{"status": "OK", "tips": "", "result": {"tips": "", "data": [{}]}}`
+        type gmResult struct {
+                Status string `json:"status"`
+        }
+        res := gmResult{}
+        err := json.Unmarshal([]byte(s), &res)
+        if err != nil {
+                fmt.Println("testcomplicatedstruct error", err.Error())
+                return
+        }
+        fmt.Println("testcomplicatedstruct success", res.Status)
+}
+
+func goexecshell(wg *sync.WaitGroup, mtx *sync.Mutex, i int) {
+        defer func() {
+                wg.Done()
+                fmt.Println("wg.Done", i)
+        }()
+        // sh ~/tmp/testloaditemlist.sh
+        cmd := exec.Command("sh", "/home/lizhijian/tmp/testloaditemlist.sh")
+        _, err := cmd.Output()
+        mtx.Lock()
+        defer func() {
+                mtx.Unlock()
+                fmt.Println("mtx.Unlock", i)
+        }()
+        if err != nil {
+                fmt.Println("goexecshell error ", i)
+        } else {
+                fmt.Println("goexecshell success", i)
+        }
+        //fmt.Printf("goexecshell %d\n", i)
+}
+
+func nolockexecshell(wg *sync.WaitGroup, i int) {
+        defer wg.Done()
+        // sh ~/tmp/testloaditemlist.sh
+        cmd := exec.Command("sh", "/home/lizhijian/tmp/testloaditemlist.sh")
+        _, err := cmd.Output()
+        if err != nil {
+                fmt.Println("goexecshell error ", i)
+        } else {
+                fmt.Println("goexecshell success", i)
+        }
+
+}
+
+func testhighgoroutinehttp() {
+        var wg sync.WaitGroup
+        //var mtx sync.Mutex
+        cnt := 1000
+        for i := 0; i < cnt; i++ {
+                wg.Add(1)
+                //go goexecshell(&wg, &mtx, i)
+                go nolockexecshell(&wg, i)
+        }
+        wg.Wait()
+}
+
+func testnulllist() {
+        hostItemLists := make(map[string][]int)
+        for _, itemList := range hostItemLists {
+                for _, itemID := range itemList {
+                        fmt.Println("testnulllist", itemID)
+                }
+        }
+}
+
+func init(){
+        fmt.Println("================ init =================")
+        mongoURL := "mongodb://mybwaccount:mybwaccount@192.168.47.82:30000/h45na?maxPoolSize=1024"
+        var err error
+        gMongo, err = mgo.DialWithTimeout(mongoURL, time.Second * 5)
+        if err != nil {
+                fmt.Printf("dial mongo url %s err %s", mongoURL, err.Error())
+                return
+        }
+
+        rdurl := "192.168.47.82:6379"
+        gRedis = &redis.Pool {
+                MaxIdle : 100,
+                IdleTimeout : 60 * time.Second,
+                Dial: func()(redis.Conn, error){
+                        c, err := redis.Dial("tcp", rdurl)
+                        if err != nil {
+                                return nil, err
+                        }
+                        if _, err := c.Do("SELECT", 1); err != nil {
+                                c.Close()
+                                return nil, err
+                        }
+                        return c, nil
+                },
+        }
+
+        fmt.Println("=======================================")
+}
+
+func main() {
+        fmt.Println("================ main =================")
+        //var v int64 = testmakerankvalue(12, 543, 1234567)
+        //fmt.Println(v)
+        //vh, vm, vd := testgetrankdatafromvalue(v)
+        //fmt.Println(vh, vm, vd)
+        //testcomplicatedstruct()
+        //testredis()
+        //testmongo()
+        //testnulllist()
+        //testhighgoroutinehttp()
+        testsort()
+        fmt.Println("=======================================")
+}
+
+</pre>
