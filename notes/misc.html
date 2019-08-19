@@ -14,7 +14,7 @@
 <header>
     <div class="container">
         
-    <h1>curl</h1>
+    <h1>misc</h1>
     <link rel="stylesheet" type="text/css" href="../stylesheets/shCoreRDark.css" media="screen" />
 
     </div>
@@ -24,25 +24,10 @@
     <section id="main_content">
         
         <section class="para">
-			<p class="key">常用指令</p>
+			<p class="key">一些杂七杂八的指令（组合）</p>
 			<p><pre class="brush: bash;">
-            # 发post请求
-            curl -X POST --data '{"uid":123,"val":100}' http://127.0.0.1:9999/add_money
-
-            # 显示http response头部
-            curl -i http://127.0.0.1
-
-            # 显示http请求详细过程，调试网络问题非常有用
-            curl -v http://127.0.0.1
-
-            # 带header
-            curl -H 'X-Token:eabcb4140cea017424bd6e34b391f520' http://127.0.0.1
-
-            # 不使用证书连接到https地址
-            curl -k https://127.0.0.1:9999/hello
-
-            # 输出到文件
-            curl http://127.0.0.1 -o output.txt
+            # 清空某个目录下所有_log文件
+            find dir_name/ -name "_log" -exec dd if=/dev/null of={} \;
             </pre></p>
 		</section>
 
