@@ -74,6 +74,7 @@ db.user_backup.find({"_id": "10001-1"}).forEach(
 
 # 列表
 db.test1.update({"_id": 1}, {$push: {"scores": 1}}, upsert=true)
+db.test1.find({"_id": 1}, {"list": {"$slice": [0,3]}}) // 从第0个开始，取3个
 
 # 集合
 db.test2.update({"_id": 1}, {$addToSet: {"scores": 1}}, upsert=true)
