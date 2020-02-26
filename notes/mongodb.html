@@ -27,12 +27,13 @@
 			<p class="key">常用指令</p>
 			<p><pre class="brush: bash;">
 # 授权
+use mydb
 db.createUser({
-    user: "g61_reader", "pwd": "abcd1234", 
-    roles: [{role: "read", db: "g61"}]})
+    user: "mydb_reader", "pwd": "abcd1234", 
+    roles: [{role: "read", db: "mydb"}]})
 db.createUser({
-    user: "g61_reader", "pwd": "abcd1234", 
-    roles: [{role: "readWrite", db: "g61"}]})
+    user: "mydb_reader", "pwd": "abcd1234", 
+    roles: [{role: "readWrite", db: "mydb"}]})
 
 # 模拟事务
 db.id_inc.findAndModify({
