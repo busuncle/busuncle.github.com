@@ -79,7 +79,8 @@ db.test1.find({"_id": 1}, {"list": {"$slice": [0,3]}}) // 从第0个开始，取
 
 # 集合
 db.test2.update({"_id": 1}, {$addToSet: {"scores": 1}}, upsert=true)
-db.test2.update({"_id": 1}, {$pull: {"scores": 1}})	# $addToSet反向操作，从集合里remove元素
+# $addToSet反向操作，从集合里remove元素
+db.test2.update({"_id": 1}, {$pull: {"scores": 1}})
             </pre></p>
 		</section>
 <!-- code syntax highlighter -->
