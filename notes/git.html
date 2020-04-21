@@ -31,7 +31,7 @@ git branch test20180626
 git clone ssh://git@192.168.41.173:10022/lizhijian/test.git
 # 提交tag到远端
 git push origin v0.2
-# merge tag，v0.1 是tag name
+# merge tag，v0.1 是tag name，如果合并某个分支，也是一样，直接把tag改成branch名字即可
 git merge v0.1
 # 只合并某个提交（ab11c720是提交生成的哈希值，可以直接用缩写，merge过程可能冲突，按git status提示解决，然后git cherry-pick --continue）
 git cherry-pick ab11c720
