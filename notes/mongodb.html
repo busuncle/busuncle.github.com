@@ -81,6 +81,9 @@ db.test1.find({"_id": 1}, {"list": {"$slice": [0,3]}}) // 从第0个开始，取
 db.test2.update({"_id": 1}, {$addToSet: {"scores": 1}}, upsert=true)
 # $addToSet反向操作，从集合里remove元素
 db.test2.update({"_id": 1}, {$pull: {"scores": 1}})
+
+# 聚合例子，随机返回若干匹配条件的文档
+db.mycoll.aggregate([{$match: {"num": {$gt: 10}}}, {$sample: {"size": 3}}])
             </pre></p>
 		</section>
 <!-- code syntax highlighter -->
