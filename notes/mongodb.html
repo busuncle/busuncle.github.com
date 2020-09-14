@@ -84,6 +84,9 @@ db.test2.update({"_id": 1}, {$pull: {"scores": 1}})
 
 # 聚合例子，随机返回若干匹配条件的文档
 db.mycoll.aggregate([{$match: {"num": {$gt: 10}}}, {$sample: {"size": 3}}])
+
+# 聚会统计，按某个key（或组合key），统计doc数量
+db.test.aggregate([{$group: {_id: {key1: "$key1", key2: "$key2"}, count: {$sum: 1}}}])
             </pre></p>
 		</section>
 <!-- code syntax highlighter -->
