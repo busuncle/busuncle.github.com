@@ -28,6 +28,9 @@
 			<p><pre class="brush: bash;">
             # 清空某个目录下所有_log文件
             find dir_name/ -name "_log" -exec dd if=/dev/null of={} \;
+	    
+	    # 用scp直接从A机器往B机器拷贝文件（跳过本地中转过程），注：machine_a和machine_b需要配置~/.ssh/config
+	    scp -3 machine_a:/home/yourname/test.txt machine_b:/home/yourname/downloads/
             </pre></p>
 		</section>
 
