@@ -31,6 +31,9 @@ find dir_name/ -name "_log" -exec dd if=/dev/null of={} \;
 	    
 # 用scp直接从A机器往B机器拷贝文件（跳过本地中转过程）
 scp -3 machine_a:/home/yourname/test.txt machine_b:/home/yourname/downloads/
+
+# 查看Linux版本信息(Debian)
+cat /etc/os-release
             </pre></p>
 		</section>
 
