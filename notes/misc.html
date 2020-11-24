@@ -34,6 +34,9 @@ scp -3 machine_a:/home/yourname/test.txt machine_b:/home/yourname/downloads/
 
 # 查看Linux版本信息(Debian)
 cat /etc/os-release
+
+# 批量清空文件（如日志）
+find somedir/ -name "some.log" -exec dd if=/dev/null of={} \;
             </pre></p>
 		</section>
 
