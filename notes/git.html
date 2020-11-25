@@ -62,6 +62,8 @@ git branch -d dev
 git log --graph --pretty=oneline --abbrev-commit	
 # 看log（可以alias方便使用）
 git log --oneline --all --graph --decorate
+# 用git做类似svn export的操作
+git archive master | tar -x -C /somewhere/else
             </pre></p>
 		</section>
 <!-- code syntax highlighter -->
