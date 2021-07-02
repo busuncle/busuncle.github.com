@@ -38,6 +38,11 @@ find somedir/ -name "some.log" -exec dd if=/dev/null of={} \;
 # pip安装指定版本的库（pip3同理）
 pip install gevent==1.4.0 greenlet==0.4.15
 pip install -r requirements.txt	# 从文件安装（pip freeze > requirements.txt得到）
+
+# vim删除包含特定字符串的行
+%g/debug/d
+# vim删除不包含特定字符串的行
+%g!/debug/d
             </pre></p>
 		</section>
 
