@@ -66,6 +66,8 @@ git log --graph --pretty=oneline --abbrev-commit
 git log --oneline --all --graph --decorate
 # 用git做类似svn export的操作
 git archive master | tar -x -C /somewhere/else
+# 命令同步分支列表（分支列表里就不会显示已远程被删除的分支了）
+git fetch -p
             </pre></p>
 		</section>
 <!-- code syntax highlighter -->
