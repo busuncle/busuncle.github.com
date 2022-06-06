@@ -42,6 +42,8 @@ git reset commit_id
 git show commit_id
 # 暂存区的最新diff
 git diff HEAD -- readme.txt
+# 已经commit后，看文件跟远端主干/分支的diff
+git diff origin/master xxx.py
 # 可以丢弃工作区的修改
 git checkout -- file
 # 可以把暂存区的修改撤销掉（unstage），重新放回工作区
