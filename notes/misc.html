@@ -43,6 +43,15 @@ pip install -r requirements.txt	# 从文件安装（pip freeze > requirements.tx
 %g/debug/d
 # vim删除不包含特定字符串的行
 %g!/debug/d
+
+查看某个进程监听了哪些tcp端口（去掉grep那部分可以看进程打开的所有文件）
+lsof -p 17637 | grep -i tcp
+查看打开了某个文件的所有进程
+lsof -a /lib/x86_64-linux-gnu/libutil-2.19.so
+查看监听了udp的进程
+lsof -i udp
+查看使用了8888端口的进程
+lsof -i :8888
             </pre></p>
 		</section>
 
