@@ -44,22 +44,22 @@ pip install -r requirements.txt	# 从文件安装（pip freeze > requirements.tx
 # vim删除不包含特定字符串的行
 %g!/debug/d
 
-查看某个进程监听了哪些tcp端口（去掉grep那部分可以看进程打开的所有文件）
+# 查看某个进程监听了哪些tcp端口（去掉grep那部分可以看进程打开的所有文件）
 lsof -p 17637 | grep -i tcp
-查看打开了某个文件的所有进程
+# 查看打开了某个文件的所有进程
 lsof -a /lib/x86_64-linux-gnu/libutil-2.19.so
-查看监听了udp的进程
+# 查看监听了udp的进程
 lsof -i udp
-查看使用了8888端口的进程
+# 查看使用了8888端口的进程
 lsof -i :8888
 
-查找某个.so是否有某个符号
+# 查找某个.so是否有某个符号
 nm -D /lib/x86_64-linux-gnu/libdl-2.28.so | grep dlsym
 
-查看二进制都加载了哪些.so
+# 查看二进制都加载了哪些.so
 ldd /usr/bin/python3.7
 
-创建软连接，ln -s target_path link_path
+# 创建软连接，ln -s target_path link_path
 # 文件：
 sudo ln -s /lib/x86_64-linux-gnu/libicuuc.so.67 /lib/x86_64-linux-gnu/libicuuc.so
 # 文件夹，需要保证/usr/local/python3/include存在，sudo mkdir -p /usr/local/python3/include：
