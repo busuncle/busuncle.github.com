@@ -52,6 +52,12 @@ lsof -a /lib/x86_64-linux-gnu/libutil-2.19.so
 lsof -i udp
 查看使用了8888端口的进程
 lsof -i :8888
+
+查找某个.so是否有某个符号
+nm -D /lib/x86_64-linux-gnu/libdl-2.28.so | grep dlsym
+
+查看二进制都加载了哪些.so
+ldd /usr/bin/python3.7
             </pre></p>
 		</section>
 
