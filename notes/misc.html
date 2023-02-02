@@ -58,6 +58,13 @@ nm -D /lib/x86_64-linux-gnu/libdl-2.28.so | grep dlsym
 
 查看二进制都加载了哪些.so
 ldd /usr/bin/python3.7
+
+创建软连接，ln -s target_path link_path
+# 文件：
+sudo ln -s /lib/x86_64-linux-gnu/libicuuc.so.67 /lib/x86_64-linux-gnu/libicuuc.so
+# 文件夹，需要保证/usr/local/python3/include存在，sudo mkdir -p /usr/local/python3/include：
+sudo ln -s /usr/local/include/python3.7m /usr/local/python3/include/python3.7m 
+
             </pre></p>
 		</section>
 
