@@ -55,6 +55,8 @@ lsof -i :8888
 
 # 查找某个.so是否有某个符号
 nm -D /lib/x86_64-linux-gnu/libdl-2.28.so | grep dlsym
+# 查看demangle后的符号（底层形式转换成用户可读形式）
+nm -C /usr/lib/x86_64-linux-gnu/libresolv.a 
 
 # 查看二进制都加载了哪些.so
 ldd /usr/bin/python3.7
