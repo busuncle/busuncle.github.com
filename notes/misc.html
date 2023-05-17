@@ -67,6 +67,11 @@ sudo ln -s /lib/x86_64-linux-gnu/libicuuc.so.67 /lib/x86_64-linux-gnu/libicuuc.s
 # 文件夹，需要保证/usr/local/python3/include存在，sudo mkdir -p /usr/local/python3/include：
 sudo ln -s /usr/local/include/python3.7m /usr/local/python3/include/python3.7m 
 
+# 检查tcp连通性
+telnet 127.0.0.1 1234
+# 检查udp连通性
+nc -vuz 127.0.0.1 1234
+
             </pre></p>
 		</section>
 
