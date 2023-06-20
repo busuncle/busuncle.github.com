@@ -43,6 +43,9 @@
 
             # 输出到文件
             curl http://127.0.0.1 -o output.txt
+            
+            # 不输出进度条，只输出结果，加-s选项（重定向的时候有用）
+            curl -s http://127.0.0.1:1234/test
             </pre></p>
 		</section>
 
