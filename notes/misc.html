@@ -28,6 +28,8 @@
 			<p><pre class="brush: bash;">	    
 # 用scp直接从A机器往B机器拷贝文件（跳过本地中转过程）
 scp -3 machine_a:/home/yourname/test.txt machine_b:/home/yourname/downloads/
+# 用scp传文件夹
+scp -r /path/to/local/folder username@remote:/path/to/remote/folder
 
 # 查看Linux版本信息(Debian)
 cat /etc/os-release
