@@ -60,6 +60,14 @@ b 3</pre>
 			awk '{OFS="\t";print ENVIRON["SHELL"], $0;}' file.txt</pre></p>
 		</section>
 
+		<section class="para">
+			<p class="key">其它有用的小技巧</p>
+			<p>
+				打印最后一行：awk '{print $NF}' filename</br>
+				打印倒数第二行：awk '{print $(NF-1)}' filename
+			</p>
+		</section>
+
 <!-- code syntax highlighter -->
 <script type="text/javascript" src="../javascripts/shCore.js"></script>
 <script type="text/javascript" src="../javascripts/shBrushBash.js"></script>
