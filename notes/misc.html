@@ -63,6 +63,9 @@ nm -C /usr/lib/x86_64-linux-gnu/libresolv.a
 # 查看二进制都加载了哪些.so
 ldd /usr/bin/python3.7
 
+# 查看二进制的动态库部分，可用于看RUNPATH，方便知道它的动态库搜索路径
+readelf -d ./bin/my_bin
+
 # 创建软连接，ln -s target_path link_path
 # 文件：
 sudo ln -s /lib/x86_64-linux-gnu/libicuuc.so.67 /lib/x86_64-linux-gnu/libicuuc.so
