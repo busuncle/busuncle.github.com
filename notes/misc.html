@@ -77,6 +77,12 @@ telnet 127.0.0.1 1234
 # 检查udp连通性
 nc -vuz 127.0.0.1 1234
 
+# perf相关
+# 直接启动
+perf record -o ~/tmp/test_perf.data your_command
+# 分析perf数据
+perf report -i ~/tmp/test_perf.data
+# 更多请查看：https://www.brendangregg.com/perf.html
             </pre></p>
 		</section>
 
