@@ -62,10 +62,14 @@ b 3</pre>
 
 		<section class="para">
 			<p class="key">其它有用的小技巧</p>
-			<p>
-				打印最后一行：awk '{print $NF}' filename</br>
-				打印倒数第二行：awk '{print $(NF-1)}' filename
-			</p>
+			<p><pre class="brush: bash;">
+				# 打印最后一行：
+				awk '{print $NF}' filename
+				# 打印倒数第二行：
+				awk '{print $(NF-1)}' filename
+				# 多个字符作为分隔符，比如将等号、逗号和空格都作为分隔符：
+				awk -F '[=, ]' '{print $3, $5}' input.txt
+			</pre></p>
 		</section>
 
 <!-- code syntax highlighter -->
