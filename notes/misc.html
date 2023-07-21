@@ -78,7 +78,9 @@ sudo ln -s /lib/x86_64-linux-gnu/libicuuc.so.67 /lib/x86_64-linux-gnu/libicuuc.s
 sudo ln -s /usr/local/include/python3.7m /usr/local/python3/include/python3.7m 
 
 # 检查tcp连通性
-telnet 127.0.0.1 1234
+telnet 127.0.0.1 1234 
+# 也可以用nc，如：nc 127.0.0.1 1234；如果看udp，就加-u，如：nc -u 127.0.0.1 1234
+# 但nc不一定有，要装
 # 检查udp连通性
 nc -vuz 127.0.0.1 1234
 
