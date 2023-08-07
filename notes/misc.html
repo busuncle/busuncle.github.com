@@ -35,7 +35,8 @@ scp -r /path/to/local/folder username@remote:/path/to/remote/folder
 cat /etc/os-release
 
 # 批量清空文件（如日志）
-find somedir/ -name "some.log" -exec dd if=/dev/null of={} \;
+find somedir/ -name your_pattern_*.log -exec dd if=/dev/null of={} \;
+find somedir/ -name your_pattern_*.log | xargs -I {} sh -c "cat /dev/null > {}"
 
 # pip安装指定版本的库（pip3同理）
 pip install gevent==1.4.0 greenlet==0.4.15
