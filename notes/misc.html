@@ -80,10 +80,13 @@ sudo ln -s /usr/local/include/python3.7m /usr/local/python3/include/python3.7m
 
 # 检查tcp连通性
 telnet 127.0.0.1 1234 
-# 也可以用nc，如：nc 127.0.0.1 1234；如果看udp，就加-u，如：nc -u 127.0.0.1 1234
-# 但nc不一定有，要装
+# 也可以用nc，如：nc 127.0.0.1 1234；如果看udp，就加-u，如：nc -u 127.0.0.1 1234，但nc不一定有，要装
 # 检查udp连通性
 nc -vuz 127.0.0.1 1234
+# 如果双端都有nc，可以这样：
+nc -u -l -p 12345   # 服务端
+echo "hello" | nc -u dest_ip 12345  # 客户端
+# 这样服务端会显示hello，不过好像只能一次，再用就只能两边ctrl+c再来
 
 # perf相关
 # 直接启动
