@@ -26,8 +26,16 @@
         <section class="para">
 			<p class="key">常用指令</p>
 			<p><pre class="brush: bash;">
-# 常用指令
-gdb program_file pid 或 gdb program_file coredump_file
+# attach到某个进程
+gdb -p pid
+# 带参数启动
+gdb --args ./your_bin arg1 arg2 arg3
+# 看coredump
+gdb your_bin coredump_file
+# 加载coredump时加载符号文件
+gdb -s Server.symbol -e Server -c core
+
+# 进gdb后常用
 看堆栈：bt
 查询线程：info threads
 切换调试线程：thread thread_id
