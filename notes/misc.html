@@ -94,6 +94,10 @@ perf record -o ~/tmp/test_perf.data your_command
 # 分析perf数据
 perf report -i ~/tmp/test_perf.data
 # 更多请查看：https://www.brendangregg.com/perf.html
+
+# ag相关
+# 只匹配py文件（ag --list-file-types查看支持的类型，常用有--cc和--cpp）：
+ag --python -w keyword ./dir_to_match
             </pre></p>
 		</section>
 
