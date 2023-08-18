@@ -66,7 +66,7 @@ ldd /usr/bin/python3.7
 
 # 查看二进制的动态库部分，可用于看RUNPATH，方便知道它的动态库搜索路径
 readelf -d ./bin/my_bin
-# 查看二进制的符号表（看.so或者.a也可以的，感觉nm -C更好用？）
+# 查看二进制的符号表（看.so或者.a也可以的，尤其是系统的库，这个貌似nm看不到）
 readelf -s ./bin/my_bin
 
 # 查看文件的创建/修改时间信息
