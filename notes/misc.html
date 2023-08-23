@@ -69,6 +69,11 @@ readelf -d ./bin/my_bin
 # 查看二进制的符号表（看.so或者.a也可以的，尤其是系统的库，这个貌似nm看不到）
 readelf -s ./bin/my_bin
 
+# 查找是否安装了某个库
+dpkg -l | grep libmongoc-dev
+# 查找某个库的库文件及头文件位置
+dpkg -L libmongoc-dev
+
 # 查看文件的创建/修改时间信息
 stat filepath
 
