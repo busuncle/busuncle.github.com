@@ -38,6 +38,9 @@ cat /etc/os-release
 find somedir/ -name your_pattern_*.log -exec dd if=/dev/null of={} \;
 find somedir/ -name your_pattern_*.log | xargs -I {} sh -c "cat /dev/null > {}"
 
+# 计算一个目录下所有文件的md5总和
+find /path/to/directory -type f -print0 | sort -z | xargs -0 cat | md5sum
+
 # pip安装指定版本的库（pip3同理）
 pip install gevent==1.4.0 greenlet==0.4.15
 pip install -r requirements.txt	# 从文件安装（pip freeze > requirements.txt得到）
