@@ -25,7 +25,10 @@
         
         <section class="para">
 			<p class="key">一些杂七杂八的指令（组合）</p>
-			<p><pre class="brush: bash;">	    
+			<p><pre class="brush: bash;">
+# 用指定IP和Port连某台机器
+ssh -i ~/.ssh/my_id_rsa yourname@remote_ip -p port
+
 # 用scp直接从A机器往B机器拷贝文件（跳过本地中转过程）
 scp -3 machine_a:/home/yourname/test.txt machine_b:/home/yourname/downloads/
 # 用scp传文件夹
