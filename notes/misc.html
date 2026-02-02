@@ -112,6 +112,9 @@ perf report -i ~/tmp/test_perf.data
 # ag相关
 # 只匹配py文件（ag --list-file-types查看支持的类型，常用有--cc和--cpp）：
 ag --python -w keyword ./dir_to_match
+
+# 查看一台机器上哪些用户起的进程占用内存比较大，降序排序
+ps hax -o rss,user | awk '{a[$2]+=$1;}END{for(i in a)print i" "int(a[i]/1024)"MB";}' | sort -k2 -rn | head
             </pre></p>
 		</section>
 
